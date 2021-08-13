@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja" class="h-100">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="Description" content="Enter your description here" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <title>SideBar menu</title>
+</head>
+
+<body class="h-100 bg-light">
+<!-- 全ページを囲む要素 -->
+<main class="h-100">
+    <div class="page-wrapper d-flex flex-row h-100 w-100">
+
+        <!-- サイトバーメニュー -->
+        <nav class="sidebar bg-primary bg-gradient">
+            <div class="brand p-4">
+                <h4>
+                    Sidabar Sample
+                </h4>
+            </div>
+            <ul class="nav flex-column m-o p-3">
+                <li class="nav-item mb-2">
+                    <a href="" class="nav-link">Static</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a href="" class="nav-link w-100 h-100">Dropdown</a>
+                </li>
+            </ul>
+        </nav>
+        <!-- サイトバーメニュー -->
+
+        <!-- 全ページの右のコンテンツ -->
+        <div class="page-content">
+
+            <!-- トップバー -->
+            <nav class="navbar px-3 bg-light border-bottom shadow-sm">
+                <div class="navbar-brand toggle-menu">
+                    <button class="btn btn-light btn-sm" id="sidebarToggler">
+                        <i class="fas fa-bars fa-lg"></i>
+                    </button>
+                </div>
+                <ul class="navbar-nav d-flex flex-row">
+                    <li class="nav-item ml-3 text-muted">
+                        Home
+                    </li>
+                    <li class="nav-item ml-3 text-muted">
+                        Test
+                    </li>
+                    <li class="nav-item ml-3 text-muted">
+                        Login
+                    </li>
+                </ul>
+            </nav>
+            <!-- トップバー -->
+
+            <!-- 下のコンテンツ -->
+            <div class="content p-3">
+                <div class="page-title border-bottom pb-2 ">
+                    <h2>Main page</h2>
+                </div>
+                <div class="container-fuild pt-3">
+                    <div class="card">
+                        <div class="card-header">
+                            ただのテスト
+                        </div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime, beatae accusantium. Dolor corporis accusamus omnis consectetur! Eum recusandae ducimus adipisci in laudantium deleniti enim! Hic corrupti modi sint odit impedit eligendi facilis earum iusto, laudantium magni ad maxime soluta quaerat id ab! Ullam nihil quos, ipsum minus harum nemo ratione asperiores at, repellendus et dicta quaerat vel autem nobis neque quibusdam maxime debitis reprehenderit ipsam quia aut dolore similique. Est, veniam eaque illo voluptatibus repellendus velit facere, iure tempora dolorum dolorem rem facilis distinctio incidunt quia doloribus illum quas voluptate, laborum repellat? Nisi, dignissimos rem unde quidem ratione deleniti consequuntur?
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 下のコンテンツ -->
+
+        </div>
+        <!-- 全ページの右のコンテンツ -->
+
+    </div>
+</main>
+<!-- 全ページを囲む要素 -->
+<script src="main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-alpha1/js/bootstrap.min.js"></script>
+</body>
+
+</html>
