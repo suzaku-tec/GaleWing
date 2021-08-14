@@ -1,7 +1,6 @@
 package com.example.GaleWings;
 
 import com.miragesql.miragesql.SqlManagerImpl;
-import com.miragesql.miragesql.dialect.HyperSQLDialect;
 import com.miragesql.miragesql.dialect.SQLiteDialect;
 import com.miragesql.miragesql.integration.spring.SpringConnectionProvider;
 import org.apache.commons.dbcp2.BasicDataSource;
