@@ -1,4 +1,4 @@
-package com.example.GaleWings;
+package com.example.galewings;
 
 import com.miragesql.miragesql.SqlManagerImpl;
 import com.miragesql.miragesql.dialect.SQLiteDialect;
@@ -39,8 +39,7 @@ public class AppConfig {
 
     @Bean
     public SQLiteDialect dialect() {
-        SQLiteDialect dialect = new SQLiteDialect();
-        return dialect;
+        return new SQLiteDialect();
     }
 
     @Bean
