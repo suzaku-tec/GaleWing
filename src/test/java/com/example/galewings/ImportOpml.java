@@ -48,7 +48,7 @@ public class ImportOpml {
         Map<String, String> params = new HashMap<>();
         params.put("htmlUrl", outline.getAttribute("htmlUrl"));
         int count = sqlManager.getCount(
-                new ClasspathSqlResource("sql/select_site_for_htmlurl.sql"),
+                new ClasspathSqlResource("sql/select_site_for_uuid.sql"),
                 params
         );
 
@@ -63,7 +63,7 @@ public class ImportOpml {
         params.put("htmlUrl", outline.getAttribute("htmlUrl"));
         params.put("xmlUrl", outline.getAttribute("xmlUrl"));
 
-        sqlManager.executeUpdate(new ClasspathSqlResource("import_feed.sql"), params);
+        sqlManager.executeUpdate(new ClasspathSqlResource("sql/import_feed.sql"), params);
 
         session.commit();
     }
