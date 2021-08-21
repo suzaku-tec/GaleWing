@@ -7,8 +7,25 @@ import java.io.Serializable;
 
 @Table(name = "feed")
 public class Feed implements Serializable {
+    @Override
+    public String toString() {
+        return "Feed{" +
+                "title='" + title + '\'' +
+                ", uuid='" + uuid + '\'' +
+                ", link='" + link + '\'' +
+                ", uri='" + uri + '\'' +
+                ", type='" + type + '\'' +
+                ", author='" + author + '\'' +
+                ", comments='" + comments + '\'' +
+                ", publishedDate='" + publishedDate + '\'' +
+                '}';
+    }
+
     @Column(name = "title")
     public String title;
+
+    @Column(name = "uuid")
+    public String uuid;
 
     @Column(name = "link")
     public String link;
@@ -30,6 +47,10 @@ public class Feed implements Serializable {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getUuid() {
+        return uuid;
     }
 
     public String getLink() {
@@ -55,4 +76,6 @@ public class Feed implements Serializable {
     public String getPublishedDate() {
         return publishedDate;
     }
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.galewings;
 
 import com.example.galewings.entity.Feed;
+import com.example.galewings.entity.Site;
 import com.miragesql.miragesql.ClasspathSqlResource;
 import com.miragesql.miragesql.SqlManager;
 import com.miragesql.miragesql.session.Session;
@@ -14,7 +15,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Map;
 
 public class RssFeed {
 
@@ -23,16 +23,17 @@ public class RssFeed {
         SqlManager sqlManager = session.getSqlManager();
         session.begin();
 
-        List<Map> resultList = sqlManager.getResultList(Map.class, new ClasspathSqlResource("getrssfeed.sql"));
+        List<Site> resultList = sqlManager.getResultList(Site.class, new ClasspathSqlResource("sql/select_all_site.sql"));
 
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 
         resultList.stream().forEach(map -> {
-            String xmlurl = map.get("xmlurl").toString();
+            String xmlurl = map.xmlUrl;
             try {
                 SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(xmlurl)));
                 feed.getEntries().stream().map(syndEntry -> {
                     Feed f = new Feed();
+                    f.uuid = map.uuid;
                     f.title = syndEntry.getTitle();
                     f.link = syndEntry.getLink();
                     f.uri = syndEntry.getUri();

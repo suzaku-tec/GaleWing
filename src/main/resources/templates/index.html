@@ -34,7 +34,7 @@
                     <a href="" class="nav-link">Dropdown</a>
                 </li>
                 <li class="nav-item mb-2" th:each="site: ${sitelist}">
-                    <a href="" class="nav-link" th:href="@{/(siteUrl=${site.htmlUrl})}">[[${site.title}]]</a>
+                    <a href="" class="nav-link" th:href="@{/(uuid=${site.uuid})}">[[${site.title}]]</a>
                 </li>
             </ul>
             <div id="test"></div>
@@ -84,28 +84,9 @@
     </div>
 </main>
 <!-- 全ページを囲む要素 -->
-<script src="main.js"></script>
+<!--<script src="main.js"></script>-->
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>-->
 
-<script th:inline="javascript">
-/*<![CDATA[*/
-var data = /*[[${feedList}]]*/ [];
-const grid = new Grid({
-  columns: [
-    { name: 'title', hidden: false},
-    {name: 'link', hidden: true},
-    { name: 'uri', hidden: true},
-    { name: 'type', hidden: true},
-    { name: 'author', hidden: true},
-    { name: 'comments', hidden: true},
-    { name: 'publishedDate', hidden: false}],
-  pagination: true,
-  data: data,
-  sort: true
-}).render(document.getElementById("wrapper"));
-
-/*]]>*/
-</script>
 </body>
 
 </html>
