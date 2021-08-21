@@ -55,18 +55,4 @@ public class Feed implements Serializable {
     public String getPublishedDate() {
         return publishedDate;
     }
-
-
-    @Override
-    public String toString() {
-        return "Feed{" +
-                "title='" + title + '\'' +
-                ", link='" + link + '\'' +
-                ", uri='" + uri + '\'' +
-                ", type='" + type + '\'' +
-                ", author='" + author + '\'' +
-                ", comments='" + comments + '\'' +
-                ", publishedDate='" + publishedDate + '\'' +
-                '}';
-    }
 }

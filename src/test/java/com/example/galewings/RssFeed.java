@@ -12,6 +12,7 @@ import com.rometools.rome.io.XmlReader;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,8 @@ public class RssFeed {
 
         List<Map> resultList = sqlManager.getResultList(Map.class, new ClasspathSqlResource("getrssfeed.sql"));
 
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+
         resultList.stream().forEach(map -> {
             String xmlurl = map.get("xmlurl").toString();
             try {
@@ -35,8 +38,7 @@ public class RssFeed {
                     f.uri = syndEntry.getUri();
                     f.author = syndEntry.getAuthor();
                     f.comments = syndEntry.getComments();
-                    ;
-                    f.publishedDate = syndEntry.getPublishedDate().toString();
+                    f.publishedDate = sdFormat.format(syndEntry.getPublishedDate());
                     return f;
                 }).forEach(f -> {
                     sqlManager.insertEntity(f);

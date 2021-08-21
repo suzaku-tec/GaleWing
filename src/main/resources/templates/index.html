@@ -6,18 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="Description" content="Enter your description here"/>
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+
+    <script src="js/main.js"></script>
     <link rel="stylesheet" href="style.css">
     <title>SideBar menu</title>
 
-    <script src="gridjs/gridjs.umd.js"></script>
-    <link href="gridjs/theme/mermaid.min.css" rel="stylesheet"/>
-    <!--    <link-->
-    <!--            href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css"-->
-    <!--            rel="stylesheet"-->
-    <!--    />-->
     <script src="ajax.js"></script>
 </head>
 
@@ -35,7 +28,7 @@
             </div>
             <ul class="nav flex-column m-o p-3" id="navi">
                 <li class="nav-item mb-2">
-                    <a href="" class="nav-link">All</a>
+                    <a href="/" class="nav-link">All</a>
                 </li>
                 <li class="nav-item mb-2">
                     <a href="" class="nav-link">Dropdown</a>
@@ -79,26 +72,7 @@
                 </div>
                 <div class="container-fuild pt-3">
                     <div class="card">
-                        <div class="card-header">
-                            ただのテスト
-                        </div>
-                        <div class="card-body">
-                            <div class="card-text">
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime, beatae
-                                    accusantium. Dolor corporis accusamus omnis consectetur! Eum recusandae ducimus
-                                    adipisci in laudantium deleniti enim! Hic corrupti modi sint odit impedit eligendi
-                                    facilis earum iusto, laudantium magni ad maxime soluta quaerat id ab! Ullam nihil
-                                    quos, ipsum minus harum nemo ratione asperiores at, repellendus et dicta quaerat vel
-                                    autem nobis neque quibusdam maxime debitis reprehenderit ipsam quia aut dolore
-                                    similique. Est, veniam eaque illo voluptatibus repellendus velit facere, iure
-                                    tempora dolorum dolorem rem facilis distinctio incidunt quia doloribus illum quas
-                                    voluptate, laborum repellat? Nisi, dignissimos rem unde quidem ratione deleniti
-                                    consequuntur?
-                                <div id="wrapper"></div>
-                                </p>
-                            </div>
-                        </div>
+                        <div id="wrapper"></div>
                     </div>
                 </div>
             </div>
@@ -111,27 +85,12 @@
 </main>
 <!-- 全ページを囲む要素 -->
 <script src="main.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-alpha1/js/bootstrap.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>-->
 
 <script th:inline="javascript">
-// var url = new URL(window.location.href);
-// new gridjs.Grid({
-//     columns: ["title", "htmlUrl",],
-//     server: {
-//         url: url.origin + "/sitelist",
-//         then: data => data.map(list => [list.title, list.htmlUrl]),
-//         handle: (res) => {
-//             if(res.status == 404) return { data: [] };
-//             if(res.ok) return res.json();
-//             throw Error("oh no!");
-//         }
-//     }
-// }).render(document.getElementById("wrapper"));
-
 /*<![CDATA[*/
 var data = /*[[${feedList}]]*/ [];
-new gridjs.Grid({
+const grid = new Grid({
   columns: [
     { name: 'title', hidden: false},
     {name: 'link', hidden: true},
@@ -141,17 +100,11 @@ new gridjs.Grid({
     { name: 'comments', hidden: true},
     { name: 'publishedDate', hidden: false}],
   pagination: true,
-  data: data
+  data: data,
+  sort: true
 }).render(document.getElementById("wrapper"));
+
 /*]]>*/
-
-
-
-
-
-
-
-
 </script>
 </body>
 
