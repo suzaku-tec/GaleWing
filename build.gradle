@@ -41,6 +41,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-core-asl
 	implementation 'org.codehaus.jackson:jackson-core-asl:1.9.13'
 
+	// https://mvnrepository.com/artifact/com.google.guava/guava
+	implementation 'com.google.guava:guava:30.1.1-jre'
+
 }
 
 test {
