@@ -27,7 +27,7 @@ public class RssFeed {
 
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 
-        resultList.stream().forEach(map -> {
+        resultList.forEach(map -> {
             String xmlurl = map.xmlUrl;
             try {
                 SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(xmlurl)));
@@ -41,13 +41,9 @@ public class RssFeed {
                     f.comments = syndEntry.getComments();
                     f.publishedDate = sdFormat.format(syndEntry.getPublishedDate());
                     return f;
-                }).forEach(f -> {
-                    sqlManager.insertEntity(f);
-                });
+                }).forEach(sqlManager::insertEntity);
 
-            } catch (FeedException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (FeedException | IOException e) {
                 e.printStackTrace();
             }
 

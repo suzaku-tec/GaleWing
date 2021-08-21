@@ -10,7 +10,9 @@ import com.miragesql.miragesql.SqlManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,20 +24,13 @@ public class SiteFeedController {
     @Autowired
     SqlManager sqlManager;
 
-    @RequestMapping(path = "/json", method = RequestMethod.POST)
-    public String getFeed(@RequestBody String url) {
-
-        return "";
-    }
-
     @GetMapping("/sitelist")
     @ResponseBody
     @Transactional
     public String getSiteList() throws JsonProcessingException {
         List<Site> resultList = sqlManager.getResultList(Site.class, new ClasspathSqlResource("sql/select_all_site.sql"));
         ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(resultList);
-        return json;
+        return mapper.writeValueAsString(resultList);
     }
 
     @GetMapping("/feedlist")
@@ -56,8 +51,7 @@ public class SiteFeedController {
         System.out.println(feeds);
 
         ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(feeds);
 
-        return json;
+        return mapper.writeValueAsString(feeds);
     }
 }

@@ -10,7 +10,6 @@ import com.miragesql.miragesql.session.Session;
 import com.miragesql.miragesql.session.SessionFactory;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,11 +22,7 @@ public class ImportOpml {
         try (FileInputStream is = new FileInputStream("C:\\Users\\ikarashi\\Desktop\\test2.opml")) {
             Opml opml = new OpmlParser().parse(is);
             opml.getBody().getOutlines().forEach(ImportOpml::importOpml);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (OpmlParseException e) {
+        } catch (IOException | OpmlParseException e) {
             e.printStackTrace();
         }
     }
