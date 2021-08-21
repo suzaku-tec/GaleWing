@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.5.3'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id "com.github.node-gradle.node" version "3.1.0"
 }
 
 tasks.withType(JavaCompile) {
@@ -14,6 +15,7 @@ sourceCompatibility = '11'
 
 repositories {
 	mavenCentral()
+	gradlePluginPortal()
 }
 
 dependencies {
@@ -44,8 +46,23 @@ dependencies {
 	// https://mvnrepository.com/artifact/com.google.guava/guava
 	implementation 'com.google.guava:guava:30.1.1-jre'
 
+	implementation "com.github.node-gradle:gradle-node-plugin:3.1.0"
+
 }
 
 test {
 	useJUnitPlatform()
 }
+
+task npmRun(type: NpmTask) {
+	npmCommand = ['run', 'gradlebuild']
+	execOverrides {
+		// The it variable contains the `ExecSpec`
+		it.ignoreExitValue = true
+		// We can also omit it since "it" is implicit
+		workingDir = file('src/main/javascript')
+	}
+}
+
+apply plugin: 'com.github.node-gradle.node'
+processResources.dependsOn npmRun
