@@ -5,6 +5,7 @@ import com.miragesql.miragesql.annotation.Table;
 
 import java.io.Serializable;
 
+@SuppressWarnings("unused")
 @Table(name = "feed")
 public class Feed implements Serializable {
     @Override

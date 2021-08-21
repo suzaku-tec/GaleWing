@@ -10,6 +10,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
 
+@SuppressWarnings("unused")
 @Configuration
 public class AppConfig {
 

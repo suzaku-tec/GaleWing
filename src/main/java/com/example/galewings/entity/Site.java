@@ -3,6 +3,7 @@ package com.example.galewings.entity;
 import com.miragesql.miragesql.annotation.Column;
 import com.miragesql.miragesql.annotation.Table;
 
+@SuppressWarnings("unused")
 @Table(name = "site")
 public class Site {
 
