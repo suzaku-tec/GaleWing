@@ -11,7 +11,8 @@
     "watch": "webpack --watch",
     "deploy": "cpx dist/* ../resources/static/js",
     "build:dev:deploy": "run-s clean build:dev deploy",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "gradlebuild": "run-s build:dev:deploy"
   },
   "keywords": [],
   "author": "",
