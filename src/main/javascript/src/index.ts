@@ -12,11 +12,7 @@ import "gridjs/dist/theme/mermaid.css";
 
 import hideModifier from '@popperjs/core/lib/modifiers/hide';
 
-console.log("load")
-
 window.onload = function() {
-
-  console.log("onload")
   var uri = new URL(window.location.href);
   var ajaxUrl = uri.origin + "/feedlist" + location.search;
 
