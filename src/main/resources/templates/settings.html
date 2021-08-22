@@ -9,6 +9,7 @@
 
     <script src="js/main.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tree.css">
     <title>GalwWing</title>
 
 </head>
@@ -16,10 +17,10 @@
 <body class="h-100 bg-light">
 <!-- 全ページを囲む要素 -->
 <main class="h-100">
-    <div class="page-wrapper d-flex flex-row h-100 w-100">
+    <div class="page-wrapper d-flex flex-row h-100">
 
         <!-- サイトバーメニュー -->
-        <nav class="sidebar bg-primary bg-gradient">
+        <nav class="sidebar bg-primary bg-gradient side">
             <div class="brand p-4">
                 <h4>
                     Sidabar Sample
@@ -27,23 +28,14 @@
             </div>
             <ul class="nav flex-column m-o p-3" id="navi">
                 <li class="nav-item mb-2">
-                    <a href="/settings" class="nav-link">settings</a>
-                </li>
-                <li class="nav-item mb-2">
-                </li>
-                <li class="nav-item mb-2">
-                    <a href="/" class="nav-link">All</a>
-                </li>
-                <li class="nav-item mb-2" th:each="site: ${sitelist}">
-                    <a href="" class="nav-link" th:href="@{/(uuid=${site.uuid})}">[[${site.title}]]</a>
+                    <a href="/" class="nav-link">Feed List</a>
                 </li>
             </ul>
-            <div id="test"></div>
         </nav>
         <!-- サイトバーメニュー -->
 
         <!-- 全ページの右のコンテンツ -->
-        <div class="page-content">
+        <div class="page-content main">
 
             <!-- トップバー -->
             <nav class="navbar px-3 bg-light border-bottom shadow-sm">
@@ -52,17 +44,6 @@
                         <i class="fas fa-bars fa-lg"></i>
                     </button>
                 </div>
-                <ul class="navbar-nav d-flex flex-row">
-                    <li class="nav-item ml-3 text-muted">
-                        Home
-                    </li>
-                    <li class="nav-item ml-3 text-muted">
-                        Test
-                    </li>
-                    <li class="nav-item ml-3 text-muted">
-                        Login
-                    </li>
-                </ul>
             </nav>
             <!-- トップバー -->
 
@@ -72,9 +53,20 @@
                     <h2>Main page</h2>
                 </div>
                 <div class="container-fuild pt-3">
-                    <div class="card">
-                        <div id="wrapper"></div>
-                    </div>
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                        <tr>
+                            <th scope="col">項目名</th>
+                            <th scope="col">値</th>
+                        </tr>
+                        </thead>
+                        <tbody th:each="setting: ${settings}">
+                        <tr>
+                            <td>[[${setting.name}]]</td>
+                            <td>[[${setting.setting}]]</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <!-- 下のコンテンツ -->
