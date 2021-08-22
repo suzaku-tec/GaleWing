@@ -7,7 +7,7 @@ import { faBars } from "@fortawesome/free-solid-svg-icons/faBars";
 library.add(faBars);
 dom.watch();
 
-import { Grid } from "gridjs";
+import { Grid, html } from "gridjs";
 import "gridjs/dist/theme/mermaid.css";
 
 import hideModifier from '@popperjs/core/lib/modifiers/hide';
@@ -23,7 +23,11 @@ window.onload = function() {
   console.log("ajaxUrl:",ajaxUrl);
   new Grid({
     columns: [
-      { name: 'title', hidden: false},
+      {
+        name: 'title',
+        hidden: false,
+        formatter: (cell, row) => html(`<a href='${row.cells[1].data}'>${row.cells[0].data}</a>`)
+      },
       { name: 'link', hidden: true},
       { name: 'uri', hidden: true},
       { name: 'type', hidden: true},
