@@ -39,7 +39,6 @@ window.onload = function() {
     server: {
       url: ajaxUrl,
       then: data => {
-        console.log(data);
         return data;
       }
     }
