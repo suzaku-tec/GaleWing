@@ -48,8 +48,6 @@ public class SiteFeedController {
             feeds = sqlManager.getResultList(Feed.class, new ClasspathSqlResource("sql/select_site_for_uuid.sql"), params);
         }
 
-        System.out.println(feeds);
-
         ObjectMapper mapper = new ObjectMapper();
 
         return mapper.writeValueAsString(feeds);
