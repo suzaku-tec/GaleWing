@@ -26,7 +26,7 @@ window.onload = function() {
       {
         name: 'title',
         hidden: false,
-        formatter: (cell, row) => html(`<a href='${row.cells[1].data}'>${row.cells[0].data}</a>`)
+        formatter: (cell, row) => html(`<a href='${row.cells[1].data}' target="_blank" rel="noopener">${row.cells[0].data}</a>`)
       },
       { name: 'link', hidden: true},
       { name: 'uri', hidden: true},
