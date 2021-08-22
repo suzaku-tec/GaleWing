@@ -9,9 +9,8 @@
 
     <script src="js/main.js"></script>
     <link rel="stylesheet" href="style.css">
-    <title>SideBar menu</title>
+    <title>GalwWing</title>
 
-    <script src="ajax.js"></script>
 </head>
 
 <body class="h-100 bg-light">
@@ -29,9 +28,6 @@
             <ul class="nav flex-column m-o p-3" id="navi">
                 <li class="nav-item mb-2">
                     <a href="/" class="nav-link">All</a>
-                </li>
-                <li class="nav-item mb-2">
-                    <a href="" class="nav-link">Dropdown</a>
                 </li>
                 <li class="nav-item mb-2" th:each="site: ${sitelist}">
                     <a href="" class="nav-link" th:href="@{/(uuid=${site.uuid})}">[[${site.title}]]</a>
@@ -84,8 +80,6 @@
     </div>
 </main>
 <!-- 全ページを囲む要素 -->
-<!--<script src="main.js"></script>-->
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>-->
 
 </body>
 
