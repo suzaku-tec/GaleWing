@@ -17,3 +17,14 @@
 main{
     transition: 0.3s all ease;
 }
+
+.rss-link {
+    text-decoration: none;
+    font-weight:  bolder;
+    color: #000000;
+}
+
+.rss-readed-link {
+    text-decoration: none;
+    color: #808080;
+}
