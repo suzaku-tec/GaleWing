@@ -41,7 +41,6 @@ window.onload = function () {
   var ajaxUrl = uri.origin + '/feedlist' + location.search;
 
   const uuid = new URLSearchParams(window.location.search).get('uuid');
-  console.log('uuid:', uuid);
 
   var grid = new Grid({
     columns: [
@@ -96,7 +95,7 @@ window.onload = function () {
   });
 
   // init event
-  new ElementEvent(new UpdateFeed('identifier')).setup(
+  new ElementEvent(new UpdateFeed('identifier', grid)).setup(
     'click',
     document.getElementById('updateFeed'),
   );
