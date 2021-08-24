@@ -130,7 +130,8 @@ public class SiteFeedController {
             feeds = sqlManager.getResultList(Feed.class, new ClasspathSqlResource("sql/select_site_for_uuid.sql"), params);
         }
 
-        return "";
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(feeds);
     }
 
     private Optional<SyndFeed> getSyndFeed(String xmlUrl) {
@@ -146,7 +147,7 @@ public class SiteFeedController {
         return result;
     }
 
-    interface SiteFeed {
+    private interface SiteFeed {
         Site getSite();
 
         Optional<SyndFeed> getOptionalSyndFeed();

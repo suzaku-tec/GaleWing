@@ -36,7 +36,8 @@
                     <a href="/" class="nav-link">All</a>
                 </li>
                 <li class="nav-item mb-2" th:each="site: ${sitelist}">
-                    <a href="" class="nav-link" th:href="@{/(uuid=${site.uuid})}">[[${site.title}]]</a>
+                    <a href="" class="nav-link"
+                       th:href="@{/(uuid=${site.uuid})}">[[${site.title}]]</a>
                 </li>
             </ul>
             <div id="test"></div>
