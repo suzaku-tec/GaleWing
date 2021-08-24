@@ -2,9 +2,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 // fortawesome
 import { library, dom } from '@fortawesome/fontawesome-svg-core';
-import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
+import { faBars, faCheck, faSyncAlt, faPlus } from '@fortawesome/free-solid-svg-icons/index';
 
-library.add(faBars);
+library.add(faBars, faCheck, faSyncAlt, faPlus);
 dom.watch();
 
 import { Grid, html } from 'gridjs';
@@ -13,6 +13,9 @@ import 'gridjs/dist/theme/mermaid.css';
 import hideModifier from '@popperjs/core/lib/modifiers/hide';
 
 import axios from 'axios';
+
+import ElementEvent from './event/elementEvent';
+import UpdateFeed from './event/updateFeed';
 
 window.onload = function () {
   // toggleボタンをセレクト
@@ -37,6 +40,9 @@ window.onload = function () {
   var uri = new URL(window.location.href);
   var ajaxUrl = uri.origin + '/feedlist' + location.search;
 
+  const uuid = new URLSearchParams(window.location.search).get('uuid');
+  console.log('uuid:', uuid);
+
   var grid = new Grid({
     columns: [
       {
@@ -60,6 +66,10 @@ window.onload = function () {
     server: {
       url: ajaxUrl,
       then: (data) => {
+        if (uuid) {
+          document.getElementById('identifier').nodeValue = uuid;
+        }
+
         return data;
       },
     },
@@ -84,6 +94,12 @@ window.onload = function () {
         console.log(error);
       });
   });
+
+  // init event
+  new ElementEvent(new UpdateFeed('identifier')).setup(
+    'click',
+    document.getElementById('updateFeed'),
+  );
 };
 
 export default { hideModifier };

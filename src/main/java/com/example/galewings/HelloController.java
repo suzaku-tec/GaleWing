@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -19,9 +20,10 @@ public class HelloController {
 
     @RequestMapping(value = "/")
     @Transactional
-    public String index(Model model) {
+    public String index(Model model, @RequestParam(name = "uuid", required = false) String uuid) {
         List<Site> resultList = sqlManager.getResultList(Site.class, new ClasspathSqlResource("sql/select_all_site.sql"));
         model.addAttribute("sitelist", resultList);
+        model.addAttribute("identifier", uuid);
         return "index";
     }
 
