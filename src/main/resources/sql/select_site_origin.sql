@@ -1,0 +1,1 @@
+select * from site where uuid = /*uuid*/

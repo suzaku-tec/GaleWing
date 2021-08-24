@@ -17,6 +17,7 @@
 <!-- 全ページを囲む要素 -->
 <main class="h-100">
     <div class="page-wrapper d-flex flex-row h-100 w-100">
+        <input type="hidden" id="identifier" value="" th:value="${identifier}">
 
         <!-- サイトバーメニュー -->
         <nav class="sidebar bg-primary bg-gradient">
@@ -69,7 +70,21 @@
             <!-- 下のコンテンツ -->
             <div class="content p-3">
                 <div class="page-title border-bottom pb-2 ">
-                    <h2>Main page</h2>
+                    <button type="button" class="btn btn-outline-secondary">
+                        <span style="font-size: 2em; color: #33cc99;">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                    </button>
+                    <button type="button" id="updateFeed" class="btn btn-outline-secondary">
+                        <span style="font-size: 2em; color: #F79800;">
+                            <i class="fas fa-sync-alt"></i>
+                        </span>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary">
+                        <span style="font-size: 2em; color: #33cc99;">
+                           <i class="fas fa-check" id="readedFeedItem"></i>
+                        </span>
+                    </button>
                 </div>
                 <div class="container-fuild pt-3">
                     <div class="card">
