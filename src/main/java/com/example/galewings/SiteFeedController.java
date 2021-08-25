@@ -1,6 +1,6 @@
 package com.example.galewings;
 
-import com.example.galewings.dto.ReadedDto;
+import com.example.galewings.dto.ReadiedDto;
 import com.example.galewings.dto.UpdateFeedDto;
 import com.example.galewings.entity.Feed;
 import com.example.galewings.entity.Site;
@@ -72,7 +72,7 @@ public class SiteFeedController {
     @PostMapping(value = "/readed")
     @ResponseBody
     @Transactional
-    public String readedFeed(@RequestBody ReadedDto dto) throws UnsupportedEncodingException {
+    public String readedFeed(@RequestBody ReadiedDto dto) throws UnsupportedEncodingException {
         Map<String, String> params = new HashMap<>();
         params.put("link", dto.getLink());
         sqlManager.executeUpdate(

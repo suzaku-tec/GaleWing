@@ -16,6 +16,7 @@ import axios from 'axios';
 
 import ElementEvent from './event/elementEvent';
 import UpdateFeed from './event/updateFeed';
+import AddSiteEvent from './event/addSiteEvent';
 
 window.onload = function () {
   // toggleボタンをセレクト
@@ -99,6 +100,8 @@ window.onload = function () {
     'click',
     document.getElementById('updateFeed'),
   );
+
+  new ElementEvent(new AddSiteEvent()).setup('click', document.getElementById('addSite'));
 };
 
 export default { hideModifier };
