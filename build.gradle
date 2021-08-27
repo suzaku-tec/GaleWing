@@ -1,12 +1,12 @@
 plugins {
-	id 'org.springframework.boot' version '2.5.3'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'java'
-	id "com.github.node-gradle.node" version "3.1.0"
+    id 'org.springframework.boot' version '2.5.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id "com.github.node-gradle.node" version "3.1.0"
 }
 
 tasks.withType(JavaCompile) {
-	options.encoding = 'UTF-8'
+    options.encoding = 'UTF-8'
 }
 
 group = 'com.example'
@@ -14,54 +14,60 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 repositories {
-	mavenCentral()
-	gradlePluginPortal()
+    mavenCentral()
+    gradlePluginPortal()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.5.3'
-	implementation 'org.springframework.boot:spring-boot-starter-web:2.5.3'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.3'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.5.3'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.5.3'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.3'
 
-	implementation 'com.miragesql:miragesql:2.1.0'
-	implementation 'org.xerial:sqlite-jdbc:3.36.0.1'
+    implementation 'com.miragesql:miragesql:2.1.0'
+    implementation 'org.xerial:sqlite-jdbc:3.36.0.1'
 
-	// https://mvnrepository.com/artifact/be.ceau/opml-parser
-	implementation 'be.ceau:opml-parser:2.2.0'
+    // https://mvnrepository.com/artifact/be.ceau/opml-parser
+    implementation 'be.ceau:opml-parser:2.2.0'
 
-	// https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2
-	implementation 'org.apache.commons:commons-dbcp2:2.9.0'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2
+    implementation 'org.apache.commons:commons-dbcp2:2.9.0'
 
-	// https://mvnrepository.com/artifact/org.springframework/spring-jdbc
-	implementation 'org.springframework:spring-jdbc:5.3.9'
+    // https://mvnrepository.com/artifact/org.springframework/spring-jdbc
+    implementation 'org.springframework:spring-jdbc:5.3.9'
 
-	implementation 'com.miragesql:miragesql-integration:2.1.0'
+    implementation 'com.miragesql:miragesql-integration:2.1.0'
 
-	// https://mvnrepository.com/artifact/com.rometools/rome
-	implementation 'com.rometools:rome:1.16.0'
+    // https://mvnrepository.com/artifact/com.rometools/rome
+    implementation 'com.rometools:rome:1.16.0'
 
-	// https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-core-asl
-	implementation 'org.codehaus.jackson:jackson-core-asl:1.9.13'
+    // https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-core-asl
+    implementation 'org.codehaus.jackson:jackson-core-asl:1.9.13'
 
-	// https://mvnrepository.com/artifact/com.google.guava/guava
-	implementation 'com.google.guava:guava:30.1.1-jre'
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    implementation 'com.google.guava:guava:30.1.1-jre'
 
-	implementation "com.github.node-gradle:gradle-node-plugin:3.1.0"
+    implementation "com.github.node-gradle:gradle-node-plugin:3.1.0"
+
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    implementation 'org.jsoup:jsoup:1.14.2'
+
+    // https://mvnrepository.com/artifact/commons-validator/commons-validator
+    implementation 'commons-validator:commons-validator:1.7'
 
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 task npmRun(type: NpmTask) {
-	npmCommand = ['run', 'gradlebuild']
-	execOverrides {
-		// The it variable contains the `ExecSpec`
-		it.ignoreExitValue = true
-		// We can also omit it since "it" is implicit
-		workingDir = file('src/main/javascript')
-	}
+    npmCommand = ['run', 'gradlebuild']
+    execOverrides {
+        // The it variable contains the `ExecSpec`
+        it.ignoreExitValue = true
+        // We can also omit it since "it" is implicit
+        workingDir = file('src/main/javascript')
+    }
 }
 
 apply plugin: 'com.github.node-gradle.node'
