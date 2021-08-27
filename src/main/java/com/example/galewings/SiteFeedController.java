@@ -58,6 +58,12 @@ public class SiteFeedController {
   @Autowired
   ObjectMapper mapper;
 
+  /**
+   * サイトリスト取得
+   *
+   * @return Siteテーブルの全データのJSON
+   * @throws JsonProcessingException
+   */
   @GetMapping("/sitelist")
   @ResponseBody
   @Transactional
@@ -68,6 +74,13 @@ public class SiteFeedController {
     return mapper.writeValueAsString(resultList);
   }
 
+  /**
+   * 対象サイトのフィードを取得
+   *
+   * @param uuid サイトUUID
+   * @return 対象サイトの未読フィードのデータJSON
+   * @throws JsonProcessingException
+   */
   @GetMapping("/feedlist")
   @ResponseBody
   @Transactional
@@ -89,6 +102,13 @@ public class SiteFeedController {
     return mapper.writeValueAsString(feeds);
   }
 
+  /**
+   * 対象ページを既読にする
+   *
+   * @param dto 既読にするページのリンク情報
+   * @return
+   * @throws UnsupportedEncodingException
+   */
   @PostMapping(value = "/readed")
   @ResponseBody
   @Transactional
@@ -102,6 +122,14 @@ public class SiteFeedController {
     return "";
   }
 
+  /**
+   * 対象サイトのフィード情報を更新する
+   *
+   * @param dto 対象サイト情報
+   * @return 対象フィード情報
+   * @throws IOException
+   * @throws FeedException
+   */
   @PostMapping(value = "/feed/update")
   @ResponseBody
   @Transactional
@@ -158,10 +186,16 @@ public class SiteFeedController {
     return mapper.writeValueAsString(feeds);
   }
 
+  /**
+   * サイトとそのサイトのRSS情報をDBに登録する
+   *
+   * @param dto 追加情報
+   * @throws IOException
+   */
   @PostMapping(value = "/addFeed")
   @ResponseBody
   @Transactional
-  public void addFeed(@RequestBody AddFeedDto dto) throws IOException {
+  public void addSiteFeed(@RequestBody AddFeedDto dto) throws IOException {
     String[] schemes = {"http", "https"};
     UrlValidator urlValidator = new UrlValidator(schemes);
     if (!urlValidator.isValid(dto.getLink())) {
@@ -196,6 +230,12 @@ public class SiteFeedController {
     }
   }
 
+  /**
+   * サイト内のRSSページへのリンク一覧を取得する
+   *
+   * @param link サイトリンク
+   * @return RSSページへのリンクリスト
+   */
   private List<String> searchRssUrlList(String link) {
     String domain = ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri().getHost();
     if (link.indexOf(link) < 0) {
@@ -216,6 +256,12 @@ public class SiteFeedController {
     }
   }
 
+  /**
+   * フィード情報の取得
+   *
+   * @param xmlUrl RSSのURL
+   * @return フィード情報
+   */
   private Optional<SyndFeed> getSyndFeed(String xmlUrl) {
     Optional<SyndFeed> result;
 
@@ -229,10 +275,23 @@ public class SiteFeedController {
     return result;
   }
 
+  /**
+   * サイトフィード情報
+   */
   private interface SiteFeed {
 
+    /**
+     * サイト情報
+     *
+     * @return サイト情報
+     */
     Site getSite();
 
+    /**
+     * フィード情報
+     *
+     * @return フィード情報
+     */
     Optional<SyndFeed> getOptionalSyndFeed();
   }
 }
