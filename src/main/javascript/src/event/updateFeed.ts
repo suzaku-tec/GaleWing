@@ -23,9 +23,17 @@ export default class UpdateFeed implements IElementEvent {
       })
       .then((response) => {
         console.log(response);
+
+        // 未読数の更新
+        response.data.siteFeedCounts.forEach((element: any) => {
+          var countElement = document.getElementById(element.uuid + '_count');
+          countElement.innerText = element.count;
+        });
+
+        // grid更新
         this.grid
           .updateConfig({
-            data: response.data,
+            data: response.data.feeds,
           })
           .forceRender();
       })

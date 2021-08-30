@@ -87,7 +87,16 @@ window.onload = function () {
         link: link,
       })
       .then((response) => {
-        var innerHTML = (event.target as any).innerHTML;
+        console.log(response);
+
+        // 未読数の更新
+        response.data.forEach((element: { uuid: string; count: number }) => {
+          var countElement = document.getElementById(element.uuid + '_count');
+          countElement.innerText = element.count.toString();
+        });
+
+        // 既読表示に変更
+        var innerHTML = (event.target as HTMLElement).innerHTML;
         (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-readed-link');
       })
       .catch((error) => {
