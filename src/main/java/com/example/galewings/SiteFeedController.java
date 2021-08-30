@@ -3,8 +3,10 @@ package com.example.galewings;
 import com.example.galewings.dto.AddFeedDto;
 import com.example.galewings.dto.ReadiedDto;
 import com.example.galewings.dto.UpdateFeedDto;
+import com.example.galewings.dto.output.FeedUpdate;
 import com.example.galewings.entity.Feed;
 import com.example.galewings.entity.Site;
+import com.example.galewings.entity.SiteFeedCount;
 import com.example.galewings.factory.FeedFactory;
 import com.example.galewings.factory.SiteFactory;
 import com.example.galewings.factory.SiteFactory.RssSyndFeed;
@@ -55,25 +57,6 @@ public class SiteFeedController {
   @Autowired
   FeedRepository feedRepository;
 
-  @Autowired
-  ObjectMapper mapper;
-
-  /**
-   * サイトリスト取得
-   *
-   * @return Siteテーブルの全データのJSON
-   * @throws JsonProcessingException
-   */
-  @GetMapping("/sitelist")
-  @ResponseBody
-  @Transactional
-  public String getSiteList() throws JsonProcessingException {
-    List<Site> resultList = sqlManager.getResultList(Site.class,
-        new ClasspathSqlResource("sql/select_all_site.sql"));
-    ObjectMapper mapper = new ObjectMapper();
-    return mapper.writeValueAsString(resultList);
-  }
-
   /**
    * 対象サイトのフィードを取得
    *
@@ -112,14 +95,19 @@ public class SiteFeedController {
   @PostMapping(value = "/readed")
   @ResponseBody
   @Transactional
-  public String readedFeed(@RequestBody ReadiedDto dto) throws UnsupportedEncodingException {
+  public String readedFeed(@RequestBody ReadiedDto dto)
+      throws UnsupportedEncodingException, JsonProcessingException {
     Map<String, String> params = new HashMap<>();
     params.put("link", dto.getLink());
     sqlManager.executeUpdate(
         new ClasspathSqlResource("sql/update_feed_readed.sql")
         , params
     );
-    return "";
+
+    List<SiteFeedCount> siteFeedCounts = siteRepository.getSiteFeedCount(dto.getLink());
+
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.writeValueAsString(siteFeedCounts);
   }
 
   /**
@@ -156,12 +144,12 @@ public class SiteFeedController {
           .filter(siteFeed -> siteFeed.getOptionalSyndFeed().isPresent())
           .forEach(siteFeed -> {
             siteFeed.getOptionalSyndFeed().get().getEntries().stream().filter(syndEntry -> {
-                  return !feedRepository.existFeed(syndEntry.getLink());
-                }).peek(
-                    syndEntry -> System.out.println(syndEntry.getTitle() + ":" + syndEntry.getLink()))
-                .map(syndEntry -> {
-                  return FeedFactory.create(syndEntry, siteFeed.getSite().uuid);
-                }).forEach(sqlManager::insertEntity);
+              return !feedRepository.existFeed(syndEntry.getLink());
+            }).map(syndEntry -> {
+              return FeedFactory.create(syndEntry, siteFeed.getSite().uuid);
+            }).peek(feed -> {
+              System.out.println(feed.getTitle() + ":" + feed.getLink());
+            }).forEach(sqlManager::insertEntity);
 
           });
 
@@ -182,8 +170,14 @@ public class SiteFeedController {
           new ClasspathSqlResource("sql/select_site_for_uuid.sql"), params);
     }
 
+    List<SiteFeedCount> siteFeedCounts = siteRepository.getSiteFeedCount();
+
+    FeedUpdate feedUpdate = new FeedUpdate();
+    feedUpdate.feeds = feeds;
+    feedUpdate.siteFeedCounts = siteFeedCounts;
+
     ObjectMapper mapper = new ObjectMapper();
-    return mapper.writeValueAsString(feeds);
+    return mapper.writeValueAsString(feedUpdate);
   }
 
   /**

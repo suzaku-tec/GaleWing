@@ -13,6 +13,7 @@
     background-color: rgba(255, 255, 255, 0.493);
     color: white;
 }
+
 /* アニメーション */
 main{
     transition: 0.3s all ease;
@@ -27,4 +28,9 @@ main{
 .rss-readed-link {
     text-decoration: none;
     color: #808080;
+}
+
+.page-content {
+	display: block;
+	width: 100%;
 }
