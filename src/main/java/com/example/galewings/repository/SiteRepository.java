@@ -7,6 +7,7 @@ import com.miragesql.miragesql.SqlManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,4 +44,27 @@ public class SiteRepository {
     return sqlManager.getResultList(SiteFeedCount.class,
         new ClasspathSqlResource("sql/site/select_site_count_for_link.sql"), params);
   }
+
+  @Transactional
+  public void insertSite(be.ceau.opml.entity.Outline outline) {
+    Map<String, String> params = new HashMap<>();
+    params.put("htmlUrl", outline.getAttribute("htmlUrl"));
+    int count = sqlManager.getCount(
+        new ClasspathSqlResource("sql/site/select_site_for_htmlUrl.sql"),
+        params
+    );
+
+    if (0 < count) {
+      return;
+    }
+
+    params = new HashMap<>();
+    params.put("uuid", UUID.randomUUID().toString());
+    params.put("title", outline.getAttribute("text"));
+    params.put("htmlUrl", outline.getAttribute("htmlUrl"));
+    params.put("xmlUrl", outline.getAttribute("xmlUrl"));
+
+    sqlManager.executeUpdate(new ClasspathSqlResource("sql/site/insert_site.sql"), params);
+  }
+
 }
