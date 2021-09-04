@@ -23,6 +23,7 @@ import axios from 'axios';
 import ElementEvent from './event/elementEvent';
 import UpdateFeed from './event/updateFeed';
 import AddSiteEvent from './event/addSiteEvent';
+import ExportOpml from './event/exportOpml';
 
 window.onload = function () {
   // toggleボタンをセレクト
@@ -117,6 +118,7 @@ window.onload = function () {
   );
 
   new ElementEvent(new AddSiteEvent()).setup('click', document.getElementById('addSite'));
+  new ElementEvent(new ExportOpml()).setup('click', document.getElementById('exportOpml'));
 };
 
 export default { hideModifier };
