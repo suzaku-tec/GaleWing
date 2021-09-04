@@ -24,6 +24,7 @@ import ElementEvent from './event/elementEvent';
 import UpdateFeed from './event/updateFeed';
 import AddSiteEvent from './event/addSiteEvent';
 import ExportOpml from './event/exportOpml';
+import ImportOpml from './event/importOpml';
 
 window.onload = function () {
   // toggleボタンをセレクト
@@ -32,15 +33,21 @@ window.onload = function () {
   let page = document.getElementsByTagName('main')[0];
   // 表示状態用の変数
   let showSidebar = true;
+  var sidemenu = document.getElementById('sidemenu');
+  var mainContent = document.getElementById('mainContent');
 
   // イベント追加
   sidebarToggler.addEventListener('click', () => {
     // 表示状態判別
     if (showSidebar) {
-      page.style.cssText = 'margin-left: -250px';
+      // page.style.cssText = 'margin-left: -250px';
+      sidemenu.classList.add('is-close');
+      mainContent.classList.add('wideMainContent');
       showSidebar = false;
     } else {
-      page.style.cssText = 'margin-left: 0px';
+      sidemenu.classList.remove('is-close');
+      mainContent.classList.remove('wideMainContent');
+      // page.style.cssText = 'margin-left: 0px';
       showSidebar = true;
     }
   });
@@ -119,6 +126,7 @@ window.onload = function () {
 
   new ElementEvent(new AddSiteEvent()).setup('click', document.getElementById('addSite'));
   new ElementEvent(new ExportOpml()).setup('click', document.getElementById('exportOpml'));
+  new ElementEvent(new ImportOpml()).setup('click', document.getElementById('importOpml'));
 };
 
 export default { hideModifier };

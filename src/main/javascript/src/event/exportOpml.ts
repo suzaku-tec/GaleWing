@@ -1,5 +1,4 @@
 import { IElementEvent } from './elementEvent';
-import axios from 'axios';
 
 export default class ExportOpml implements IElementEvent {
   constructor() {}
