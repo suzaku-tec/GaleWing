@@ -2,9 +2,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 // fortawesome
 import { library, dom } from '@fortawesome/fontawesome-svg-core';
-import { faBars, faCheck, faSyncAlt, faPlus } from '@fortawesome/free-solid-svg-icons/index';
+import {
+  faBars,
+  faCheck,
+  faSyncAlt,
+  faPlus,
+  faWrench,
+} from '@fortawesome/free-solid-svg-icons/index';
 
-library.add(faBars, faCheck, faSyncAlt, faPlus);
+library.add(faBars, faCheck, faSyncAlt, faPlus, faWrench);
 dom.watch();
 
 import { Grid, html } from 'gridjs';
@@ -17,6 +23,7 @@ import axios from 'axios';
 import ElementEvent from './event/elementEvent';
 import UpdateFeed from './event/updateFeed';
 import AddSiteEvent from './event/addSiteEvent';
+import ExportOpml from './event/exportOpml';
 
 window.onload = function () {
   // toggleボタンをセレクト
@@ -111,6 +118,7 @@ window.onload = function () {
   );
 
   new ElementEvent(new AddSiteEvent()).setup('click', document.getElementById('addSite'));
+  new ElementEvent(new ExportOpml()).setup('click', document.getElementById('exportOpml'));
 };
 
 export default { hideModifier };

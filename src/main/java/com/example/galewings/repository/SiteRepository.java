@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class SiteRepository {
@@ -24,6 +25,7 @@ public class SiteRepository {
     return site;
   }
 
+  @Transactional
   public List<Site> getAllSite() {
     return sqlManager.getResultList(Site.class, new ClasspathSqlResource(
         "sql/site/select_all_site.sql"));
