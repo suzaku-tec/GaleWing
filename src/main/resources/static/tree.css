@@ -35,10 +35,3 @@ ul,
     display: flex;
 }
 
-.main {
-  width: calc( 100% - 300px );
-}
-
-.side {
-  width: 300px;
-}

@@ -33,18 +33,22 @@ export default class AddSiteEvent implements IElementEvent {
     var modal = new Modal(document.getElementById('exampleModal'));
     modal.show();
 
-    document.getElementById('exampleModal').addEventListener('hidden.bs.modal', (event) => {
-      var modalBody = document.getElementById('modal-body');
-      while (modalBody.firstChild) {
-        modalBody.removeChild(modalBody.firstChild);
-      }
+    document.getElementById('exampleModal').addEventListener(
+      'hidden.bs.modal',
+      (event) => {
+        var modalBody = document.getElementById('modal-body');
+        while (modalBody.firstChild) {
+          modalBody.removeChild(modalBody.firstChild);
+        }
 
-      var modalFooter = document.getElementById('modal-footer');
-      while (modalFooter.firstChild) {
-        modalFooter.removeChild(modalFooter.firstChild);
-      }
+        var modalFooter = document.getElementById('modal-footer');
+        while (modalFooter.firstChild) {
+          modalFooter.removeChild(modalFooter.firstChild);
+        }
 
-      modal.dispose();
-    });
+        modal.dispose();
+      },
+      { once: true },
+    );
   }
 }

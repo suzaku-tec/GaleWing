@@ -13,20 +13,20 @@
 
 </head>
 
-<body class="h-100 bg-light">
+<body>
 <!-- 全ページを囲む要素 -->
-<main class="h-100">
-  <div class="page-wrapper d-flex flex-row h-100 w-100">
+<main class="container mw-100" role="main">
+  <div class="row">
     <input type="hidden" id="identifier" value="" th:value="${identifier}">
 
     <!-- サイトバーメニュー -->
-    <nav class="sidebar bg-primary bg-gradient">
+    <nav class="sidebar col-md-3" id="sidemenu">
       <div class="brand p-4">
         <h4>
           Sidabar Sample
         </h4>
       </div>
-      <ul class="nav flex-column m-o p-3" id="navi">
+      <ul class="nav flex-column m-o p-3 bg-primary" id="navi">
         <li class="nav-item mb-2">
           <a href="/settings" class="list-group-item">settings</a>
         </li>
@@ -47,7 +47,7 @@
     <!-- サイトバーメニュー -->
 
     <!-- 全ページの右のコンテンツ -->
-    <div class="page-content">
+    <div class="col-md-9" id="mainContent">
 
       <!-- トップバー -->
       <nav class="navbar px-3 bg-light border-bottom shadow-sm">
@@ -56,7 +56,7 @@
             <i class="fas fa-bars fa-lg"></i>
           </button>
         </div>
-        <ul class="navbar-nav d-flex flex-row">
+        <ul class="navbar-nav">
           <li class="nav-item ml-3 text-muted">
             Home
           </li>
@@ -95,7 +95,7 @@
             </span>
           </button>
           <ul class="dropdown-menu" aria-labelledby="toolDropdownMenuButton">
-            <li><a class="dropdown-item" href="#" id="inportOpml">inport</a></li>
+            <li><a class="dropdown-item" href="#" id="importOpml">import</a></li>
             <li><a class="dropdown-item" href="#" id="exportOpml">export</a></li>
           </ul>
         </div>
@@ -134,7 +134,7 @@
     </div>
   </div>
 </div>
-<div class="display: none;">
+<div style="display: none;">
   <div id="modalAddSiteBody">
     <p>フィードのURL もしくは、WebサイトのURL</p>
     <div>
@@ -147,6 +147,16 @@
   </div>
   <div id="modalAddSiteFooter">
     <button type="button" class="btn btn-primary modal-submit">complete!</button>
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
+  </div>
+  <div id="modalImportOpmlBody">
+    <div>
+      <label for="importOpmlFile" class="form-label">Upload Opml file</label>
+      <input class="form-control" type="file" id="importOpmlFile">
+    </div>
+  </div>
+  <div id="modalImportOpmlFooter">
+    <button type="button" class="btn btn-primary modal-submit">import</button>
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
   </div>
 </div>
