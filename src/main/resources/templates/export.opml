@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0" xmlns:th="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>[(${title})]</title>
+    <dateModified>[(${date})]</dateModified>
+  </head>
+  <body>
+[# th:each="outline : ${outlines}"]
+    <outline text="[(${outline.title})]" htmlUrl="[(${outline.htmlUrl})]" xmlUrl="[(${outline.xmlUrl})]"
+      type="rss"/>
+[/]
+  </body>
+</opml>
