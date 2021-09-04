@@ -1,7 +1,12 @@
 /* 重要な部分 */
 .sidebar{
-    max-width: 250px;
-    min-width: 250px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transition-duration: 1s;
+    max-height: 100vh;
 }
 
 /* 見栄え */
@@ -9,6 +14,7 @@
     background-color: #0d6efdc9;
     color: white;
 }
+
 .sidebar .nav-link{
     background-color: rgba(255, 255, 255, 0.493);
     color: white;
@@ -32,5 +38,27 @@ main{
 
 .page-content {
 	display: block;
-	width: 100%;
+}
+
+.container {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.is-close {
+  transform: translateX(-16em);
+  transition-duration: 1s;
+}
+
+.wideMainContent {
+  transform: translateX(-16em);
+  transition-duration: 1s;
+}
+
+.mainContent {
+  transition-duration: 1s;
+}
+
+body {
+  max-height: 100vh;
 }

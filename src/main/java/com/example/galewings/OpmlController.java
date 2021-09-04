@@ -1,7 +1,11 @@
 package com.example.galewings;
 
+import be.ceau.opml.OpmlParseException;
+import be.ceau.opml.OpmlParser;
+import be.ceau.opml.entity.Opml;
 import com.example.galewings.entity.Site;
 import com.example.galewings.repository.SiteRepository;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -18,6 +22,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -54,6 +61,29 @@ public class OpmlController {
         "attachment; filename*=utf-8''" + URLEncoder.encode("export.opml", StandardCharsets.UTF_8));
     return new ResponseEntity<>(opmlStr.getBytes(StandardCharsets.UTF_8), header, HttpStatus.OK);
   }
+
+  @RequestMapping(value = "/import", method = RequestMethod.POST)
+  @ResponseBody
+  public void importOpml(@RequestParam("file") MultipartFile multipartFile)
+      throws IOException, OpmlParseException {
+    if (multipartFile.isEmpty()) {
+      System.out.println("file is empty");
+    }
+
+    byte[] bytes = multipartFile.getBytes();
+    Opml opml = new OpmlParser().parse(new String(bytes));
+    opml.getBody().getOutlines().forEach(outline -> importOpml(outline));
+
+  }
+
+  private void importOpml(be.ceau.opml.entity.Outline outline) {
+    if ("rss".equals(outline.getAttribute("type"))) {
+      siteRepository.insertSite(outline);
+    } else {
+      outline.getSubElements().forEach(ol -> importOpml(ol));
+    }
+  }
+
 
   private class Outline {
 
