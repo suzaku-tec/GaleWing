@@ -62,3 +62,7 @@ main{
 body {
   max-height: 100vh;
 }
+
+.hiddenContent {
+  display: none;
+}
