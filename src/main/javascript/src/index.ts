@@ -8,9 +8,11 @@ import {
   faSyncAlt,
   faPlus,
   faWrench,
+  faTh,
+  faIdCard,
 } from '@fortawesome/free-solid-svg-icons/index';
 
-library.add(faBars, faCheck, faSyncAlt, faPlus, faWrench);
+library.add(faBars, faCheck, faSyncAlt, faPlus, faWrench, faTh, faIdCard);
 dom.watch();
 
 import { Grid, html } from 'gridjs';
@@ -25,6 +27,8 @@ import UpdateFeed from './event/updateFeed';
 import AddSiteEvent from './event/addSiteEvent';
 import ExportOpml from './event/exportOpml';
 import ImportOpml from './event/importOpml';
+import GridLayoutChgEvent from './event/gridLayoutChgEvent';
+import CardLayoutChgEvent from './event/cardLayoutChgEvent';
 
 window.onload = function () {
   // toggleボタンをセレクト
@@ -127,6 +131,15 @@ window.onload = function () {
   new ElementEvent(new AddSiteEvent()).setup('click', document.getElementById('addSite'));
   new ElementEvent(new ExportOpml()).setup('click', document.getElementById('exportOpml'));
   new ElementEvent(new ImportOpml()).setup('click', document.getElementById('importOpml'));
+  new ElementEvent(new GridLayoutChgEvent()).setup(
+    'click',
+    document.getElementById('gridLayoutItem'),
+  );
+
+  new ElementEvent(new CardLayoutChgEvent()).setup(
+    'click',
+    document.getElementById('cardLayoutItem'),
+  );
 };
 
 export default { hideModifier };
