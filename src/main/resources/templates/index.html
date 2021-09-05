@@ -67,41 +67,57 @@
             Login
           </li>
         </ul>
+        <ul class="nav nav-tabs">
+          <li class="nav-item" id="gridLayoutItem">
+            <div class="nav-link active" aria-current="page" data-layout="gridLayout">
+              <i class="fas fa-th"></i>
+            </div>
+          </li>
+          <li class="nav-item" id="cardLayoutItem">
+            <div class="nav-link" aria-current="page" data-layout="cardLayout">
+              <i class="fas fa-id-card"></i>
+            </div>
+          </li>
+        </ul>
       </nav>
       <!-- トップバー -->
 
       <!-- 下のコンテンツ -->
       <div class="content p-3">
-        <div class="page-title border-bottom pb-2 ">
-          <button type="button" id="addSite" class="btn btn-outline-secondary">
+        <div>
+          <div class="page-title border-bottom pb-2">
+            <button type="button" id="addSite" class="btn btn-outline-secondary">
                         <span style="font-size: 2em; color: #33cc99;">
                             <i class="fas fa-plus"></i>
                         </span>
-          </button>
-          <button type="button" id="updateFeed" class="btn btn-outline-secondary">
+            </button>
+            <button type="button" id="updateFeed" class="btn btn-outline-secondary">
                         <span style="font-size: 2em; color: #F79800;">
                             <i class="fas fa-sync-alt"></i>
                         </span>
-          </button>
-          <button type="button" class="btn btn-outline-secondary">
+            </button>
+            <button type="button" class="btn btn-outline-secondary">
                         <span style="font-size: 2em; color: #33cc99;">
                            <i class="fas fa-check" id="readedFeedItem"></i>
                         </span>
-          </button>
-          <button class="btn btn-outline-secondary" data-bs-toggle="dropdown" aria-expanded="false"
-                  id="toolDropdownMenuButton">
+            </button>
+            <button class="btn btn-outline-secondary" data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    id="toolDropdownMenuButton">
             <span style="font-size: 2em;">
               <i class="fas fa-wrench" id="tool"></i>
             </span>
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="toolDropdownMenuButton">
-            <li><a class="dropdown-item" href="#" id="importOpml">import</a></li>
-            <li><a class="dropdown-item" href="#" id="exportOpml">export</a></li>
-          </ul>
-        </div>
-        <div class="container-fuild pt-3">
-          <div class="card">
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="toolDropdownMenuButton">
+              <li><a class="dropdown-item" href="#" id="importOpml">import</a></li>
+              <li><a class="dropdown-item" href="#" id="exportOpml">export</a></li>
+            </ul>
+          </div>
+          <div id="gridLayout" class="contentLayout">
             <div id="wrapper"></div>
+          </div>
+          <div id="cardLayout" class="contentLayout hiddenContent">
+            <div id="cardWrapper"></div>
           </div>
         </div>
       </div>
