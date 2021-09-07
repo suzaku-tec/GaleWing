@@ -37,8 +37,6 @@ import GaleWingApi from './galeWingApi';
 window.onload = function () {
   var api = new GaleWingApi();
 
-  init(12);
-
   // toggleボタンをセレクト
   let sidebarToggler = document.getElementById('sidebarToggler');
 
@@ -51,20 +49,17 @@ window.onload = function () {
   sidebarToggler.addEventListener('click', () => {
     // 表示状態判別
     if (showSidebar) {
-      // page.style.cssText = 'margin-left: -250px';
       sidemenu.classList.add('is-close');
       mainContent.classList.add('wideMainContent');
       showSidebar = false;
     } else {
       sidemenu.classList.remove('is-close');
       mainContent.classList.remove('wideMainContent');
-      // page.style.cssText = 'margin-left: 0px';
       showSidebar = true;
     }
   });
 
   var uri = new URL(window.location.href);
-  var ajaxUrl = uri.origin + '/feedlist' + location.search;
 
   api
     .getFeedList()
@@ -125,6 +120,8 @@ window.onload = function () {
             console.log(error);
           });
       });
+
+      init(9, 3, res.data);
     })
     .catch((error) => {
       throw new Error(error);

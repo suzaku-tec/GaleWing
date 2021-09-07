@@ -1,26 +1,19 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-const imgStyle = {
-  width: "18rem"
-}
-
-export default function init(count: number) {
+export default function init(count: number, col: number, feedList: any[]) {
+  const gridColClass = "row row-cols-" + col;
   const CardGridLayout: React.FunctionComponent<{ compiler: string, framework: string }> = (props) => {
     return (
       <div>
-        <div>{props.compiler}</div>
-        <div>{props.framework}</div>
-        <div className="row row-cols-2">
+        <div className={gridColClass}>
         {
-          Array(count).fill('test').map((_, i) => {
-            console.log(i)
+          feedList.slice(0, count).map((feed, i) => {
             return (
-              <div className="card" style={imgStyle}>
+              <div className="col">
               <img src="" className="card-img-top" alt="..."></img>
               <div className="card-body">
-                <h5 className="card-title">Card title</h5>
-                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <h5 className="card-title">{feed.title}</h5>
               </div>
             </div>
             );
