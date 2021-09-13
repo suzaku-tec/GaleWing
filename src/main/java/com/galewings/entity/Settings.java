@@ -6,13 +6,16 @@ import com.miragesql.miragesql.annotation.Table;
 @Table(name = "setting")
 public class Settings {
 
-    @Column(name = "id")
-    public String id;
+  @Column(name = "id")
+  public String id;
 
-    @Column(name = "name")
-    public String name;
+  @Column(name = "setting")
+  public String setting;
 
-    @Column(name = "setting")
-    public String setting;
+  @Column(name = "overview")
+  public String overview;
+
+  @Column(name = "description")
+  public String description;
 
 }
