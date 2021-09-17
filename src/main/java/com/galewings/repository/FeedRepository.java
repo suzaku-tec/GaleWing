@@ -41,5 +41,12 @@ public class FeedRepository {
         new ClasspathSqlResource("sql/feed/select_site_feed.sql"), params);
   }
 
+  public int updateSiteFeedRead(String identifier) {
+    Map<String, String> params = new HashMap<>();
+    params.put("identifier", identifier);
+
+    return sqlManager.executeUpdate(new ClasspathSqlResource("sql/feed/update_site_feed_read.sql"),
+        params);
+  }
 
 }

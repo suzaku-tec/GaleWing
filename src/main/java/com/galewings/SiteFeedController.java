@@ -3,6 +3,7 @@ package com.galewings;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galewings.dto.AddFeedDto;
+import com.galewings.dto.ReadAllShowFeedDto;
 import com.galewings.dto.ReadiedDto;
 import com.galewings.dto.UpdateFeedDto;
 import com.galewings.dto.output.FeedUpdate;
@@ -36,6 +37,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -222,6 +224,21 @@ public class SiteFeedController {
             .forEach(sqlManager::insertEntity);
       });
     }
+  }
+
+  @PostMapping(value = "/readAllShowFeed", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseBody
+  @Transactional
+  public String readAllShowFeed(
+      @RequestBody ReadAllShowFeedDto readAllShowFeedDto)
+      throws JsonProcessingException {
+    feedRepository.updateSiteFeedRead(readAllShowFeedDto.getIdentifier());
+
+    List<SiteFeedCount> resultList = siteRepository.getSiteFeedCount();
+
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.writeValueAsString(resultList);
+
   }
 
   /**
