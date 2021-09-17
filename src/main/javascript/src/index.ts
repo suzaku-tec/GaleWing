@@ -29,6 +29,7 @@ import ExportOpml from './event/exportOpml';
 import ImportOpml from './event/importOpml';
 import GridLayoutChgEvent from './event/gridLayoutChgEvent';
 import CardLayoutChgEvent from './event/cardLayoutChgEvent';
+import ReadAllShowFeed from './event/readAllShowFeed';
 
 import init from './layout/cardGridLayout';
 
@@ -90,6 +91,11 @@ window.onload = function () {
       new ElementEvent(new UpdateFeed('identifier', grid)).setup(
         'click',
         document.getElementById('updateFeed'),
+      );
+
+      new ElementEvent(new ReadAllShowFeed(grid)).setup(
+        'click',
+        document.getElementById('readAllShowFeed'),
       );
 
       grid.on('rowClick', (event, row) => {
