@@ -2,6 +2,7 @@ package com.galewings.repository;
 
 import com.galewings.entity.Site;
 import com.galewings.entity.SiteFeedCount;
+import com.galewings.utility.FaviconUtil;
 import com.miragesql.miragesql.ClasspathSqlResource;
 import com.miragesql.miragesql.SqlManager;
 import java.util.HashMap;
@@ -17,6 +18,9 @@ public class SiteRepository {
 
   @Autowired
   SqlManager sqlManager;
+
+  @Autowired
+  FaviconUtil faviconUtil;
 
   public Site getSite(String uuid) {
     Map<String, String> params = new HashMap<>();
@@ -58,11 +62,14 @@ public class SiteRepository {
       return;
     }
 
+    var faviconBase64 = faviconUtil.getBase64Favicon(outline.getAttribute("htmlUrl")).get();
+
     params = new HashMap<>();
     params.put("uuid", UUID.randomUUID().toString());
     params.put("title", outline.getAttribute("text"));
     params.put("htmlUrl", outline.getAttribute("htmlUrl"));
     params.put("xmlUrl", outline.getAttribute("xmlUrl"));
+    params.put("faviconBase64", faviconBase64);
 
     sqlManager.executeUpdate(new ClasspathSqlResource("sql/site/insert_site.sql"), params);
   }
