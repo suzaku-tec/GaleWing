@@ -148,8 +148,6 @@ public class SiteFeedController {
               return !feedRepository.existFeed(syndEntry.getLink());
             }).map(syndEntry -> {
               return FeedFactory.create(syndEntry, siteFeed.getSite().uuid);
-            }).peek(feed -> {
-              System.out.println(feed.getTitle() + ":" + feed.getLink());
             }).forEach(sqlManager::insertEntity);
 
           });

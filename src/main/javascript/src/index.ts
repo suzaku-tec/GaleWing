@@ -118,8 +118,13 @@ window.onload = function () {
             });
 
             // 既読表示に変更
-            var innerHTML = (event.target as HTMLElement).innerHTML;
-            (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-readed-link');
+            if ((event.target as any).localName == 'a') {
+              (event.target as HTMLElement).classList.remove('rss-link');
+              (event.target as HTMLElement).classList.add('rss-readed-link');
+            } else {
+              var innerHTML = (event.target as HTMLElement).innerHTML;
+              (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-readed-link');
+            }
           })
           .catch((error) => {
             console.log(error);
