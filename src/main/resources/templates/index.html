@@ -37,7 +37,9 @@
         </li>
         <li class="mb-2" th:each="site: ${sitelist}" id="siteList">
           <a href="" class="list-group-item" th:id="${site.uuid}"
-             th:href="@{/(uuid=${site.uuid})}">[[${site.title}]]：
+             th:href="@{/(uuid=${site.uuid})}"> <img
+              th:src="'data:image/png;base64,' + ${site.faviconBase64}">
+            [[${site.title}]]：
             <span th:id="${site.uuid} + '_count'" class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
 
         </li>

@@ -2,10 +2,12 @@ insert into site(
 uuid,
 title,
 htmlUrl,
-xmlUrl
+xmlUrl,
+faviconBase64
 ) values (
 /*uuid*/,
 /*title*/,
 /*htmlUrl*/,
-/*xmlUrl*/
+/*xmlUrl*/,
+/*faviconBase64*/
 )

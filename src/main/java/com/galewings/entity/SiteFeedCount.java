@@ -13,4 +13,6 @@ public class SiteFeedCount {
   @Column(name = "count")
   public int count;
 
+  @Column(name = "faviconBase64")
+  public String faviconBase64;
 }

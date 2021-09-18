@@ -12,7 +12,6 @@ import com.galewings.entity.Site;
 import com.galewings.entity.SiteFeedCount;
 import com.galewings.factory.FeedFactory;
 import com.galewings.factory.SiteFactory;
-import com.galewings.factory.SiteFactory.RssSyndFeed;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.SiteRepository;
 import com.google.common.base.Strings;
@@ -204,17 +203,7 @@ public class SiteFeedController {
       var url = rssUrlList.get(0);
       Optional<SyndFeed> syndFeedOptional = getSyndFeed(url);
       syndFeedOptional.ifPresent(syndFeed -> {
-        Site site = SiteFactory.create(new RssSyndFeed() {
-          @Override
-          public String getRssUrl() {
-            return url;
-          }
-
-          @Override
-          public SyndFeed getSyndFeed() {
-            return syndFeed;
-          }
-        });
+        Site site = SiteFactory.create(url, syndFeed);
 
         // サイト追加
         sqlManager.insertEntity(site);

@@ -65,7 +65,6 @@ window.onload = function () {
   api
     .getFeedList()
     .then((res) => {
-      const uuid = new URLSearchParams(window.location.search).get('uuid');
       var grid = new Grid({
         columns: [
           {
@@ -132,8 +131,6 @@ window.onload = function () {
     .catch((error) => {
       throw new Error(error);
     });
-
-  const uuid = new URLSearchParams(window.location.search).get('uuid');
 
   // init event
   new ElementEvent(new AddSiteEvent()).setup('click', document.getElementById('addSite'));
