@@ -6,18 +6,24 @@ import java.text.SimpleDateFormat;
 
 public class FeedFactory {
 
-    public static Feed create(SyndEntry syndEntry, String uuid) {
-        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+  public static Feed create(SyndEntry syndEntry, String uuid) {
+    SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 
-        Feed f = new Feed();
-        f.uuid = uuid;
-        f.title = syndEntry.getTitle();
-        f.link = syndEntry.getLink();
-        f.uri = syndEntry.getUri();
-        f.author = syndEntry.getAuthor();
-        f.comments = syndEntry.getComments();
-        f.publishedDate = sdFormat.format(syndEntry.getPublishedDate());
+    Feed f = new Feed();
+    f.uuid = uuid;
+    f.title = syndEntry.getTitle();
+    f.link = syndEntry.getLink();
+    f.uri = syndEntry.getUri();
+    f.author = syndEntry.getAuthor();
+    f.comments = syndEntry.getComments();
 
-        return f;
+    try {
+      f.publishedDate = sdFormat.format(syndEntry.getPublishedDate());
+    } catch (NullPointerException e) {
+      e.printStackTrace();
+      f.publishedDate = null;
     }
+
+    return f;
+  }
 }
