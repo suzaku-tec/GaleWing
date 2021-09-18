@@ -18,4 +18,7 @@ public class Site {
 
   @Column(name = "xmlUrl")
   public String xmlUrl;
+
+  @Column(name = "faviconBase64")
+  public String faviconBase64;
 }

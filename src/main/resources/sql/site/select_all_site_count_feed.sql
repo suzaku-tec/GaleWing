@@ -2,6 +2,7 @@ select
     s.uuid
     , s.title
     , ifnull(f.count, 0) as count
+    , s.faviconBase64
 from
     site s
     left join (

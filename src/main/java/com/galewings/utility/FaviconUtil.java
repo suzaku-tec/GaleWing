@@ -1,71 +1,47 @@
 package com.galewings.utility;
 
-import com.google.common.base.Strings;
-import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Base64;
 import java.util.Optional;
 import javax.imageio.ImageIO;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FaviconUtil {
 
-  public Optional<BufferedImage> getFavigon(String url) throws MalformedURLException {
-
-    if (!url.contains("favicon")) {
-      throw new IllegalArgumentException("not contains favicon");
-    }
-
+  public Optional<String> getBase64Favicon(String url) {
     try {
-      URL target = new URL(url);
-      return Optional.of(ImageIO.read(target));
+      String domain = toDomain(url);
+      URL favGet = new URL("http://www.google.com/s2/favicons?domain=" + domain);
+
+      var img = ImageIO.read(favGet);
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      ImageIO.write(img, "png", baos);
+      baos.flush();
+      byte[] imageInByte = baos.toByteArray();
+      baos.close();
+
+      return Optional.of(Base64.getEncoder().encodeToString(imageInByte));
+
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+      return Optional.empty();
     } catch (MalformedURLException e) {
-      throw e;
+      e.printStackTrace();
+      return Optional.empty();
     } catch (IOException e) {
-      return getFaviconForLinkTag(url);
+      e.printStackTrace();
+      return Optional.empty();
     }
   }
 
-  private Optional<BufferedImage> getFaviconForLinkTag(String url) {
-    Document doc = null;
-    try {
-      doc = Jsoup.connect(url).get();
-    } catch (IOException e) {
-      return Optional.empty();
-    }
-
-    Elements faviconEl = doc.select("link[rel='shortcut icon']");
-    if (faviconEl == null || faviconEl.size() <= 0) {
-      faviconEl = doc.select("link[rel='icon']");
-    }
-
-    if (faviconEl == null || faviconEl.size() <= 0) {
-      var favicon = faviconEl.stream().map(element -> element.attr("href"))
-          .filter(s -> !Strings.isNullOrEmpty(s))
-          .map(this::convertOptional)
-          .map(Optional::orElseThrow)
-          .findFirst().orElseThrow();
-
-      try {
-        return Optional.of(ImageIO.read(favicon));
-      } catch (IOException e) {
-        return Optional.empty();
-      }
-    }
-
-    return Optional.empty();
-  }
-
-  private Optional<URL> convertOptional(String url) {
-    try {
-      return Optional.of(new URL(url));
-    } catch (MalformedURLException e) {
-      return Optional.empty();
-    }
+  private String toDomain(String url) throws URISyntaxException {
+    URI uri = new URI(url);
+    return uri.getRawAuthority();
   }
 }
