@@ -66,3 +66,7 @@ body {
 .hiddenContent {
   display: none;
 }
+
+.list-group-item-selected {
+  border: solid 2px #ff6a00;
+}

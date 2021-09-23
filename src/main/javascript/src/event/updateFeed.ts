@@ -2,6 +2,7 @@ import { Grid } from 'gridjs';
 import axios from 'axios';
 import { IElementEvent } from './elementEvent';
 
+import UpdateMessageEvent from './updateMessageEvent';
 export default class UpdateFeed implements IElementEvent {
   uuidElementId: string;
   grid: Grid;
@@ -12,6 +13,9 @@ export default class UpdateFeed implements IElementEvent {
   }
 
   execute() {
+    var ume = new UpdateMessageEvent();
+    ume.execute();
+
     var uri = new URL(window.location.href);
 
     var uuid = (<HTMLInputElement>document.getElementById(this.uuidElementId)).value;
@@ -39,6 +43,7 @@ export default class UpdateFeed implements IElementEvent {
       })
       .catch((error) => {
         console.log(error);
-      });
+      })
+      .finally(() => ume.close());
   }
 }

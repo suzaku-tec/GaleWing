@@ -23,7 +23,7 @@
     <nav class="sidebar col-md-3" id="sidemenu">
       <div class="brand p-4">
         <h4>
-          Sidabar Sample
+          Site List
         </h4>
       </div>
       <ul class="nav flex-column m-o p-3 bg-primary" id="navi">
@@ -36,12 +36,20 @@
           <a href="/" class="list-group-item">All</a>
         </li>
         <li class="mb-2" th:each="site: ${sitelist}" id="siteList">
-          <a href="" class="list-group-item" th:id="${site.uuid}"
-             th:href="@{/(uuid=${site.uuid})}"> <img
-              th:src="'data:image/png;base64,' + ${site.faviconBase64}">
-            [[${site.title}]]：
-            <span th:id="${site.uuid} + '_count'" class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
-
+          <th:block th:if="${site.uuid == identifier}">
+            <a href="" class="list-group-item bg-warning" th:id="${site.uuid}"
+               th:href="@{/(uuid=${site.uuid})}"> <img
+                th:src="'data:image/png;base64,' + ${site.faviconBase64}">
+              [[${site.title}]]：
+              <span th:id="${site.uuid} + '_count'" class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
+          </th:block>
+          <th:block th:if="${!(site.uuid == identifier)}">
+            <a href="" class="list-group-item" th:id="${site.uuid}"
+               th:href="@{/(uuid=${site.uuid})}"> <img
+                th:src="'data:image/png;base64,' + ${site.faviconBase64}">
+              [[${site.title}]]：
+              <span th:id="${site.uuid} + '_count'" class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
+          </th:block>
         </li>
       </ul>
       <div id="test"></div>
@@ -138,9 +146,9 @@
      aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header" id="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
+        <button type="button" class="btn-close" id="modal-header-btn-close" data-bs-dismiss="modal"
                 aria-label="Close"></button>
       </div>
       <div class="modal-body" id="modal-body">
@@ -177,6 +185,13 @@
   <div id="modalImportOpmlFooter">
     <button type="button" class="btn btn-primary modal-submit">import</button>
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
+  </div>
+  <div id="updateMessageModal">
+    <center>
+      <div class="spinner-grow" role="status">
+      </div>
+      <span>Updating...</span>
+    </center>
   </div>
 </div>
 
