@@ -14,3 +14,4 @@ FROM
     "feed" 
 WHERE
     readed = false
+order by publishedDate DESC

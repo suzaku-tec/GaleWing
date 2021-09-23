@@ -17,3 +17,4 @@ from
             uuid
     ) f
         on s.uuid = f.uuid
+order by count desc
