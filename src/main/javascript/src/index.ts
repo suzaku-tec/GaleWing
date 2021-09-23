@@ -85,6 +85,7 @@ window.onload = function () {
         ],
         pagination: true,
         sort: true,
+        search: true,
         data: res.data,
       }).render(document.getElementById('wrapper'));
       new ElementEvent(new UpdateFeed('identifier', grid)).setup(
