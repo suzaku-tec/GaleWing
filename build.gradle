@@ -18,6 +18,13 @@ repositories {
     gradlePluginPortal()
 }
 
+// tag::jar[]
+jar {
+    archiveBaseName = 'GaleWings'
+    archiveVersion = '0.1.0'
+}
+// end::jar[]
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.5.3'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.5.3'
