@@ -35,21 +35,23 @@
         <li class="nav-item mb-2">
           <a href="/" class="list-group-item">All</a>
         </li>
-        <li class="mb-2" th:each="site: ${sitelist}" id="siteList">
-          <th:block th:if="${site.uuid == identifier}">
-            <a href="" class="list-group-item bg-warning" th:id="${site.uuid}"
-               th:href="@{/(uuid=${site.uuid})}"> <img
-                th:src="'data:image/png;base64,' + ${site.faviconBase64}">
-              [[${site.title}]]：
-              <span th:id="${site.uuid} + '_count'" class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
-          </th:block>
-          <th:block th:if="${!(site.uuid == identifier)}">
-            <a href="" class="list-group-item" th:id="${site.uuid}"
-               th:href="@{/(uuid=${site.uuid})}"> <img
-                th:src="'data:image/png;base64,' + ${site.faviconBase64}">
-              [[${site.title}]]：
-              <span th:id="${site.uuid} + '_count'" class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
-          </th:block>
+        <li class="mb-2" id="siteList">
+          <div th:each="site: ${sitelist}">
+            <th:block th:if="${site.uuid == identifier}">
+              <a href="" class="list-group-item bg-warning" th:id="${site.uuid}"
+                 th:href="@{/(uuid=${site.uuid})}"> <img
+                  th:src="'data:image/png;base64,' + ${site.faviconBase64}">
+                [[${site.title}]]：
+                <span th:id="${site.uuid} + '_count'" class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
+            </th:block>
+            <th:block th:if="${!(site.uuid == identifier)}">
+              <a href="" class="list-group-item" th:id="${site.uuid}"
+                 th:href="@{/(uuid=${site.uuid})}"> <img
+                  th:src="'data:image/png;base64,' + ${site.faviconBase64}">
+                [[${site.title}]]：
+                <span th:id="${site.uuid} + '_count'" class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
+            </th:block>
+          </div>
         </li>
       </ul>
       <div id="test"></div>
