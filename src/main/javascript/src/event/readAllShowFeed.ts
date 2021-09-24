@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { IElementEvent } from './elementEvent';
 import { Grid } from 'gridjs';
+import { getSite } from '../siteList';
 
 export default class ReadAllShowFeed implements IElementEvent {
   private grid: Grid;
@@ -20,14 +21,23 @@ export default class ReadAllShowFeed implements IElementEvent {
         identifier: identifier,
       })
       .then((response) => {
-        this.updateSiteFeedCount(response.data);
-        this.grid
-          .updateConfig({
-            data: [],
-          })
-          .forceRender();
+        // this.updateSiteFeedCount(response.data);
+        // this.grid
+        //   .updateConfig({
+        //     data: [],
+        //   })
+        //   .forceRender();
+        return;
       })
-      .catch((error) => {});
+      .catch((error) => {})
+      .finally(() => {
+        var site = getSite(identifier);
+        console.log(site);
+        if (site.next) {
+          var anchor = <HTMLAnchorElement>site.next;
+          location.href = anchor.href;
+        }
+      });
   }
 
   updateSiteFeedCount(data: [{ uuid: string; title: string; count: number }]) {
