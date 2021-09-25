@@ -74,4 +74,16 @@ public class SiteRepository {
     sqlManager.executeUpdate(new ClasspathSqlResource("sql/site/insert_site.sql"), params);
   }
 
+  @Transactional
+  public boolean delete(String uuid) {
+    Map<String, String> params = new HashMap<>();
+    params.put("uuid", uuid);
+    int siteDelCnt = sqlManager.executeUpdate(new ClasspathSqlResource("sql/site/delete.sql"),
+        params);
+
+    sqlManager.executeUpdate(new ClasspathSqlResource("sql/feed/delete.sql"),
+        params);
+
+    return 0 < siteDelCnt;
+  }
 }
