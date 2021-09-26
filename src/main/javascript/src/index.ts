@@ -36,8 +36,6 @@ import init from './layout/cardGridLayout';
 import GaleWingApi from './galeWingApi';
 
 window.onload = function () {
-  var api = new GaleWingApi();
-
   // toggleボタンをセレクト
   let sidebarToggler = document.getElementById('sidebarToggler');
 
@@ -62,8 +60,9 @@ window.onload = function () {
 
   var uri = new URL(window.location.href);
 
+  var api = GaleWingApi.getInstance();
   api
-    .getFeedList()
+    .getFeedList(window.location.href)
     .then((res) => {
       var grid = new Grid({
         columns: [
