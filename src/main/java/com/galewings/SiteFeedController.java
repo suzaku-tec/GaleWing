@@ -128,7 +128,7 @@ public class SiteFeedController {
     List<Feed> feeds;
     if (Strings.isNullOrEmpty(dto.getUuid())) {
       siteRepository.getAllSite()
-          .stream()
+          .parallelStream()
           .map(site -> {
             return new SiteFeed() {
               @Override
@@ -143,13 +143,13 @@ public class SiteFeedController {
             };
           })
           .filter(siteFeed -> siteFeed.getOptionalSyndFeed().isPresent())
+          .sequential()
           .forEach(siteFeed -> {
             siteFeed.getOptionalSyndFeed().get().getEntries().stream().filter(syndEntry -> {
               return !feedRepository.existFeed(syndEntry.getLink());
             }).map(syndEntry -> {
               return FeedFactory.create(syndEntry, siteFeed.getSite().uuid);
             }).forEach(sqlManager::insertEntity);
-
           });
 
       feeds = sqlManager.getResultList(Feed.class,

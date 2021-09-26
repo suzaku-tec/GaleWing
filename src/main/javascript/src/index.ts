@@ -10,9 +10,10 @@ import {
   faWrench,
   faTh,
   faIdCard,
+  faCogs,
 } from '@fortawesome/free-solid-svg-icons/index';
 
-library.add(faBars, faCheck, faSyncAlt, faPlus, faWrench, faTh, faIdCard);
+library.add(faBars, faCheck, faSyncAlt, faPlus, faWrench, faTh, faIdCard, faCogs);
 dom.watch();
 
 import { Grid, html } from 'gridjs';
