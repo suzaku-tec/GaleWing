@@ -1,4 +1,4 @@
-package com.galewings;
+package com.galewings.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
