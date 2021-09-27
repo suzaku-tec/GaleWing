@@ -1,4 +1,4 @@
-package com.galewings;
+package com.galewings.controller;
 
 import be.ceau.opml.OpmlParseException;
 import be.ceau.opml.OpmlParser;
