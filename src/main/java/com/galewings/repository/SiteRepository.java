@@ -2,7 +2,7 @@ package com.galewings.repository;
 
 import com.galewings.entity.Site;
 import com.galewings.entity.SiteFeedCount;
-import com.galewings.utility.FaviconUtil;
+import com.galewings.service.FaviconService;
 import com.miragesql.miragesql.ClasspathSqlResource;
 import com.miragesql.miragesql.SqlManager;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class SiteRepository {
   SqlManager sqlManager;
 
   @Autowired
-  FaviconUtil faviconUtil;
+  FaviconService faviconUtil;
 
   public Site getSite(String uuid) {
     Map<String, String> params = new HashMap<>();
