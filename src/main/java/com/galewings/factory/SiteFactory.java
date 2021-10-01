@@ -1,7 +1,7 @@
 package com.galewings.factory;
 
 import com.galewings.entity.Site;
-import com.galewings.utility.FaviconUtil;
+import com.galewings.service.FaviconService;
 import com.rometools.rome.feed.synd.SyndFeed;
 import java.util.UUID;
 
@@ -25,7 +25,7 @@ public class SiteFactory {
    * @return Siteエンティティ
    */
   public static Site create(String rssUrl, SyndFeed feed) {
-    FaviconUtil faviconUtil = new FaviconUtil();
+    FaviconService faviconUtil = new FaviconService();
     var favicon = faviconUtil.getBase64Favicon(feed.getLink()).get();
     return create(rssUrl, feed, favicon);
   }

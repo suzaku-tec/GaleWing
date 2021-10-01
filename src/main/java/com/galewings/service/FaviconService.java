@@ -1,4 +1,4 @@
-package com.galewings.utility;
+package com.galewings.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import javax.imageio.ImageIO;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FaviconUtil {
+public class FaviconService {
 
   public Optional<String> getBase64Favicon(String url) {
     try {
