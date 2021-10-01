@@ -8,13 +8,10 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 @SuppressWarnings("unused")
 @Configuration
-public class AppConfig {
+public class DBConfig {
 
   @Bean(destroyMethod = "close")
   public DataSource dataSource() {
@@ -53,14 +50,4 @@ public class AppConfig {
     return sqlManager;
   }
 
-  @Bean
-  public TemplateEngine opmlTemplateEngine() {
-    ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
-    TemplateEngine engine = new TemplateEngine();
-    resolver.setTemplateMode(TemplateMode.TEXT);
-    resolver.setPrefix("templates/");
-    resolver.setSuffix(".opml");
-    engine.setTemplateResolver(resolver);
-    return engine;
-  }
 }
