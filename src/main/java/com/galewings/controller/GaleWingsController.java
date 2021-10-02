@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -20,7 +21,7 @@ public class GaleWingsController {
   @Autowired
   SiteRepository siteRepository;
 
-  @RequestMapping(value = "/")
+  @RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
   @Transactional
   public String index(Model model, @RequestParam(name = "uuid", required = false) String uuid) {
     List<SiteFeedCount> resultList = siteRepository.getSiteFeedCount();
