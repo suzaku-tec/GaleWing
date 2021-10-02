@@ -42,7 +42,7 @@ public class ImportOpml {
         Map<String, String> params = new HashMap<>();
         params.put("htmlUrl", outline.getAttribute("htmlUrl"));
         int count = sqlManager.getCount(
-            new ClasspathSqlResource("sql/select_site_for_uuid.sql"),
+            new ClasspathSqlResource("sql/feed/select_feed_for_uuid.sql"),
             params
         );
 

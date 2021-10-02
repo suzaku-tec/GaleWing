@@ -86,4 +86,9 @@ public class SiteRepository {
 
     return 0 < siteDelCnt;
   }
+
+  public int insertEntity(Site site) {
+    return sqlManager.insertEntity(site);
+  }
+
 }
