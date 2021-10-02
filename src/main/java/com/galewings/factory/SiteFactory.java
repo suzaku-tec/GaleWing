@@ -4,6 +4,7 @@ import com.galewings.entity.Site;
 import com.galewings.service.FaviconService;
 import com.rometools.rome.feed.synd.SyndFeed;
 import java.util.UUID;
+import org.apache.logging.log4j.util.Strings;
 
 public class SiteFactory {
 
@@ -26,7 +27,7 @@ public class SiteFactory {
    */
   public static Site create(String rssUrl, SyndFeed feed) {
     FaviconService faviconUtil = new FaviconService();
-    var favicon = faviconUtil.getBase64Favicon(feed.getLink()).get();
+    var favicon = faviconUtil.getBase64Favicon(feed.getLink()).orElse(Strings.EMPTY);
     return create(rssUrl, feed, favicon);
   }
 

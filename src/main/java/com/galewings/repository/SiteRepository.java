@@ -62,7 +62,7 @@ public class SiteRepository {
       return;
     }
 
-    var faviconBase64 = faviconUtil.getBase64Favicon(outline.getAttribute("htmlUrl")).get();
+    var faviconBase64 = faviconUtil.getBase64Favicon(outline.getAttribute("htmlUrl")).orElse(null);
 
     params = new HashMap<>();
     params.put("uuid", UUID.randomUUID().toString());
