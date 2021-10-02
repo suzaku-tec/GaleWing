@@ -40,7 +40,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
 public class SiteFeedController {
@@ -215,8 +214,7 @@ public class SiteFeedController {
    * @return RSSページへのリンクリスト
    */
   private List<String> searchRssUrlList(String link) {
-    String domain = ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri().getHost();
-    if (link.indexOf(link) < 0) {
+    if (Strings.isNullOrEmpty(link)) {
       return Collections.emptyList();
     }
 
