@@ -49,4 +49,24 @@ public class FeedRepository {
         params);
   }
 
+  public List<Feed> getFeed(String uuid) {
+    Map<String, String> params = new HashMap<>();
+    params.put("uuid", uuid);
+    return sqlManager.getResultList(Feed.class,
+        new ClasspathSqlResource("sql/feed/select_feed_for_uuid.sql"), params);
+  }
+
+  public int updateReadFeed(String link) {
+    Map<String, String> params = new HashMap<>();
+    params.put("link", link);
+    return sqlManager.executeUpdate(
+        new ClasspathSqlResource("sql/feed/update_feed_readed.sql")
+        , params
+    );
+  }
+
+  public int insertEntity(Feed feed) {
+    return sqlManager.insertEntity(feed);
+  }
+
 }

@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galewings.dto.input.SiteDeleteDto;
 import com.galewings.entity.Site;
 import com.galewings.repository.SiteRepository;
-import com.miragesql.miragesql.ClasspathSqlResource;
-import com.miragesql.miragesql.SqlManager;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,9 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SiteController {
 
   @Autowired
-  SqlManager sqlManager;
-
-  @Autowired
   SiteRepository siteRepository;
 
   /**
@@ -38,7 +33,7 @@ public class SiteController {
   @ResponseBody
   @Transactional
   public String getSiteList() throws JsonProcessingException {
-    List<Site> resultList = siteList();
+    List<Site> resultList = siteRepository.getAllSite();
     ObjectMapper mapper = new ObjectMapper();
     return mapper.writeValueAsString(resultList);
   }
@@ -46,7 +41,7 @@ public class SiteController {
   @RequestMapping(value = "/site/management", method = RequestMethod.GET)
   @Transactional
   public String index(Model model) {
-    List<Site> resultList = siteList();
+    List<Site> resultList = siteRepository.getAllSite();
     model.addAttribute("sitelist", resultList);
 
     return "/site/management";
@@ -60,9 +55,4 @@ public class SiteController {
     return Boolean.toString(result);
   }
 
-  private List<Site> siteList() {
-    return sqlManager.getResultList(Site.class,
-        new ClasspathSqlResource("sql/site/select_all_site.sql"));
-
-  }
 }
