@@ -15,8 +15,6 @@ import com.galewings.factory.SiteFactory;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.SiteRepository;
 import com.google.common.base.Strings;
-import com.miragesql.miragesql.ClasspathSqlResource;
-import com.miragesql.miragesql.SqlManager;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
@@ -26,9 +24,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -48,9 +44,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
 public class SiteFeedController {
-
-  @Autowired
-  SqlManager sqlManager;
 
   @Autowired
   SiteRepository siteRepository;
@@ -73,13 +66,9 @@ public class SiteFeedController {
 
     List<Feed> feeds;
     if (Strings.isNullOrEmpty(uuid)) {
-      feeds = sqlManager.getResultList(Feed.class,
-          new ClasspathSqlResource("sql/select_all_feed.sql"));
+      feeds = feedRepository.getAllFeed();
     } else {
-      Map<String, String> params = new HashMap<>();
-      params.put("uuid", uuid);
-      feeds = sqlManager.getResultList(Feed.class,
-          new ClasspathSqlResource("sql/select_site_for_uuid.sql"), params);
+      feeds = feedRepository.getFeed(uuid);
     }
 
     ObjectMapper mapper = new ObjectMapper();
@@ -98,12 +87,7 @@ public class SiteFeedController {
   @Transactional
   public String readedFeed(@RequestBody ReadiedDto dto)
       throws UnsupportedEncodingException, JsonProcessingException {
-    Map<String, String> params = new HashMap<>();
-    params.put("link", dto.getLink());
-    sqlManager.executeUpdate(
-        new ClasspathSqlResource("sql/update_feed_readed.sql")
-        , params
-    );
+    feedRepository.updateReadFeed(dto.getLink());
 
     List<SiteFeedCount> siteFeedCounts = siteRepository.getSiteFeedCount(dto.getLink());
 
@@ -149,11 +133,10 @@ public class SiteFeedController {
               return !feedRepository.existFeed(syndEntry.getLink());
             }).map(syndEntry -> {
               return FeedFactory.create(syndEntry, siteFeed.getSite().uuid);
-            }).forEach(sqlManager::insertEntity);
+            }).forEach(feedRepository::insertEntity);
           });
 
-      feeds = sqlManager.getResultList(Feed.class,
-          new ClasspathSqlResource("sql/select_all_feed.sql"));
+      feeds = feedRepository.getAllFeed();
     } else {
       Site site = siteRepository.getSite(dto.getUuid());
       SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(site.xmlUrl)));
@@ -161,12 +144,9 @@ public class SiteFeedController {
         return !feedRepository.existFeed(syndEntry.getLink());
       }).peek(syndEntry -> System.out.println(syndEntry.getTitle())).map(syndEntry -> {
         return FeedFactory.create(syndEntry, site.uuid);
-      }).forEach(sqlManager::insertEntity);
+      }).forEach(feedRepository::insertEntity);
 
-      Map<String, String> params = new HashMap<>();
-      params.put("uuid", site.uuid);
-      feeds = sqlManager.getResultList(Feed.class,
-          new ClasspathSqlResource("sql/select_site_for_uuid.sql"), params);
+      feeds = feedRepository.getFeed(site.uuid);
     }
 
     List<SiteFeedCount> siteFeedCounts = siteRepository.getSiteFeedCount();
@@ -204,11 +184,11 @@ public class SiteFeedController {
         Site site = SiteFactory.create(url, syndFeed);
 
         // サイト追加
-        sqlManager.insertEntity(site);
+        siteRepository.insertEntity(site);
 
         // フィード追加
         syndFeed.getEntries().stream().map(syndEntry -> FeedFactory.create(syndEntry, site.uuid))
-            .forEach(sqlManager::insertEntity);
+            .forEach(feedRepository::insertEntity);
       });
     }
   }
