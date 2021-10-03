@@ -11,9 +11,22 @@ import {
   faTh,
   faIdCard,
   faCogs,
+  faStepBackward,
+  faBookmark,
 } from '@fortawesome/free-solid-svg-icons/index';
 
-library.add(faBars, faCheck, faSyncAlt, faPlus, faWrench, faTh, faIdCard, faCogs);
+library.add(
+  faBars,
+  faCheck,
+  faSyncAlt,
+  faPlus,
+  faWrench,
+  faTh,
+  faIdCard,
+  faCogs,
+  faStepBackward,
+  faBookmark,
+);
 dom.watch();
 
 import { Grid, html } from 'gridjs';
@@ -82,6 +95,11 @@ window.onload = function () {
           { name: 'comments', hidden: true },
           { name: 'publishedDate', hidden: false },
           { name: 'uuid', hidden: true },
+          {
+            name: '',
+            hidden: false,
+            formatter: (_, row) => html(`<i class="fas fa-bookmark" role="button"></i>`),
+          },
         ],
         pagination: true,
         sort: true,
@@ -99,9 +117,16 @@ window.onload = function () {
       );
 
       grid.on('rowClick', (event, row) => {
-        var link = row.cell(1).data.toLocaleString();
+        if ((event.target as any).localName == 'path') {
+          console.log('row: ', row);
+          var uuid = row.cell(7).data.toLocaleString();
+          var link = row.cell(1).data.toLocaleString();
+          stack(uuid, link);
+          return;
+        }
 
         if ((event.target as any).localName != 'a') {
+          var link = row.cell(1).data.toLocaleString();
           window.open(link);
         }
 
@@ -110,8 +135,6 @@ window.onload = function () {
             link: link,
           })
           .then((response) => {
-            console.log(response);
-
             // 未読数の更新
             response.data.forEach((element: { uuid: string; count: number }) => {
               var countElement = document.getElementById(element.uuid + '_count');
@@ -152,5 +175,10 @@ window.onload = function () {
     document.getElementById('cardLayoutItem'),
   );
 };
+
+function stack(uuid: string, link: string) {
+  var api = GaleWingApi.getInstance();
+  api.stackFeed(window.location.href, uuid, link);
+}
 
 export default { hideModifier };
