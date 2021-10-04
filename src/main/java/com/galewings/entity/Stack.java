@@ -1,7 +1,6 @@
 package com.galewings.entity;
 
 import com.miragesql.miragesql.annotation.Column;
-import java.util.Date;
 
 public class Stack {
 
@@ -27,6 +26,6 @@ public class Stack {
   public String publishedDate;
 
   @Column(name = "stackDate")
-  public Date stackDate;
+  public String stackDate;
 
 }
