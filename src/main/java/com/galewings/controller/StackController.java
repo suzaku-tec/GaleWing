@@ -9,7 +9,6 @@ import com.galewings.repository.StackRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +32,7 @@ public class StackController {
 
   @GetMapping("/list")
   @ResponseBody
-  public String getStackList(Model model) throws JsonProcessingException {
+  public String getStackList() throws JsonProcessingException {
     List<Stack> stackList = stackRepository.getStackList();
 
     ObjectMapper mapper = new ObjectMapper();
@@ -50,8 +49,4 @@ public class StackController {
     return Boolean.TRUE.toString();
   }
 
-  @PostMapping("/read")
-  public String read() {
-    return Boolean.TRUE.toString();
-  }
 }

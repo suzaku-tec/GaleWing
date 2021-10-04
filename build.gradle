@@ -77,7 +77,7 @@ sonarqube {
         property "sonar.projectKey", "suzaku-tec_GaleWing"
         property "sonar.organization", "suzaku-tec"
         property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.exclusions", "src/main/java/com/galewings/entity/**"
+        property "sonar.exclusions", "src/main/java/com/galewings/entity/**, src/main/java/com/galewings/dto/**"
     }
 }
 
