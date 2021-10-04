@@ -46,7 +46,7 @@ class StackControllerTest {
 
     String result = stackController.getStackList();
     Assertions.assertEquals(
-        "[{\"title\":\"test-title\",\"uuid\":\"test-uuid\",\"link\":\"test-link\",\"uri\":\"test-uri\",\"author\":\"test-author\",\"comments\":\"test-comments\",\"publishedDate\":\"test-publishedDate\",\"stackDate\":558543600000}]",
+        "[{\"title\":\"test-title\",\"uuid\":\"test-uuid\",\"link\":\"test-link\",\"uri\":\"test-uri\",\"author\":\"test-author\",\"comments\":\"test-comments\",\"publishedDate\":\"test-publishedDate\",\"stackDate\":\"1987/09/14 00:00:00\"}]",
         result);
   }
 

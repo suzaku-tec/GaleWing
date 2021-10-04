@@ -2,7 +2,6 @@ package com.galewings;
 
 import com.galewings.entity.Stack;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 public final class TestEntityObject {
 
@@ -15,8 +14,7 @@ public final class TestEntityObject {
     stack.author = "test-author";
     stack.comments = "test-comments";
     stack.publishedDate = "test-publishedDate";
-    SimpleDateFormat sdformat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
-    stack.stackDate = sdformat.parse("1987/09/14 00:00:00");
+    stack.stackDate = "1987/09/14 00:00:00";
 
     return stack;
   }
