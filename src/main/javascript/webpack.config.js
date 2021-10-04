@@ -11,6 +11,7 @@ const config = {
     main: './src/index.ts',
     settings: './src/settings.ts',
     siteManagement: './src/site/index.ts',
+    stack: './src/stack/index.ts',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
