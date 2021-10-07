@@ -75,6 +75,7 @@ dependencies {
 
 sonarqube {
     properties {
+        property "sonar.sources", "src/main/javascript"
         property "sonar.projectKey", "suzaku-tec_GaleWing"
         property "sonar.organization", "suzaku-tec"
         property "sonar.host.url", "https://sonarcloud.io"
