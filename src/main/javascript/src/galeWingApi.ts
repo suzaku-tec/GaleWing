@@ -15,7 +15,7 @@ export default class GaleWingApi {
 
   getFeedList(url: string): Promise<AxiosResponse<any>> {
     var baseUrl = new URL(url);
-    var ajaxUrl = baseUrl.origin + this.apiUrls.feedList + location.search;
+    var ajaxUrl = baseUrl.origin + this.apiUrls.feedList + baseUrl.search;
     return axios.get(ajaxUrl);
   }
 
