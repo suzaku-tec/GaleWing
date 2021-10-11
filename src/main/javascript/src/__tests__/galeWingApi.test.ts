@@ -1,4 +1,4 @@
-import * as testTarget from '../galeWingApi';
+import * as testTarget from '../main/api/galeWingApi';
 
 jest.mock('axios');
 import axios from 'axios';

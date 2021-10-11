@@ -1,6 +1,6 @@
 import axios from 'axios';
-import GaleWingModal from '../galeWingModal';
-import { IElementEvent } from './elementEvent';
+import GaleWingModal from '../../screen/galeWingModal';
+import { IElementEvent } from '../elementEvent';
 
 export default class ImportOpml implements IElementEvent {
   private modal: GaleWingModal;

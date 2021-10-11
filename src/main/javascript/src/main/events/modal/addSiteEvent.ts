@@ -1,4 +1,4 @@
-import { IElementEvent } from './elementEvent';
+import { IElementEvent } from '../elementEvent';
 import { Modal } from 'bootstrap';
 import axios from 'axios';
 
