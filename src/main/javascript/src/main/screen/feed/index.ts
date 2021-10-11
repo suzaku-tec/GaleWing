@@ -36,18 +36,18 @@ import hideModifier from '@popperjs/core/lib/modifiers/hide';
 
 import axios from 'axios';
 
-import ElementEvent from './event/elementEvent';
-import UpdateFeed from './event/updateFeed';
-import AddSiteEvent from './event/addSiteEvent';
-import ExportOpml from './event/exportOpml';
-import ImportOpml from './event/importOpml';
-import GridLayoutChgEvent from './event/gridLayoutChgEvent';
-import CardLayoutChgEvent from './event/cardLayoutChgEvent';
-import ReadAllShowFeed from './event/readAllShowFeed';
+import ElementEvent from '../../events/elementEvent';
+import UpdateFeed from '../../events/updateFeed';
+import AddSiteEvent from '../../events/modal/addSiteEvent';
+import ExportOpml from '../../events/exportOpml';
+import ImportOpml from '../../events/modal/importOpml';
+import GridLayoutChgEvent from '../../events/gridLayoutChgEvent';
+import CardLayoutChgEvent from '../../events/cardLayoutChgEvent';
+import ReadAllShowFeed from '../../events/readAllShowFeed';
 
-import init from './layout/cardGridLayout';
+import init from '../cardGridLayout';
 
-import GaleWingApi from './galeWingApi';
+import GaleWingApi from '../../api/galeWingApi';
 
 window.onload = function () {
   // toggleボタンをセレクト
