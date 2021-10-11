@@ -8,10 +8,10 @@ const stylesHandler = 'style-loader';
 
 const config = {
   entry: {
-    main: './src/index.ts',
-    settings: './src/settings.ts',
-    siteManagement: './src/site/index.ts',
-    stack: './src/stack/index.ts',
+    main: './src/main/screen/feed/index.ts',
+    settings: './src/main/screen/setting/index.ts',
+    siteManagement: './src/main/screen/site/index.ts',
+    stack: './src/main/screen/stack/index.ts',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

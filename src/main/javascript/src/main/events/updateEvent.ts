@@ -1,4 +1,4 @@
-import { IElementEvent } from '../elementEvent';
+import { IElementEvent } from './elementEvent';
 
 export default class UpdateEvent implements IElementEvent {
   execute(): void {

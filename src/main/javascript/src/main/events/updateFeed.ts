@@ -2,7 +2,7 @@ import { Grid } from 'gridjs';
 import axios from 'axios';
 import { IElementEvent } from './elementEvent';
 
-import UpdateMessageEvent from './updateMessageEvent';
+import UpdateMessageEvent from './modal/updateMessageEvent';
 export default class UpdateFeed implements IElementEvent {
   uuidElementId: string;
   grid: Grid;

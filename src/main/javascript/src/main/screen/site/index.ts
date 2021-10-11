@@ -3,7 +3,7 @@ import 'gridjs/dist/theme/mermaid.css';
 
 import hideModifier from '@popperjs/core/lib/modifiers/hide';
 
-import GaleWingApi from '../galeWingApi';
+import GaleWingApi from '../../api/galeWingApi';
 
 function deleteSite(uuid: string) {
   var api = GaleWingApi.getInstance();
