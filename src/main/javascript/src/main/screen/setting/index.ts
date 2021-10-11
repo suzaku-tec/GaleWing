@@ -13,8 +13,8 @@ import {
   faIdCard,
 } from '@fortawesome/free-solid-svg-icons/index';
 
-import ElementEvent from './event/elementEvent';
-import UpdateEvent from './event/settings/updateEvent';
+import ElementEvent from '../../events/elementEvent';
+import UpdateEvent from '../../events/updateEvent';
 
 library.add(faBars, faCheck, faSyncAlt, faPlus, faWrench, faTh, faIdCard);
 dom.watch();

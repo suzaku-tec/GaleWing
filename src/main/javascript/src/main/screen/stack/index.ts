@@ -4,7 +4,7 @@ import 'gridjs/dist/theme/mermaid.css';
 import hideModifier from '@popperjs/core/lib/modifiers/hide';
 import { Grid } from 'gridjs';
 
-import GaleWingApi from '../galeWingApi';
+import GaleWingApi from '../../api/galeWingApi';
 
 window.onload = () => {
   var api = GaleWingApi.getInstance();
