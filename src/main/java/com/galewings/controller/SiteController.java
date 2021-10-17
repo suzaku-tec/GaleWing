@@ -36,6 +36,12 @@ public class SiteController {
     return mapper.writeValueAsString(resultList);
   }
 
+  /**
+   * サイト管理画面初期表示
+   *
+   * @param model
+   * @return 遷移先情報
+   */
   @GetMapping(value = "/site/management")
   @Transactional
   public String index(Model model) {
@@ -45,6 +51,12 @@ public class SiteController {
     return "/site/management";
   }
 
+  /**
+   * サイト削除
+   *
+   * @param dto 削除対象サイト情報
+   * @return 処理結果(boolean true : 成功 false : 失敗)
+   */
   @PostMapping(value = "/site/delete")
   @ResponseBody
   @Transactional

@@ -41,12 +41,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+/**
+ * SiteFeedController
+ */
 @Controller
 public class SiteFeedController {
 
+  /**
+   * SiteRepository
+   */
   @Autowired
   SiteRepository siteRepository;
 
+  /**
+   * FeedRepository
+   */
   @Autowired
   FeedRepository feedRepository;
 

@@ -13,15 +13,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * SiteRepository
+ */
 @Component
 public class SiteRepository {
 
+  /**
+   * SqlManager
+   */
   @Autowired
   SqlManager sqlManager;
 
+  /**
+   * FaviconService
+   */
   @Autowired
   FaviconService faviconUtil;
 
+  /**
+   * サイト情報取得
+   *
+   * @param uuid UUID
+   * @return サイト情報
+   */
   public Site getSite(String uuid) {
     Map<String, String> params = new HashMap<>();
     params.put("uuid", uuid);
@@ -30,17 +45,33 @@ public class SiteRepository {
     return site;
   }
 
+  /**
+   * 全サイト情報取得
+   *
+   * @return 全サイト情報リスト
+   */
   @Transactional
   public List<Site> getAllSite() {
     return sqlManager.getResultList(Site.class, new ClasspathSqlResource(
         "sql/site/select_all_site.sql"));
   }
 
+  /**
+   * サイト別フィード件数取得
+   *
+   * @return サイト別フィード件数リスト
+   */
   public List<SiteFeedCount> getSiteFeedCount() {
     return sqlManager.getResultList(SiteFeedCount.class,
         new ClasspathSqlResource("sql/site/select_all_site_count_feed.sql"));
   }
 
+  /**
+   * 特定サイトのフィード件数取得
+   *
+   * @param link リンク
+   * @return フィード件数
+   */
   public List<SiteFeedCount> getSiteFeedCount(String link) {
     Map<String, String> params = new HashMap<>();
     params.put("link", link);
@@ -49,6 +80,11 @@ public class SiteRepository {
         new ClasspathSqlResource("sql/site/select_site_count_for_link.sql"), params);
   }
 
+  /**
+   * サイト情報追加
+   *
+   * @param outline
+   */
   @Transactional
   public void insertSite(be.ceau.opml.entity.Outline outline) {
     Map<String, String> params = new HashMap<>();
@@ -74,6 +110,12 @@ public class SiteRepository {
     sqlManager.executeUpdate(new ClasspathSqlResource("sql/site/insert_site.sql"), params);
   }
 
+  /**
+   * サイト情報削除
+   *
+   * @param uuid UUID
+   * @return 実行結果
+   */
   @Transactional
   public boolean delete(String uuid) {
     Map<String, String> params = new HashMap<>();
@@ -87,6 +129,12 @@ public class SiteRepository {
     return 0 < siteDelCnt;
   }
 
+  /**
+   * サイト情報追加
+   *
+   * @param site サイト情報
+   * @return
+   */
   public int insertEntity(Site site) {
     return sqlManager.insertEntity(site);
   }
