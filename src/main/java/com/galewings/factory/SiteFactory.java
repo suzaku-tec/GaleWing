@@ -6,6 +6,9 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import java.util.UUID;
 import org.apache.logging.log4j.util.Strings;
 
+/**
+ * SiteFactory
+ */
 public class SiteFactory {
 
   public static Site create(RssSyndFeed rssSyndFeed) {
@@ -50,10 +53,23 @@ public class SiteFactory {
     return site;
   }
 
+  /**
+   * RssSyndFeed
+   */
   public interface RssSyndFeed {
 
+    /**
+     * RSSのURL
+     *
+     * @return URL
+     */
     String getRssUrl();
 
+    /**
+     * SyndFeed
+     *
+     * @return SyndFeed
+     */
     SyndFeed getSyndFeed();
   }
 }

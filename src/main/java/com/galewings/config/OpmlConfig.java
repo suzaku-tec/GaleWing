@@ -6,9 +6,17 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
+/**
+ * OPML設定
+ */
 @Configuration
 public class OpmlConfig {
 
+  /**
+   * OPMLテンプレートエンジン
+   *
+   * @return OPMLテンプレートエンジン
+   */
   @Bean
   public TemplateEngine opmlTemplateEngine() {
     ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();

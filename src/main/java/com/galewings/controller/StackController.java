@@ -15,21 +15,41 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+/**
+ * StackController
+ */
 @RequestMapping("/stack")
 @Controller
 public class StackController {
 
+  /**
+   * StackRepository
+   */
   @Autowired
   StackRepository stackRepository;
 
+  /**
+   * FeedRepository
+   */
   @Autowired
   FeedRepository feedRepository;
 
+  /**
+   * 積読ページ初期表示
+   *
+   * @return 線先情報
+   */
   @GetMapping("")
   public String index() {
     return "stack";
   }
 
+  /**
+   * 積読情報リスト取得
+   *
+   * @return 積読サイト情報リスト(JSON形式)
+   * @throws JsonProcessingException
+   */
   @GetMapping("/list")
   @ResponseBody
   public String getStackList() throws JsonProcessingException {
@@ -39,6 +59,12 @@ public class StackController {
     return mapper.writeValueAsString(stackList);
   }
 
+  /**
+   * 積読情報を追加
+   *
+   * @param dto 積読するサイト情報
+   * @return 実行結果(true : 成功)
+   */
   @PostMapping("/add")
   @ResponseBody
   public String addStack(@RequestBody StackAddDto dto) {

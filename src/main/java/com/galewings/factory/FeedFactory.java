@@ -4,8 +4,18 @@ import com.galewings.entity.Feed;
 import com.rometools.rome.feed.synd.SyndEntry;
 import java.text.SimpleDateFormat;
 
+/**
+ * FeedFactory
+ */
 public class FeedFactory {
 
+  /**
+   * Feed生成
+   *
+   * @param syndEntry SyndEntry
+   * @param uuid      UUID
+   * @return Feed
+   */
   public static Feed create(SyndEntry syndEntry, String uuid) {
     SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 
