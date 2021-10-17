@@ -28,16 +28,35 @@ import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+/**
+ * OpmlController
+ * <p>
+ * opml関連の操作を提供する
+ */
 @RequestMapping("/opml")
 @Controller
 public class OpmlController {
 
+  /**
+   * opmlTemplateEngine
+   */
   @Autowired
   TemplateEngine opmlTemplateEngine;
 
+  /**
+   * siteRepository
+   */
   @Autowired
   SiteRepository siteRepository;
 
+  /**
+   * OPMLファイルエクスポート
+   * <p>
+   * 全サイトの情報をOPMLファイルに出力する
+   *
+   * @return OPMLファイル
+   * @throws UnsupportedEncodingException
+   */
   @RequestMapping(value = "/export", method = RequestMethod.GET)
   public ResponseEntity<byte[]> export() throws UnsupportedEncodingException {
     List<Site> allSite = siteRepository.getAllSite();
@@ -62,6 +81,13 @@ public class OpmlController {
     return new ResponseEntity<>(opmlStr.getBytes(StandardCharsets.UTF_8), header, HttpStatus.OK);
   }
 
+  /**
+   * OPMLファイルのインポート
+   *
+   * @param multipartFile OPMLファイル情報
+   * @throws IOException
+   * @throws OpmlParseException
+   */
   @RequestMapping(value = "/import", method = RequestMethod.POST)
   @ResponseBody
   public void importOpml(@RequestParam("file") MultipartFile multipartFile)
@@ -76,6 +102,13 @@ public class OpmlController {
 
   }
 
+  /**
+   * OPMLファイルのインポート
+   * <p>
+   * OPMLファイルから読み取ったデータをDBに登録する
+   *
+   * @param outline サイトデータ
+   */
   private void importOpml(be.ceau.opml.entity.Outline outline) {
     if ("rss".equals(outline.getAttribute("type"))) {
       siteRepository.insertSite(outline);
@@ -84,7 +117,9 @@ public class OpmlController {
     }
   }
 
-
+  /**
+   * サイト情報
+   */
   private class Outline {
 
     String title;
@@ -98,7 +133,13 @@ public class OpmlController {
     }
   }
 
-  private Map<String, String> getFieldMap(Object obj) {
+  /**
+   * サイト情報をMapデータに変換する
+   *
+   * @param obj サイト情報
+   * @return サイト情報(Map形式)
+   */
+  private Map<String, String> getFieldMap(Outline obj) {
     return Arrays.stream(obj.getClass().getDeclaredFields())
         .collect(Collectors.toMap(field -> field.getName(), field -> {
           try {

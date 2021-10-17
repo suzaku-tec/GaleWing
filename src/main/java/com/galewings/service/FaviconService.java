@@ -11,9 +11,20 @@ import java.util.Optional;
 import javax.imageio.ImageIO;
 import org.springframework.stereotype.Component;
 
+/**
+ * FaviconService
+ * <p>
+ * Googleのファビコン取得APIを利用してファビコン画像を取得する
+ */
 @Component
 public class FaviconService {
 
+  /**
+   * 指定されたサイトのファビコンをbase64形式で取得する
+   *
+   * @param url URL
+   * @return ファビコン画像のbase64形式の文字列
+   */
   public Optional<String> getBase64Favicon(String url) {
     try {
       String domain = toDomain(url);
@@ -40,6 +51,13 @@ public class FaviconService {
     }
   }
 
+  /**
+   * リンクからドメイン情報を抽出する
+   *
+   * @param url URL
+   * @return ドメインURL
+   * @throws URISyntaxException
+   */
   private String toDomain(String url) throws URISyntaxException {
     URI uri = new URI(url);
     return uri.getRawAuthority();

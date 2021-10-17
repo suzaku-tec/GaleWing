@@ -16,17 +16,30 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-
+/**
+ * SettingsController
+ */
 @RequestMapping("/settings")
 @Controller
 public class SettingsController {
 
+  /**
+   * sqlManager
+   */
   @Autowired
   SqlManager sqlManager;
 
+  /**
+   * 設定ページ初期表示
+   *
+   * @param model
+   * @return 遷移先情報
+   * @throws JsonProcessingException
+   */
   @GetMapping("")
   @Transactional
   public String index(Model model) throws JsonProcessingException {
+    // TODO: リポジトリを使う
     List<Settings> settingsList = sqlManager.getResultList(Settings.class,
         new ClasspathSqlResource("sql/settings/select_setting.sql"));
 
@@ -35,9 +48,17 @@ public class SettingsController {
     return "settings";
   }
 
+  /**
+   * 設定情報更新
+   *
+   * @param form  更新情報
+   * @param model
+   * @return 遷移先情報
+   */
   @PostMapping("/update")
   @Transactional
   public String update(SettingsUpdateForm form, Model model) {
+    // TODO: リポジトリを使う
     form.getSettings().forEach((key, value) -> {
       Map<String, String> params = new HashMap<>();
       params.put("id", key);
