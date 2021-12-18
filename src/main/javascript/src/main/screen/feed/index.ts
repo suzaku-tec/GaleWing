@@ -117,18 +117,20 @@ window.onload = function () {
       );
 
       grid.on('rowClick', (event, row) => {
+        var link = null;
         if ((event.target as any).localName == 'path') {
-          console.log('row: ', row);
           var uuid = row.cell(7).data.toLocaleString();
-          var link = row.cell(1).data.toLocaleString();
+          link = row.cell(1).data.toLocaleString();
           stack(uuid, link);
           return;
         }
 
+        link = row.cell(1).data.toLocaleString();
         if ((event.target as any).localName != 'a') {
-          var link = row.cell(1).data.toLocaleString();
           window.open(link);
         }
+
+        console.log('link:', link);
 
         axios
           .post(uri.origin + '/readed', {
