@@ -1,6 +1,6 @@
-<!DOCTYPE html>
-<html lang="ja" class="h-100" xmlns:th="http://www.thymeleaf.org">
-
+<!DOCTYPE html "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html lang="ja" class="h-100" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -110,6 +110,7 @@
       <!-- 下のコンテンツ -->
       <div class="content p-3">
         <div>
+          <!-- アイコン -->
           <div class="page-title border-bottom pb-2">
             <button type="button" id="addSite" class="btn btn-outline-secondary">
                         <span style="font-size: 2em; color: #33cc99;">
@@ -126,6 +127,11 @@
                            <i class="fas fa-check"></i>
                         </span>
             </button>
+            <button type="button" class="btn btn-outline-secondary" id="playTitle">
+                        <span style="font-size: 2em; color: #33cc99;">
+                           <i class="fas fa-play-circle"></i>
+                        </span>
+            </button>
             <button class="btn btn-outline-secondary" data-bs-toggle="dropdown"
                     aria-expanded="false"
                     id="toolDropdownMenuButton">
@@ -138,6 +144,8 @@
               <li><a class="dropdown-item" href="#" id="exportOpml">export</a></li>
             </ul>
           </div>
+
+          <!-- メインコンテンツ -->
           <div id="gridLayout" class="contentLayout">
             <div id="wrapper"></div>
           </div>
@@ -211,6 +219,7 @@
 </div>
 
 <a id="downloadLink" style="display: none;"></a>
+<div id="playWav"></div>
 </body>
 
 </html>
