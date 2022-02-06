@@ -13,6 +13,8 @@ import {
   faCogs,
   faStepBackward,
   faBookmark,
+  faPlayCircle,
+  faBackward,
 } from '@fortawesome/free-solid-svg-icons/index';
 
 library.add(
@@ -26,6 +28,8 @@ library.add(
   faCogs,
   faStepBackward,
   faBookmark,
+  faPlayCircle,
+  faBackward,
 );
 dom.watch();
 
@@ -48,6 +52,7 @@ import ReadAllShowFeed from '../../events/readAllShowFeed';
 import init from '../cardGridLayout';
 
 import GaleWingApi from '../../api/galeWingApi';
+import PlaySound from '../../events/playSound';
 
 window.onload = function () {
   // toggleボタンをセレクト
@@ -176,6 +181,17 @@ window.onload = function () {
     'click',
     document.getElementById('cardLayoutItem'),
   );
+
+  var ps = new PlaySound();
+  ps.setTalking(() => {
+    // TODO 再生のコントロールを検討する
+    var rssLinks = document.getElementsByClassName('rss-link');
+    console.log(rssLinks);
+    var text = rssLinks.item(0).textContent;
+    console.log(text);
+    ps.genAudio(text);
+  });
+  new ElementEvent(ps).setup('click', document.getElementById('playTitle'));
 };
 
 function stack(uuid: string, link: string) {

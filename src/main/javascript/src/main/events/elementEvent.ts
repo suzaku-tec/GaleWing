@@ -11,5 +11,8 @@ export default class ElementEvent {
 }
 
 export interface IElementEvent {
+  /**
+   * イベント実行
+   */
   execute(): void;
 }
