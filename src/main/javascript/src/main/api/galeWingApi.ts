@@ -7,6 +7,7 @@ export default class GaleWingApi {
     deleteSite: '/site/delete',
     stackList: '/stack/list',
     stackFeed: '/stack/add',
+    settingsJson: '/settings/json',
   };
 
   private static singleton: GaleWingApi;
@@ -41,6 +42,12 @@ export default class GaleWingApi {
     var baseUrl = new URL(url);
     var ajaxUrl = baseUrl.origin + this.apiUrls.stackFeed;
     return axios.post(ajaxUrl, { uuid: uuid, link: link });
+  }
+
+  settingsJson(url: string): Promise<AxiosResponse<any>> {
+    var baseUrl = new URL(url);
+    var ajaxUrl = baseUrl.origin + this.apiUrls.settingsJson;
+    return axios.get(ajaxUrl);
   }
 
   static getInstance() {
