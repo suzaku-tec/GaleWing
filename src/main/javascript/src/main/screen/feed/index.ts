@@ -53,6 +53,7 @@ import init from '../cardGridLayout';
 
 import GaleWingApi from '../../api/galeWingApi';
 import PlaySound from '../../events/playSound';
+import SettingsApi from '../../api/settingsApi';
 
 window.onload = function () {
   // toggleボタンをセレクト
@@ -192,6 +193,9 @@ window.onload = function () {
     ps.genAudio(text);
   });
   new ElementEvent(ps).setup('click', document.getElementById('playTitle'));
+
+  var settingsApi = new SettingsApi();
+  settingsApi.get('delete_cycle').then((v) => console.log(v));
 };
 
 function stack(uuid: string, link: string) {
