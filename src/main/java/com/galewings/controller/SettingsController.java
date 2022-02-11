@@ -35,7 +35,7 @@ public class SettingsController {
    */
   @GetMapping("")
   @Transactional
-  public String index(Model model) throws JsonProcessingException {
+  public String index(Model model) {
     List<Settings> settingsList = settingRepository.getSettingAllList();
     model.addAttribute("settings", settingsList);
 
