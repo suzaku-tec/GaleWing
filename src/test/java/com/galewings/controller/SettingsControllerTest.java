@@ -10,6 +10,7 @@ import com.galewings.dto.input.SettingsUpdateForm;
 import com.galewings.entity.Settings;
 import com.galewings.repository.SettingRepository;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,8 +51,11 @@ class SettingsControllerTest {
   void testUpdate() {
     when(settingRepository.update(anyString(), anyString())).thenReturn(0);
 
-    String result = settingsController.update(new SettingsUpdateForm(), null);
-    Assertions.assertEquals("replaceMeWithExpectedResult", result);
+    SettingsUpdateForm form = new SettingsUpdateForm();
+    form.setSettings(Collections.emptyMap());
+
+    String result = settingsController.update(form, null);
+    Assertions.assertEquals("redirect:/settings", result);
   }
 
   @Test
