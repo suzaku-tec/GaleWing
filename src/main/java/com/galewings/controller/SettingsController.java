@@ -3,11 +3,9 @@ package com.galewings.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.galewings.dto.input.SettingsUpdateForm;
 import com.galewings.entity.Settings;
-import com.miragesql.miragesql.ClasspathSqlResource;
-import com.miragesql.miragesql.SqlManager;
-import java.util.HashMap;
+import com.galewings.exception.GaleWingsZeroUpdateException;
+import com.galewings.repository.SettingRepository;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * SettingsController
@@ -23,11 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class SettingsController {
 
-  /**
-   * sqlManager
-   */
   @Autowired
-  SqlManager sqlManager;
+  private SettingRepository settingRepository;
 
   /**
    * 設定ページ初期表示
@@ -38,11 +35,8 @@ public class SettingsController {
    */
   @GetMapping("")
   @Transactional
-  public String index(Model model) throws JsonProcessingException {
-    // TODO: リポジトリを使う
-    List<Settings> settingsList = sqlManager.getResultList(Settings.class,
-        new ClasspathSqlResource("sql/settings/select_setting.sql"));
-
+  public String index(Model model) {
+    List<Settings> settingsList = settingRepository.getSettingAllList();
     model.addAttribute("settings", settingsList);
 
     return "settings";
@@ -58,15 +52,24 @@ public class SettingsController {
   @PostMapping("/update")
   @Transactional
   public String update(SettingsUpdateForm form, Model model) {
-    // TODO: リポジトリを使う
     form.getSettings().forEach((key, value) -> {
-      Map<String, String> params = new HashMap<>();
-      params.put("id", key);
-      params.put("setting", value);
-      sqlManager.executeUpdate(new ClasspathSqlResource("sql/settings/update_settings.sql"),
-          params);
+      if (0 == settingRepository.update(key, value)) {
+        throw new GaleWingsZeroUpdateException();
+      }
     });
 
     return "redirect:/settings";
+  }
+
+  /**
+   * 設定情報リスト取得（JSON形式）
+   *
+   * @return 設定情報リスト（JSON形式）
+   */
+  @Transactional
+  @RequestMapping(value = "/json", method = RequestMethod.GET)
+  @ResponseBody
+  public List<Settings> getAllJson() {
+    return settingRepository.getSettingAllList();
   }
 }
