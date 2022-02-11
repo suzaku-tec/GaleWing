@@ -8,10 +8,12 @@ import com.galewings.ModelMock;
 import com.galewings.TestEntityObject;
 import com.galewings.dto.input.SettingsUpdateForm;
 import com.galewings.entity.Settings;
+import com.galewings.exception.GaleWingsZeroUpdateException;
 import com.galewings.repository.SettingRepository;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,13 +51,33 @@ class SettingsControllerTest {
 
   @Test
   void testUpdate() {
-    when(settingRepository.update(anyString(), anyString())).thenReturn(0);
+    when(settingRepository.update(anyString(), anyString())).thenReturn(1);
 
     SettingsUpdateForm form = new SettingsUpdateForm();
-    form.setSettings(Collections.emptyMap());
+    Map<String, String> map = new HashMap<>();
+    map.put("1", "2");
+    form.setSettings(map);
 
     String result = settingsController.update(form, null);
     Assertions.assertEquals("redirect:/settings", result);
+  }
+
+  @Test
+  void testUpdateZero() {
+    when(settingRepository.update(anyString(), anyString())).thenReturn(0);
+
+    SettingsUpdateForm form = new SettingsUpdateForm();
+    Map<String, String> map = new HashMap<>();
+    map.put("1", "2");
+    form.setSettings(map);
+
+    try {
+      String result = settingsController.update(form, null);
+      assert false;
+    } catch (GaleWingsZeroUpdateException e) {
+    } catch (Exception e) {
+      assert false;
+    }
   }
 
   @Test
