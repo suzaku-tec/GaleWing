@@ -38,35 +38,43 @@ export default class PlaySound implements IElementEvent {
 
     var arrayBuffer = synthesis.data;
     console.log(arrayBuffer);
-    if (arrayBuffer instanceof ArrayBuffer) {
-      // The 2nd argument for decodeAudioData
-      var successCallback = (audioBuffer: AudioBuffer): void => {
-        /* audioBuffer is the instance of AudioBuffer */
-        var source = this.context.createBufferSource();
-        // Set the instance of AudioBuffer
-        source.buffer = audioBuffer;
-        // Set parameters
-        source.loop = false;
-        source.loopStart = 0;
-        source.loopEnd = audioBuffer.duration;
-        source.playbackRate.value = 1.0;
 
-        // AudioBufferSourceNode (Input) -> AudioDestinationNode (Output)
-        source.connect(this.context.destination);
+    return new Promise<void>((resolve, reject) => {
+      if (arrayBuffer instanceof ArrayBuffer) {
+        // The 2nd argument for decodeAudioData
+        var successCallback = (audioBuffer: AudioBuffer): void => {
+          /* audioBuffer is the instance of AudioBuffer */
+          var source = this.context.createBufferSource();
+          // Set the instance of AudioBuffer
+          source.buffer = audioBuffer;
+          // Set parameters
+          source.loop = false;
+          source.loopStart = 0;
+          source.loopEnd = audioBuffer.duration;
+          source.playbackRate.value = 1.0;
 
-        // Start audio
-        source.start(0);
-      };
-      // The 3rd argument for decodeAudioData
-      var errorCallback = (error: { message: any }) => {
-        if (error instanceof Error) {
-          window.alert(error.message);
-        } else {
-          window.alert('Error : "decodeAudioData" method.');
-        }
-      };
-      // Create the instance of AudioBuffer (Asynchronously)
-      this.context.decodeAudioData(arrayBuffer, successCallback, errorCallback);
-    }
+          // AudioBufferSourceNode (Input) -> AudioDestinationNode (Output)
+          source.connect(this.context.destination);
+
+          source.onended = () => {
+            resolve();
+          };
+
+          // Start audio
+          source.start(0);
+        };
+        // The 3rd argument for decodeAudioData
+        var errorCallback = (error: { message: any }) => {
+          if (error instanceof Error) {
+            window.alert(error.message);
+          } else {
+            window.alert('Error : "decodeAudioData" method.');
+          }
+          reject();
+        };
+        // Create the instance of AudioBuffer (Asynchronously)
+        this.context.decodeAudioData(arrayBuffer, successCallback, errorCallback);
+      }
+    });
   }
 }
