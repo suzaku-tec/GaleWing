@@ -186,10 +186,19 @@ window.onload = function () {
   ps.setTalking(() => {
     // TODO 再生のコントロールを検討する
     var rssLinks = document.getElementsByClassName('rss-link');
-    console.log(rssLinks);
-    var text = rssLinks.item(0).textContent;
-    console.log(text);
-    ps.genAudio(text);
+
+    (async () => {
+      await Array.from(rssLinks).reduce((promise, rssLink) => {
+        return promise.then(async () => {
+          await ps.genAudio(rssLink.textContent);
+        });
+      }, Promise.resolve());
+    })();
+
+    // var text = rssLinks.item(0).textContent;
+
+    // console.log(text);
+    // ps.genAudio(text);
   });
   new ElementEvent(ps).setup('click', document.getElementById('playTitle'));
 };
