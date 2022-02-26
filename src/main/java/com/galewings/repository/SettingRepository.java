@@ -16,7 +16,7 @@ import org.springframework.ui.Model;
 public class SettingRepository {
 
   /**
-   * sqlManager
+   * SqlManager
    */
   @Autowired
   SqlManager sqlManager;

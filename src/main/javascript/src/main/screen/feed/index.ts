@@ -201,6 +201,9 @@ window.onload = function () {
     })();
   });
   new ElementEvent(ps).setup('click', document.getElementById('playTitle'));
+
+  var settingsApi = new SettingsApi();
+  settingsApi.get('delete_cycle').then((v) => console.log(v));
 };
 
 function stack(uuid: string, link: string) {
