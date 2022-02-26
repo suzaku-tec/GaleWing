@@ -6,7 +6,7 @@ export default class SettingsApi {
 
   constructor() {
     var api = GaleWingApi.getInstance();
-    this.settingResPromise = api.settingsJson(window.location.href);
+    this.settingResPromise = api.settingJson();
   }
 
   async get(id: string) {
