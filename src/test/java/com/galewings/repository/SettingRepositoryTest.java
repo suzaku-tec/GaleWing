@@ -37,11 +37,11 @@ class SettingRepositoryTest {
   }
 
   @Test
-  void testGetSettingAllList() {
+  void testList() {
     List<Settings> testDataList = Arrays.asList(TestEntityObject.settings());
 
     when(sqlManager.getResultList(eq(Settings.class), any())).thenReturn(testDataList);
-    List<Settings> result = settingRepository.getSettingAllList();
+    List<Settings> result = settingRepository.list();
 
     Assertions.assertEquals(testDataList, result);
   }
