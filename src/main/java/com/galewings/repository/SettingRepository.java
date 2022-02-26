@@ -1,5 +1,6 @@
 package com.galewings.repository;
 
+import com.galewings.dto.input.SettingsUpdateForm;
 import com.galewings.entity.Settings;
 import com.miragesql.miragesql.ClasspathSqlResource;
 import com.miragesql.miragesql.SqlManager;
@@ -8,31 +9,43 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 @Component
 public class SettingRepository {
 
   /**
-   * SqlManager
+   * sqlManager
    */
   @Autowired
   SqlManager sqlManager;
 
-  public int update(String id, String value) {
-    Map<String, String> params = new HashMap<>();
-    params.put("id", id);
-    params.put("setting", value);
-    return sqlManager.executeUpdate(new ClasspathSqlResource("sql/settings/update_settings.sql"),
-        params);
+  /**
+   * update
+   *
+   * @param form
+   * @param model
+   * @return
+   */
+  @Transactional
+  public int update(SettingsUpdateForm form, Model model) {
 
+    return form.getSettings().entrySet().stream().map(
+        e -> {
+          Map<String, String> params = new HashMap<>();
+          params.put("id", e.getKey());
+          params.put("setting", e.getValue());
+          return params;
+        }
+    ).mapToInt(params -> {
+      return sqlManager.executeUpdate(new ClasspathSqlResource("sql/settings/update_settings.sql"),
+          params);
+    }).sum();
   }
 
-  /**
-   * 設定情報取得
-   *
-   * @return 設定情報リスト
-   */
-  public List<Settings> getSettingAllList() {
+  @Transactional
+  public List<Settings> list() {
     return sqlManager.getResultList(Settings.class,
         new ClasspathSqlResource("sql/settings/select_setting.sql"));
   }
