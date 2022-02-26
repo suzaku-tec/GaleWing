@@ -3,6 +3,7 @@ package com.galewings.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.galewings.dto.input.SettingsUpdateForm;
 import com.galewings.entity.Settings;
+import com.galewings.repository.SettingRepository;
 import com.miragesql.miragesql.ClasspathSqlResource;
 import com.miragesql.miragesql.SqlManager;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * SettingsController
@@ -28,6 +30,12 @@ public class SettingsController {
    */
   @Autowired
   SqlManager sqlManager;
+
+  /**
+   * StackRepository
+   */
+  @Autowired
+  SettingRepository settingRepository;
 
   /**
    * 設定ページ初期表示
@@ -69,4 +77,11 @@ public class SettingsController {
 
     return "redirect:/settings";
   }
+
+  @GetMapping("/list/json")
+  @ResponseBody
+  public List<Settings> listForJson() {
+    return settingRepository.list();
+  }
+
 }

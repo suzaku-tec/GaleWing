@@ -53,8 +53,13 @@ import init from '../cardGridLayout';
 
 import GaleWingApi from '../../api/galeWingApi';
 import PlaySound from '../../events/playSound';
+import SettingApi from '../../api/settingApi';
+
+var setting: SettingApi;
 
 window.onload = function () {
+  setting = new SettingApi();
+
   // toggleボタンをセレクト
   let sidebarToggler = document.getElementById('sidebarToggler');
 
@@ -194,11 +199,6 @@ window.onload = function () {
         });
       }, Promise.resolve());
     })();
-
-    // var text = rssLinks.item(0).textContent;
-
-    // console.log(text);
-    // ps.genAudio(text);
   });
   new ElementEvent(ps).setup('click', document.getElementById('playTitle'));
 };
