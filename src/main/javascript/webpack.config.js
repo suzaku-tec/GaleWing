@@ -31,6 +31,10 @@ const config = {
         test: /\.(ts|tsx)$/i,
         loader: 'ts-loader',
         exclude: ['/node_modules/'],
+        options: {
+          transpileOnly: true,
+          configFile: process.argv.mode === 'production' ? 'tsconfig.json' : 'tsconfig.dev.json',
+        },
       },
       {
         test: /\.css$/i,

@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "build": "run-p clean build:prod",
+    "dev-build": "run-p clean build:dev",
     "build:dev": "webpack --mode=development --node-env=development",
     "build:prod": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch",
