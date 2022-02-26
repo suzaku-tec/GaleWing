@@ -5,7 +5,6 @@ import com.galewings.dto.input.SettingsUpdateForm;
 import com.galewings.entity.Settings;
 import com.galewings.exception.GaleWingsZeroUpdateException;
 import com.galewings.repository.SettingRepository;
-import com.miragesql.miragesql.ClasspathSqlResource;
 import com.miragesql.miragesql.SqlManager;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +45,7 @@ public class SettingsController {
   @GetMapping("")
   @Transactional
   public String index(Model model) {
-    // TODO: リポジトリを使う
-    List<Settings> settingsList = sqlManager.getResultList(Settings.class,
-        new ClasspathSqlResource("sql/settings/select_setting.sql"));
-
+    List<Settings> settingsList = settingRepository.list();
     model.addAttribute("settings", settingsList);
 
     return "settings";
