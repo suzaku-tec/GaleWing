@@ -1,6 +1,6 @@
 package com.galewings.controller;
 
-import static org.mockito.Mockito.anyString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.galewings.GaleWingsJson;
@@ -37,7 +37,7 @@ class SettingsControllerTest {
   @Test
   void testIndex() {
     // モック設定
-    when(settingRepository.getSettingAllList()).thenReturn(
+    when(settingRepository.list()).thenReturn(
         Arrays.asList(TestEntityObject.settings()));
     Model model = new ModelMock();
 
@@ -51,7 +51,7 @@ class SettingsControllerTest {
 
   @Test
   void testUpdate() {
-    when(settingRepository.update(anyString(), anyString())).thenReturn(1);
+    when(settingRepository.update(any(), any())).thenReturn(1);
 
     SettingsUpdateForm form = new SettingsUpdateForm();
     Map<String, String> map = new HashMap<>();
@@ -64,7 +64,7 @@ class SettingsControllerTest {
 
   @Test
   void testUpdateZero() {
-    when(settingRepository.update(anyString(), anyString())).thenReturn(0);
+    when(settingRepository.update(any(), any())).thenReturn(0);
 
     SettingsUpdateForm form = new SettingsUpdateForm();
     Map<String, String> map = new HashMap<>();
@@ -81,11 +81,11 @@ class SettingsControllerTest {
   }
 
   @Test
-  void testGetAllJson() {
-    when(settingRepository.getSettingAllList()).thenReturn(
+  void testListForJson() {
+    when(settingRepository.list()).thenReturn(
         Arrays.asList(TestEntityObject.settings()));
 
-    List<Settings> result = settingsController.getAllJson();
+    List<Settings> result = settingsController.listForJson();
     assetList(Arrays.asList(TestEntityObject.settings()), result);
   }
 
