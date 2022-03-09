@@ -28,26 +28,22 @@ export default class UpdateMessageEvent implements IElementEvent {
 
         modalHeaderCloseBtn.style.display = '';
 
-        document.getElementById('modal-dialog').classList.remove('modal-dialog-centered ');
-
         this.modal.dispose();
       },
       { once: true },
     );
 
-    var a = document.getElementById('modal-dialog');
-    a.classList.add('modal-dialog-centered');
-
     this.modal = new Modal(document.getElementById('exampleModal'), {
       backdrop: 'static',
     });
-
+    document.getElementById('modal-dialog').classList.add('modal-dialog-centered');
     this.modal.show();
   }
 
   close() {
     if (this.modal) {
       this.modal.hide();
+      document.getElementById('modal-dialog').classList.remove('modal-dialog-centered');
     }
   }
 }
