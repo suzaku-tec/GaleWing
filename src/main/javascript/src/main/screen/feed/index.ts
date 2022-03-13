@@ -57,8 +57,12 @@ import SettingApi from '../../api/settingApi';
 
 var setting: SettingApi;
 
-window.onload = function () {
-  setting = new SettingApi();
+window.onload = () => {
+  (async () => {
+    setting = new SettingApi();
+    await setting.init();
+    setting.outputLog();
+  })();
 
   // toggleボタンをセレクト
   let sidebarToggler = document.getElementById('sidebarToggler');

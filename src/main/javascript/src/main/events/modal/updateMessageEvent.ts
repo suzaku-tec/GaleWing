@@ -21,7 +21,6 @@ export default class UpdateMessageEvent implements IElementEvent {
     document.getElementById('exampleModal').addEventListener(
       'hidden.bs.modal',
       (event) => {
-        var modalBody = document.getElementById('modal-body');
         while (modalBody.firstChild) {
           modalBody.removeChild(modalBody.firstChild);
         }
