@@ -57,34 +57,13 @@ import SettingApi from '../../api/settingApi';
 
 var setting: SettingApi;
 
-window.onload = () => {
-  (async () => {
-    setting = new SettingApi();
-    await setting.init();
-    setting.outputLog();
-  })();
+window.onload = async () => {
+  setting = new SettingApi();
+  await setting.init();
+  setting.outputLog();
 
-  // toggleボタンをセレクト
-  let sidebarToggler = document.getElementById('sidebarToggler');
-
-  // 表示状態用の変数
-  let showSidebar = true;
-  var sidemenu = document.getElementById('sidemenu');
-  var mainContent = document.getElementById('mainContent');
-
-  // イベント追加
-  sidebarToggler.addEventListener('click', () => {
-    // 表示状態判別
-    if (showSidebar) {
-      sidemenu.classList.add('is-close');
-      mainContent.classList.add('wideMainContent');
-      showSidebar = false;
-    } else {
-      sidemenu.classList.remove('is-close');
-      mainContent.classList.remove('wideMainContent');
-      showSidebar = true;
-    }
-  });
+  // サイドバー初期化
+  setupSidebar();
 
   var uri = new URL(window.location.href);
 
@@ -115,7 +94,10 @@ window.onload = () => {
             formatter: (_, row) => html(`<i class="fas fa-bookmark" role="button"></i>`),
           },
         ],
-        pagination: true,
+        pagination: {
+          enabled: true,
+          limit: Number(setting.get('feed_rows')),
+        },
         sort: true,
         search: true,
         data: res.data,
@@ -210,6 +192,33 @@ window.onload = () => {
 function stack(uuid: string, link: string) {
   var api = GaleWingApi.getInstance();
   api.stackFeed(window.location.href, uuid, link);
+}
+
+/**
+ * サイドバー初期化
+ */
+function setupSidebar() {
+  // toggleボタンをセレクト
+  let sidebarToggler = document.getElementById('sidebarToggler');
+
+  // 表示状態用の変数
+  let showSidebar = true;
+  var sidemenu = document.getElementById('sidemenu');
+  var mainContent = document.getElementById('mainContent');
+
+  // イベント追加
+  sidebarToggler.addEventListener('click', () => {
+    // 表示状態判別
+    if (showSidebar) {
+      sidemenu.classList.add('is-close');
+      mainContent.classList.add('wideMainContent');
+      showSidebar = false;
+    } else {
+      sidemenu.classList.remove('is-close');
+      mainContent.classList.remove('wideMainContent');
+      showSidebar = true;
+    }
+  });
 }
 
 export default { hideModifier };

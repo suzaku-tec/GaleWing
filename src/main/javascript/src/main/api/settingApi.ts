@@ -42,7 +42,7 @@ export default class SettingApi {
         .filter((setting) => {
           return setting.id === key;
         })
-        .slice(0, 1)[0];
+        .slice(0, 1)[0].setting;
     } else {
       throw new Error('wait setting response');
     }
