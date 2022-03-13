@@ -55,8 +55,11 @@ main{
   transition-duration: 1s;
 }
 
-.mainContent {
+div#mainContent {
   transition-duration: 1s;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: 100vh;
 }
 
 body {
