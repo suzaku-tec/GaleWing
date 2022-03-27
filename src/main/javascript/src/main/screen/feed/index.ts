@@ -54,6 +54,7 @@ import init from '../cardGridLayout';
 import GaleWingApi from '../../api/galeWingApi';
 import PlaySound from '../../events/playSound';
 import SettingApi from '../../api/settingApi';
+import ConfirmModalEvent from '../../events/modal/confirmModal';
 
 var setting: SettingApi;
 
