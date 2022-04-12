@@ -3,6 +3,7 @@ package com.galewings.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galewings.dto.AddFeedDto;
+import com.galewings.dto.GaleWingSiteFeed;
 import com.galewings.dto.ReadAllShowFeedDto;
 import com.galewings.dto.ReadiedDto;
 import com.galewings.dto.UpdateFeedDto;
@@ -69,7 +70,6 @@ public class SiteFeedController {
    */
   @GetMapping("/feedlist")
   @ResponseBody
-  @Transactional
   public String getFeedList(@RequestParam(value = "uuid", required = false) String uuid)
       throws JsonProcessingException {
 
@@ -93,7 +93,6 @@ public class SiteFeedController {
    */
   @PostMapping(value = "/readed")
   @ResponseBody
-  @Transactional
   public String readedFeed(@RequestBody ReadiedDto dto)
       throws UnsupportedEncodingException, JsonProcessingException {
     feedRepository.updateReadFeed(dto.getLink());
@@ -114,7 +113,6 @@ public class SiteFeedController {
    */
   @PostMapping(value = "/feed/update")
   @ResponseBody
-  @Transactional
   public String updateFeed(@RequestBody UpdateFeedDto dto) throws IOException, FeedException {
     SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 
@@ -123,7 +121,7 @@ public class SiteFeedController {
       siteRepository.getAllSite()
           .parallelStream()
           .map(site -> {
-            return new SiteFeed() {
+            return new GaleWingSiteFeed() {
               @Override
               public Site getSite() {
                 return site;
@@ -204,7 +202,6 @@ public class SiteFeedController {
 
   @PostMapping(value = "/readAllShowFeed", consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
-  @Transactional
   public String readAllShowFeed(
       @RequestBody ReadAllShowFeedDto readAllShowFeedDto)
       throws JsonProcessingException {
@@ -263,25 +260,5 @@ public class SiteFeedController {
     }
 
     return result;
-  }
-
-  /**
-   * サイトフィード情報
-   */
-  private interface SiteFeed {
-
-    /**
-     * サイト情報
-     *
-     * @return サイト情報
-     */
-    Site getSite();
-
-    /**
-     * フィード情報
-     *
-     * @return フィード情報
-     */
-    Optional<SyndFeed> getOptionalSyndFeed();
   }
 }

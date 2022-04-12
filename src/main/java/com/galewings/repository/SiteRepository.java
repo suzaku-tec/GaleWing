@@ -37,6 +37,7 @@ public class SiteRepository {
    * @param uuid UUID
    * @return サイト情報
    */
+  @Transactional
   public Site getSite(String uuid) {
     Map<String, String> params = new HashMap<>();
     params.put("uuid", uuid);
@@ -61,6 +62,7 @@ public class SiteRepository {
    *
    * @return サイト別フィード件数リスト
    */
+  @Transactional
   public List<SiteFeedCount> getSiteFeedCount() {
     return sqlManager.getResultList(SiteFeedCount.class,
         new ClasspathSqlResource("sql/site/select_all_site_count_feed.sql"));
@@ -72,6 +74,7 @@ public class SiteRepository {
    * @param link リンク
    * @return フィード件数
    */
+  @Transactional
   public List<SiteFeedCount> getSiteFeedCount(String link) {
     Map<String, String> params = new HashMap<>();
     params.put("link", link);
@@ -135,6 +138,7 @@ public class SiteRepository {
    * @param site サイト情報
    * @return
    */
+  @Transactional
   public int insertEntity(Site site) {
     return sqlManager.insertEntity(site);
   }
