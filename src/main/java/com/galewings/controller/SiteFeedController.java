@@ -143,8 +143,7 @@ public class SiteFeedController {
       SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(site.xmlUrl)));
       feed.getEntries().stream().filter(syndEntry -> {
             return !feedRepository.existFeed(syndEntry.getLink());
-          }).peek(syndEntry -> System.out.println(syndEntry.getTitle()))
-          .map(syndEntry -> FeedFactory.create(syndEntry, site.uuid))
+          }).map(syndEntry -> FeedFactory.create(syndEntry, site.uuid))
           .forEach(feedRepository::insertEntity);
 
       feeds = feedRepository.getFeed(site.uuid);
