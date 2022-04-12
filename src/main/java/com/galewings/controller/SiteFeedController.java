@@ -23,8 +23,6 @@ import com.rometools.rome.io.XmlReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -66,7 +64,7 @@ public class SiteFeedController {
    *
    * @param uuid サイトUUID
    * @return 対象サイトの未読フィードのデータJSON
-   * @throws JsonProcessingException
+   * @throws JsonProcessingException JSON変換失敗
    */
   @GetMapping("/feedlist")
   @ResponseBody
@@ -88,8 +86,8 @@ public class SiteFeedController {
    * 対象ページを既読にする
    *
    * @param dto 既読にするページのリンク情報
-   * @return
-   * @throws UnsupportedEncodingException
+   * @return サイトの未読フィード件数リスト
+   * @throws UnsupportedEncodingException エンコード失敗例外
    */
   @PostMapping(value = "/readed")
   @ResponseBody
@@ -108,13 +106,12 @@ public class SiteFeedController {
    *
    * @param dto 対象サイト情報
    * @return 対象フィード情報
-   * @throws IOException
-   * @throws FeedException
+   * @throws IOException   入出力失敗
+   * @throws FeedException フィード読み込み失敗
    */
   @PostMapping(value = "/feed/update")
   @ResponseBody
   public String updateFeed(@RequestBody UpdateFeedDto dto) throws IOException, FeedException {
-    SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 
     List<Feed> feeds;
     if (Strings.isNullOrEmpty(dto.getUuid())) {
@@ -135,23 +132,20 @@ public class SiteFeedController {
           })
           .filter(siteFeed -> siteFeed.getOptionalSyndFeed().isPresent())
           .sequential()
-          .forEach(siteFeed -> {
-            siteFeed.getOptionalSyndFeed().get().getEntries().stream().filter(syndEntry -> {
-              return !feedRepository.existFeed(syndEntry.getLink());
-            }).map(syndEntry -> {
-              return FeedFactory.create(syndEntry, siteFeed.getSite().uuid);
-            }).forEach(feedRepository::insertEntity);
-          });
+          .forEach(siteFeed -> siteFeed.getOptionalSyndFeed().get().getEntries().stream()
+              .filter(syndEntry -> !feedRepository.existFeed(syndEntry.getLink()))
+              .map(syndEntry -> FeedFactory.create(syndEntry, siteFeed.getSite().uuid))
+              .forEach(feedRepository::insertEntity));
 
       feeds = feedRepository.getAllFeed();
     } else {
       Site site = siteRepository.getSite(dto.getUuid());
       SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(site.xmlUrl)));
       feed.getEntries().stream().filter(syndEntry -> {
-        return !feedRepository.existFeed(syndEntry.getLink());
-      }).peek(syndEntry -> System.out.println(syndEntry.getTitle())).map(syndEntry -> {
-        return FeedFactory.create(syndEntry, site.uuid);
-      }).forEach(feedRepository::insertEntity);
+            return !feedRepository.existFeed(syndEntry.getLink());
+          }).peek(syndEntry -> System.out.println(syndEntry.getTitle()))
+          .map(syndEntry -> FeedFactory.create(syndEntry, site.uuid))
+          .forEach(feedRepository::insertEntity);
 
       feeds = feedRepository.getFeed(site.uuid);
     }
@@ -170,7 +164,7 @@ public class SiteFeedController {
    * サイトとそのサイトのRSS情報をDBに登録する
    *
    * @param dto 追加情報
-   * @throws IOException
+   * @throws IOException 入出力失敗
    */
   @PostMapping(value = "/addFeed")
   @ResponseBody
@@ -226,7 +220,7 @@ public class SiteFeedController {
     }
 
     if (link.endsWith(".rdf")) {
-      return Arrays.asList(link);
+      return List.of(link);
     }
 
     try {
