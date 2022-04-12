@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * FeedRepository
@@ -28,6 +29,7 @@ public class FeedRepository {
    * @param link リンクURL
    * @return true:存在 false:未存在
    */
+  @Transactional
   public boolean existFeed(String link) {
     Map<String, String> params = new HashMap<>();
     params.put("link", link);
@@ -40,6 +42,7 @@ public class FeedRepository {
    *
    * @return フィードリスト
    */
+  @Transactional
   public List<Feed> getAllFeed() {
     return sqlManager.getResultList(Feed.class,
         new ClasspathSqlResource("sql/feed/select_all_feed.sql"));
@@ -51,6 +54,7 @@ public class FeedRepository {
    * @param site サイト情報
    * @return サイトの全フィード
    */
+  @Transactional
   public List<Feed> getSiteFeed(Site site) {
     Map<String, String> params = new HashMap<>();
     params.put("uuid", site.uuid);
@@ -64,6 +68,7 @@ public class FeedRepository {
    * @param identifier サイト識別情報
    * @return 件数
    */
+  @Transactional
   public int updateSiteFeedRead(String identifier) {
     Map<String, String> params = new HashMap<>();
     params.put("identifier", identifier);
@@ -78,6 +83,7 @@ public class FeedRepository {
    * @param uuid UUID
    * @return フィードリスト
    */
+  @Transactional
   public List<Feed> getFeed(String uuid) {
     Map<String, String> params = new HashMap<>();
     params.put("uuid", uuid);
@@ -91,6 +97,7 @@ public class FeedRepository {
    * @param link リンク
    * @return 更新件数
    */
+  @Transactional
   public int updateReadFeed(String link) {
     Map<String, String> params = new HashMap<>();
     params.put("link", link);
@@ -106,6 +113,7 @@ public class FeedRepository {
    * @param feed
    * @return
    */
+  @Transactional
   public int insertEntity(Feed feed) {
     return sqlManager.insertEntity(feed);
   }

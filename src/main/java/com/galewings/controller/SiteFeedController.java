@@ -3,6 +3,7 @@ package com.galewings.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galewings.dto.AddFeedDto;
+import com.galewings.dto.GaleWingSiteFeed;
 import com.galewings.dto.ReadAllShowFeedDto;
 import com.galewings.dto.ReadiedDto;
 import com.galewings.dto.UpdateFeedDto;
@@ -22,8 +23,6 @@ import com.rometools.rome.io.XmlReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -65,11 +64,10 @@ public class SiteFeedController {
    *
    * @param uuid サイトUUID
    * @return 対象サイトの未読フィードのデータJSON
-   * @throws JsonProcessingException
+   * @throws JsonProcessingException JSON変換失敗
    */
   @GetMapping("/feedlist")
   @ResponseBody
-  @Transactional
   public String getFeedList(@RequestParam(value = "uuid", required = false) String uuid)
       throws JsonProcessingException {
 
@@ -88,12 +86,11 @@ public class SiteFeedController {
    * 対象ページを既読にする
    *
    * @param dto 既読にするページのリンク情報
-   * @return
-   * @throws UnsupportedEncodingException
+   * @return サイトの未読フィード件数リスト
+   * @throws UnsupportedEncodingException エンコード失敗例外
    */
   @PostMapping(value = "/readed")
   @ResponseBody
-  @Transactional
   public String readedFeed(@RequestBody ReadiedDto dto)
       throws UnsupportedEncodingException, JsonProcessingException {
     feedRepository.updateReadFeed(dto.getLink());
@@ -109,21 +106,19 @@ public class SiteFeedController {
    *
    * @param dto 対象サイト情報
    * @return 対象フィード情報
-   * @throws IOException
-   * @throws FeedException
+   * @throws IOException   入出力失敗
+   * @throws FeedException フィード読み込み失敗
    */
   @PostMapping(value = "/feed/update")
   @ResponseBody
-  @Transactional
   public String updateFeed(@RequestBody UpdateFeedDto dto) throws IOException, FeedException {
-    SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 
     List<Feed> feeds;
     if (Strings.isNullOrEmpty(dto.getUuid())) {
       siteRepository.getAllSite()
           .parallelStream()
           .map(site -> {
-            return new SiteFeed() {
+            return new GaleWingSiteFeed() {
               @Override
               public Site getSite() {
                 return site;
@@ -137,23 +132,19 @@ public class SiteFeedController {
           })
           .filter(siteFeed -> siteFeed.getOptionalSyndFeed().isPresent())
           .sequential()
-          .forEach(siteFeed -> {
-            siteFeed.getOptionalSyndFeed().get().getEntries().stream().filter(syndEntry -> {
-              return !feedRepository.existFeed(syndEntry.getLink());
-            }).map(syndEntry -> {
-              return FeedFactory.create(syndEntry, siteFeed.getSite().uuid);
-            }).forEach(feedRepository::insertEntity);
-          });
+          .forEach(siteFeed -> siteFeed.getOptionalSyndFeed().get().getEntries().stream()
+              .filter(syndEntry -> !feedRepository.existFeed(syndEntry.getLink()))
+              .map(syndEntry -> FeedFactory.create(syndEntry, siteFeed.getSite().uuid))
+              .forEach(feedRepository::insertEntity));
 
       feeds = feedRepository.getAllFeed();
     } else {
       Site site = siteRepository.getSite(dto.getUuid());
       SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(site.xmlUrl)));
       feed.getEntries().stream().filter(syndEntry -> {
-        return !feedRepository.existFeed(syndEntry.getLink());
-      }).peek(syndEntry -> System.out.println(syndEntry.getTitle())).map(syndEntry -> {
-        return FeedFactory.create(syndEntry, site.uuid);
-      }).forEach(feedRepository::insertEntity);
+            return !feedRepository.existFeed(syndEntry.getLink());
+          }).map(syndEntry -> FeedFactory.create(syndEntry, site.uuid))
+          .forEach(feedRepository::insertEntity);
 
       feeds = feedRepository.getFeed(site.uuid);
     }
@@ -172,7 +163,7 @@ public class SiteFeedController {
    * サイトとそのサイトのRSS情報をDBに登録する
    *
    * @param dto 追加情報
-   * @throws IOException
+   * @throws IOException 入出力失敗
    */
   @PostMapping(value = "/addFeed")
   @ResponseBody
@@ -204,7 +195,6 @@ public class SiteFeedController {
 
   @PostMapping(value = "/readAllShowFeed", consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
-  @Transactional
   public String readAllShowFeed(
       @RequestBody ReadAllShowFeedDto readAllShowFeedDto)
       throws JsonProcessingException {
@@ -224,12 +214,9 @@ public class SiteFeedController {
    * @return RSSページへのリンクリスト
    */
   private List<String> searchRssUrlList(String link) {
-    if (Strings.isNullOrEmpty(link)) {
-      return Collections.emptyList();
-    }
 
     if (link.endsWith(".rdf")) {
-      return Arrays.asList(link);
+      return List.of(link);
     }
 
     try {
@@ -263,25 +250,5 @@ public class SiteFeedController {
     }
 
     return result;
-  }
-
-  /**
-   * サイトフィード情報
-   */
-  private interface SiteFeed {
-
-    /**
-     * サイト情報
-     *
-     * @return サイト情報
-     */
-    Site getSite();
-
-    /**
-     * フィード情報
-     *
-     * @return フィード情報
-     */
-    Optional<SyndFeed> getOptionalSyndFeed();
   }
 }
