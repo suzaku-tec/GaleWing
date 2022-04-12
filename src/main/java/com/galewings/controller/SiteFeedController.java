@@ -215,9 +215,6 @@ public class SiteFeedController {
    * @return RSSページへのリンクリスト
    */
   private List<String> searchRssUrlList(String link) {
-    if (Strings.isNullOrEmpty(link)) {
-      return Collections.emptyList();
-    }
 
     if (link.endsWith(".rdf")) {
       return List.of(link);

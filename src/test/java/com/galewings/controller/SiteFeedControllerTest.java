@@ -102,6 +102,16 @@ class SiteFeedControllerTest {
   }
 
   @Test
+  void testAddSiteFeed_rdf() throws IOException {
+    when(siteRepository.insertEntity(any())).thenReturn(0);
+
+    AddFeedDto testDto = new AddFeedDto();
+    testDto.setLink("http://127.0.0.1/test.rdf");
+
+    siteFeedController.addSiteFeed(testDto);
+  }
+
+  @Test
   void testReadAllShowFeed() throws JsonProcessingException {
     when(siteRepository.getSiteFeedCount()).thenReturn(
         List.of(new SiteFeedCount()));
