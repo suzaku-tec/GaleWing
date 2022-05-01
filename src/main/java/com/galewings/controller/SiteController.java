@@ -8,7 +8,6 @@ import com.galewings.repository.SiteRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +28,6 @@ public class SiteController {
    */
   @GetMapping("/sitelist")
   @ResponseBody
-  @Transactional
   public String getSiteList() throws JsonProcessingException {
     List<Site> resultList = siteRepository.getAllSite();
     ObjectMapper mapper = new ObjectMapper();
@@ -43,7 +41,6 @@ public class SiteController {
    * @return 遷移先情報
    */
   @GetMapping(value = "/site/management")
-  @Transactional
   public String index(Model model) {
     List<Site> resultList = siteRepository.getAllSite();
     model.addAttribute("sitelist", resultList);
@@ -59,10 +56,18 @@ public class SiteController {
    */
   @PostMapping(value = "/site/delete")
   @ResponseBody
-  @Transactional
   public String delete(@RequestBody SiteDeleteDto dto) {
     boolean result = siteRepository.delete(dto.getUuid());
     return Boolean.toString(result);
   }
 
+  @GetMapping("/site/lastUpdateDate")
+  public String fixLastUpdate(Model model) {
+
+    siteRepository.selectSiteLastFeed().stream().forEach(siteLastFeedDto -> {
+      siteRepository.updateSiteLastUpdateDate(siteLastFeedDto.uuid, siteLastFeedDto.lastUpdateDate);
+    });
+
+    return index(model);
+  }
 }
