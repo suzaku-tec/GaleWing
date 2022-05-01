@@ -1,0 +1,1 @@
+select uuid, max(publishedDate) as lastUpdateDate from feed where publishedDate is not null group by uuid;

@@ -1,5 +1,6 @@
 package com.galewings.repository;
 
+import com.galewings.dto.output.SiteLastFeedDto;
 import com.galewings.entity.Site;
 import com.galewings.entity.SiteFeedCount;
 import com.galewings.service.FaviconService;
@@ -143,4 +144,20 @@ public class SiteRepository {
     return sqlManager.insertEntity(site);
   }
 
+  @Transactional
+  public int updateSiteLastUpdateDate(String uuid, String lastUpdateDate) {
+
+    Map<String, String> param = new HashMap<>();
+    param.put("uuid", uuid);
+    param.put("lastUpdateDate", lastUpdateDate);
+
+    return sqlManager.executeUpdate(
+        new ClasspathSqlResource("sql/site/update_site_lastUpdate.sql"), param);
+  }
+
+  @Transactional
+  public List<SiteLastFeedDto> selectSiteLastFeed() {
+    return sqlManager.getResultList(SiteLastFeedDto.class,
+        new ClasspathSqlResource("sql/feed/select_last_feed.sql"));
+  }
 }
