@@ -21,4 +21,7 @@ public class Site {
 
   @Column(name = "faviconBase64")
   public String faviconBase64;
+
+  @Column(name = "lastUpdate")
+  public String lastUpdate;
 }

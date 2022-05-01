@@ -19,6 +19,11 @@ window.onload = () => {
     var url = new URL(location.href);
     location.href = url.origin;
   });
+
+  var feedUpdate = document.getElementById('feedUpdate');
+  feedUpdate.addEventListener('click', () => {
+    window.location.href = '/site/lastUpdateDate';
+  });
 };
 
 export default { hideModifier, deleteSite };

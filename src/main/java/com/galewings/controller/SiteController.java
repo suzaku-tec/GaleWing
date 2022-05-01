@@ -65,4 +65,13 @@ public class SiteController {
     return Boolean.toString(result);
   }
 
+  @GetMapping("/site/lastUpdateDate")
+  public String fixLastUpdate(Model model) {
+
+    siteRepository.selectSiteLastFeed().stream().forEach(siteLastFeedDto -> {
+      siteRepository.updateSiteLastUpdateDate(siteLastFeedDto.uuid, siteLastFeedDto.lastUpdateDate);
+    });
+
+    return index(model);
+  }
 }
