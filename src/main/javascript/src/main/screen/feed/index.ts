@@ -17,6 +17,8 @@ import {
   faBackward,
 } from '@fortawesome/free-solid-svg-icons/index';
 
+import { faYoutube } from '@fortawesome/free-brands-svg-icons';
+
 library.add(
   faBars,
   faCheck,
@@ -30,6 +32,7 @@ library.add(
   faBookmark,
   faPlayCircle,
   faBackward,
+  faYoutube,
 );
 dom.watch();
 

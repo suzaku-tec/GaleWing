@@ -6,7 +6,9 @@
     "target": "es5",
     "allowJs": true,
     "moduleResolution": "node",
-    "baseUrl": ".",
+    "alwaysStrict": true,
+    "strict": true,
+    "baseUrl": "src",
     "jsx": "react",
     "paths": {
       "*": [
@@ -15,4 +17,10 @@
     },
     "outDir": "dist"
   },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
