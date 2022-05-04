@@ -23,8 +23,8 @@ window.onload = () => {
   var player: any;
   function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
-      height: '360',
-      width: '640',
+      height: '100%',
+      width: '100%',
       videoId: 'M7lc1UVf-VE',
       events: {
         onReady: onPlayerReady,
