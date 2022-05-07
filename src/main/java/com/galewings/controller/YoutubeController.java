@@ -41,7 +41,6 @@ public class YoutubeController {
       ObjectMapper objectMapper = new ObjectMapper();
       InitialData initialData
           = objectMapper.readValue(m.group(), InitialData.class);
-      System.out.println(initialData);
 
       return initialData.contents.twoColumnBrowseResultsRenderer.tabs.get(
               1).tabRenderer.content.sectionListRenderer.contents.get(
