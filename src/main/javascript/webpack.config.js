@@ -39,7 +39,8 @@ const config = {
       },
       {
         test: /\.css$/i,
-        use: [stylesHandler, 'css-loader'],
+        use: [stylesHandler, { loader: 'css-loader', options: { url: false } }],
+        sideEffects: true, // production modeでもswiper-bundle.cssが使えるように
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
