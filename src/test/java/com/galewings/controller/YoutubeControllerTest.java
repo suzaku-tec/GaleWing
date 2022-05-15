@@ -1,7 +1,10 @@
 package com.galewings.controller;
 
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 
+import com.galewings.ModelMock;
 import com.galewings.dto.YtdGridRendererDto;
 import java.io.IOException;
 import java.util.Collections;
@@ -20,7 +23,12 @@ class YoutubeControllerTest {
 
   @Test
   void testIndex() {
-    String result = youtubeController.index();
+
+    YoutubeController controller = spy(new YoutubeController());
+
+    doReturn(Collections.EMPTY_LIST).when(controller).channelList();
+
+    String result = controller.index(new ModelMock());
     Assertions.assertEquals("/youtube/index", result);
   }
 
@@ -34,7 +42,7 @@ class YoutubeControllerTest {
 
       mock.when(() -> Jsoup.connect(anyString())).thenReturn(mockConnection);
 
-      List<YtdGridRendererDto> result = youtubeController.videos();
+      List<YtdGridRendererDto> result = youtubeController.videos("test");
       Assertions.assertEquals(Collections.emptyList(), result);
     }
   }
@@ -53,7 +61,7 @@ class YoutubeControllerTest {
 
       mock.when(() -> Jsoup.connect(anyString())).thenReturn(mockConnection);
 
-      List<YtdGridRendererDto> result = youtubeController.videos();
+      List<YtdGridRendererDto> result = youtubeController.videos("test");
       Assertions.assertNotNull(result);
       Assertions.assertEquals(3, result.size());
     }
