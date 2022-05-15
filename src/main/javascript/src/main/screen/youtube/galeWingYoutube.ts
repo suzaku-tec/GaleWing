@@ -1,5 +1,3 @@
-import GwYoutubeApi from '../../api/gwYoutubeApi';
-
 // import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -89,33 +87,15 @@ window.onload = () => {
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
   }
 
-  // var testBtn = document.getElementById('test');
-  // testBtn?.addEventListener('click', () => {
-  //   let gwYoutubeApi = GwYoutubeApi.getInstance();
-  //   gwYoutubeApi.test().then((res) => {
-  //     var data = res.data;
-
-  //     var swiperWrapper = document.getElementsByClassName('swiper-wrapper')[0];
-
-  //     data.forEach((element: { title: string; imgUrl: string; videoId: string }) => {
-  //       var div = createYoutubeList(element);
-  //       swiperWrapper.appendChild(div);
-  //     });
-  //   });
-  // });
-
-  GwYoutubeApi.getInstance()
-    .test()
-    .then((res) => {
-      var data = res.data;
-
-      var swiperWrapper = document.getElementsByClassName('swiper-wrapper')[0];
-
-      data.forEach((element: { title: string; imgUrl: string; videoId: string }) => {
-        var div = createYoutubeList(element);
-        swiperWrapper.appendChild(div);
-      });
+  var swiperSlides = Array.from(
+    document.getElementsByClassName('swiper-slide') as HTMLCollectionOf<HTMLElement>,
+  );
+  swiperSlides.forEach((swiperSlide) => {
+    swiperSlide.addEventListener('click', () => {
+      player.stopVideo();
+      player.cueVideoById({ videoId: swiperSlide.dataset.videoId });
     });
+  });
 
   window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
@@ -135,6 +115,7 @@ window.onload = () => {
     scrollbar: {
       el: '.swiper-scrollbar',
     },
+    watchSlidesProgress: true,
   };
 
   const swiper = new Swiper('.swiper', swiperParams);

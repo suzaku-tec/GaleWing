@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja" class="h-100">
+<html lang="ja" class="h-100" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="UTF-8">
@@ -26,37 +26,19 @@
       <div id="player"></div>
     </div>
   </div>
-  <button id="test">test</button>
-  <ul id="list"></ul>
-
-  <!--  &lt;!&ndash; Slider main container &ndash;&gt;-->
-  <!--  <div class="swiper">-->
-  <!--    &lt;!&ndash; Additional required wrapper &ndash;&gt;-->
-  <!--    <div class="swiper-wrapper">-->
-  <!--      &lt;!&ndash; Slides &ndash;&gt;-->
-  <!--      <div class="swiper-slide">Slide 1</div>-->
-  <!--      <div class="swiper-slide">Slide 2</div>-->
-  <!--      <div class="swiper-slide">Slide 3</div>-->
-  <!--    </div>-->
-  <!--    &lt;!&ndash; If we need pagination &ndash;&gt;-->
-  <!--    <div class="swiper-pagination"></div>-->
-
-  <!--    &lt;!&ndash; If we need navigation buttons &ndash;&gt;-->
-  <!--    <div class="swiper-button-prev"></div>-->
-  <!--    <div class="swiper-button-next"></div>-->
-
-  <!--    &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
-  <!--    <div class="swiper-scrollbar"></div>-->
-  <!--  </div>-->
 
   <!-- Slider main container -->
-  <div class="swiper">
+  <div class="swiper" style="margin: 10px" th:each="channel: ${ytdChannelList}">
+
+    <h2 th:data-channel-id="${channel.channelId}">[[${channel.channelName}]]</h2>
+
     <!-- Additional required wrapper -->
     <div class="swiper-wrapper">
-      <!-- Slides -->
-      <!--      <div class="swiper-slide">Slide 1</div>-->
-      <!--      <div class="swiper-slide">Slide 2</div>-->
-      <!--      <div class="swiper-slide">Slide 3</div>-->
+      <div class="swiper-slide" th:each="ytdSwiper: ${channel.ytdGridRendererDtos}"
+           th:data-video-id="${ytdSwiper.videoId}">
+        <img th:src="${ytdSwiper.imgUrl}">
+        <p>[[${ytdSwiper.title}]]</p>
+      </div>
     </div>
 
     <!-- If we need pagination -->
