@@ -1,20 +1,24 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
-title: ''
-labels: ''
-assignees: ''
+about: 機能改善・追加
+title: "[feature]"
+labels: enhancement
+assignees: suzaku-tec
 
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+# 概要
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+# 理由・目的
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+# 実装方針
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+## タスク
+
+- [ ] 細かいタスクに分解できているなら書き出す
+
+# 参考
+
+## サイトURL
+
+## 資料
