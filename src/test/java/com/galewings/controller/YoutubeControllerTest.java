@@ -2,11 +2,14 @@ package com.galewings.controller;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
 
 import com.galewings.ModelMock;
 import com.galewings.dto.YtdGridRendererDto;
+import com.galewings.dto.output.YoutubeListSelectChannel;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.jsoup.Connection;
@@ -22,11 +25,30 @@ class YoutubeControllerTest {
   YoutubeController youtubeController = new YoutubeController();
 
   @Test
-  void testIndex() {
+  void testIndex1() throws IOException {
 
     YoutubeController controller = spy(new YoutubeController());
 
-    doReturn(Collections.EMPTY_LIST).when(controller).channelList();
+    YoutubeListSelectChannel channel = new YoutubeListSelectChannel();
+    channel.channelId = "channelid";
+    channel.name = "name";
+    doReturn(Arrays.asList(channel)).when(controller).channelList();
+    doReturn(null).when(controller).videos(anyString());
+
+    String result = controller.index(new ModelMock());
+    Assertions.assertEquals("/youtube/index", result);
+  }
+
+  @Test
+  void testIndex2() throws IOException {
+
+    YoutubeController controller = spy(new YoutubeController());
+
+    YoutubeListSelectChannel channel = new YoutubeListSelectChannel();
+    channel.channelId = "channelid";
+    channel.name = "name";
+    doReturn(Arrays.asList(channel)).when(controller).channelList();
+    doThrow(new IOException("test")).when(controller).videos(anyString());
 
     String result = controller.index(new ModelMock());
     Assertions.assertEquals("/youtube/index", result);

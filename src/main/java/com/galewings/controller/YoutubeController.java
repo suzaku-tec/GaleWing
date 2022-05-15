@@ -58,7 +58,6 @@ public class YoutubeController {
     Matcher m = p.matcher(document.html());
 
     if (m.find()) {
-      System.out.println(m.group());
       ObjectMapper objectMapper = new ObjectMapper();
       InitialData initialData
           = objectMapper.readValue(m.group(), InitialData.class);
