@@ -86,7 +86,6 @@ public class HotwordService {
     return feedRepository.selectPublicDateFrom(fromDate.getDate()).stream()
         .map(feed -> feed.title)
         .flatMap(title -> tokenizerStream(title))
-        .peek(tokenizer -> System.out.println(tokenizer.partOfSpeech + ":" + tokenizer.term))
         .filter(tokenizer -> StringUtils.contains(tokenizer.partOfSpeech, "名詞"))
         .map(tokenizer -> tokenizer.term)
         .collect(Collectors.groupingBy(String::toString, Collectors.counting()));
