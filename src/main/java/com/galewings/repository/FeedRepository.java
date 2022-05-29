@@ -4,6 +4,8 @@ import com.galewings.entity.Feed;
 import com.galewings.entity.Site;
 import com.miragesql.miragesql.ClasspathSqlResource;
 import com.miragesql.miragesql.SqlManager;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,6 +118,22 @@ public class FeedRepository {
   @Transactional
   public int insertEntity(Feed feed) {
     return sqlManager.insertEntity(feed);
+  }
+
+  /**
+   * 指定した日付以降のデータを取得する
+   *
+   * @param date 指定日
+   * @return フィードリスト
+   */
+  @Transactional
+  public List<Feed> selectPublicDateFrom(Date date) {
+    SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    Map<String, String> params = new HashMap<>();
+    params.put("fromDate", sdFormat.format(date));
+
+    return sqlManager.getResultList(Feed.class,
+        new ClasspathSqlResource("sql/feed/select_public_from.sql"), params);
   }
 
 }

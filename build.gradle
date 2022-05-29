@@ -7,6 +7,8 @@ plugins {
     id 'jacoco'
 }
 
+apply plugin: 'io.spring.dependency-management'
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
@@ -75,6 +77,12 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.mockito/mockito-inline
     testImplementation 'org.mockito:mockito-inline:4.5.1'
+
+    // https://mvnrepository.com/artifact/org.apache.lucene/lucene-analyzers-kuromoji
+    implementation group: 'org.apache.lucene', name: 'lucene-analyzers-kuromoji', version: '8.11.1'
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
 }
 
