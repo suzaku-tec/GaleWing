@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -128,8 +127,7 @@ public class HotwordService {
       return tokenizerAttributeDtoList.stream();
     } catch (IOException e) {
       e.printStackTrace();
-      List<TokenizerAttributeDto> tokenizerAttributeDtoList = Collections.emptyList();
-      return tokenizerAttributeDtoList.stream();
+      return Stream.empty();
     }
 
   }
