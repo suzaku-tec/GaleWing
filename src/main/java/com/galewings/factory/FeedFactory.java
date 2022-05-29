@@ -17,7 +17,7 @@ public class FeedFactory {
    * @return Feed
    */
   public static Feed create(SyndEntry syndEntry, String uuid) {
-    SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+    SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     Feed f = new Feed();
     f.uuid = uuid;
