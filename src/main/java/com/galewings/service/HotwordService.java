@@ -79,8 +79,10 @@ public class HotwordService {
   }
 
   /**
-   * @param fromDate
-   * @return
+   * ホットワード算出
+   *
+   * @param fromDate 日付情報
+   * @return 名詞出現カウントマップ
    */
   public Map<String, Long> hotword(FromDate fromDate) {
     return feedRepository.selectPublicDateFrom(fromDate.getDate()).stream()
@@ -91,6 +93,12 @@ public class HotwordService {
         .collect(Collectors.groupingBy(String::toString, Collectors.counting()));
   }
 
+  /**
+   * 形態素解析結果をStream形式で返す
+   *
+   * @param target 形態素解析対象文字列
+   * @return 解析結果
+   */
   private Stream<TokenizerAttributeDto> tokenizerStream(String target) {
     try {
       tokenizer.setReader(new StringReader(target));
