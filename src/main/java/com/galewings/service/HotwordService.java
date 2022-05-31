@@ -126,7 +126,6 @@ public class HotwordService {
       tokenizer.close();
       return tokenizerAttributeDtoList.stream();
     } catch (IOException e) {
-      e.printStackTrace();
       return Stream.empty();
     }
 
