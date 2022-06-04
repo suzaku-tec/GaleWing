@@ -18,6 +18,7 @@ public class Feed implements Serializable {
         ", author='" + author + '\'' +
         ", comments='" + comments + '\'' +
         ", publishedDate='" + publishedDate + '\'' +
+        ", opened='" + opened + '\'' +
         ", readed='" + readed + '\'' +
         '}';
   }
@@ -42,6 +43,9 @@ public class Feed implements Serializable {
 
   @Column(name = "publishedDate")
   public String publishedDate;
+
+  @Column(name = "opened")
+  public boolean opened;
 
   @Column(name = "readed")
   public boolean readed;
@@ -72,6 +76,10 @@ public class Feed implements Serializable {
 
   public String getPublishedDate() {
     return publishedDate;
+  }
+
+  public boolean getOpened() {
+    return this.opened;
   }
 
   public boolean getReaded() {
