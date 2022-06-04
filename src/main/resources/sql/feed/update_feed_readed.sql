@@ -1,5 +1,6 @@
-UPDATE "feed"
-SET
-    "readed" = true
-WHERE
+update "feed"
+set
+    "readed" = true,
+    "opened" = true
+where
     "link" = /*link*/
