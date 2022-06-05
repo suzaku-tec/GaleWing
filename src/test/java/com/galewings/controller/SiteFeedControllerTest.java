@@ -49,7 +49,7 @@ class SiteFeedControllerTest {
 
     String result = siteFeedController.getFeedList("uuid");
     assertEquals(
-        "[{\"title\":null,\"uuid\":null,\"link\":null,\"uri\":null,\"author\":null,\"comments\":null,\"publishedDate\":null,\"readed\":false}]",
+        "[{\"title\":null,\"uuid\":null,\"link\":null,\"uri\":null,\"author\":null,\"comments\":null,\"publishedDate\":null,\"opened\":false,\"readed\":false}]",
         result);
   }
 
@@ -75,7 +75,7 @@ class SiteFeedControllerTest {
 
     String result = siteFeedController.updateFeed(new UpdateFeedDto());
     assertEquals(
-        "{\"feeds\":[{\"title\":null,\"uuid\":null,\"link\":null,\"uri\":null,\"author\":null,\"comments\":null,\"publishedDate\":null,\"readed\":false}],\"siteFeedCounts\":[{\"uuid\":null,\"title\":null,\"count\":0,\"faviconBase64\":null}]}",
+        "{\"feeds\":[{\"title\":null,\"uuid\":null,\"link\":null,\"uri\":null,\"author\":null,\"comments\":null,\"publishedDate\":null,\"opened\":false,\"readed\":false}],\"siteFeedCounts\":[{\"uuid\":null,\"title\":null,\"count\":0,\"faviconBase64\":null}]}",
         result);
   }
 
