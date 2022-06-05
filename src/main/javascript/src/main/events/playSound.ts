@@ -7,7 +7,7 @@ const rpc = axios.create({ baseURL: 'http://localhost:50021', proxy: false });
 
 export default class PlaySound implements IElementEvent {
   private context = new AudioContext();
-  private talkFunc: () => void = null;
+  private talkFunc: (() => void) | undefined = undefined;
 
   setTalking(func: () => void) {
     this.talkFunc = func;
@@ -20,8 +20,13 @@ export default class PlaySound implements IElementEvent {
   }
 
   //text:喋ってもらいたい言葉
-  async genAudio(text: string) {
+  async genAudio(text: string | null) {
     console.log('genAudio() text:', text);
+
+    if (!text) {
+      return Promise.reject();
+    }
+
     /* まずtextを渡してsynthesis宛のパラメータを生成する、textはURLに付けるのでencodeURIで変換しておく。*/
     const audio_query = await rpc.post('audio_query?text=' + encodeURI(text) + '&speaker=1');
 

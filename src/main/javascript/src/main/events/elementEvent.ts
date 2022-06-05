@@ -5,8 +5,8 @@ export default class ElementEvent {
     this.executor = executor;
   }
 
-  setup<K extends keyof HTMLElementEventMap>(type: K, element: HTMLElement) {
-    element.addEventListener(type, () => this.executor.execute());
+  setup<K extends keyof HTMLElementEventMap>(type: K, element: HTMLElement | null) {
+    element?.addEventListener(type, () => this.executor.execute());
   }
 }
 

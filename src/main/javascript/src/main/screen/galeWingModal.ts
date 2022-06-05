@@ -4,12 +4,12 @@ export default class GaleWingModal {
   private modal: Modal;
   private modalBody: HTMLElement;
   private modalFooter: HTMLElement;
-  private submitFunc: (event: Event) => void;
+  private submitFunc: ((event: Event) => void) | undefined;
 
   constructor() {
-    this.modalBody = document.getElementById('modal-body');
-    this.modalFooter = document.getElementById('modal-footer');
-    this.modal = new Modal(document.getElementById('exampleModal'));
+    this.modalBody = document.getElementById('modal-body')!;
+    this.modalFooter = document.getElementById('modal-footer')!;
+    this.modal = new Modal(document.getElementById('exampleModal')!);
 
     this.modal;
   }
@@ -33,7 +33,7 @@ export default class GaleWingModal {
     this.modalFooter.appendChild(footer.cloneNode(true));
   }
 
-  setModalSubmit(callback?: (event: Event) => void) {
+  setModalSubmit(callback: (event: Event) => void) {
     var submit = this.modalFooter.getElementsByClassName('modal-submit');
     var submitEl = submit ? submit[0] : null;
 
@@ -54,15 +54,15 @@ export default class GaleWingModal {
       });
     }
 
-    document.getElementById('exampleModal').addEventListener(
+    document.getElementById('exampleModal')!.addEventListener(
       'hidden.bs.modal',
       (event) => {
-        var modalBody = document.getElementById('modal-body');
+        var modalBody = document.getElementById('modal-body')!;
         while (modalBody.firstChild) {
           modalBody.removeChild(modalBody.firstChild);
         }
 
-        var modalFooter = document.getElementById('modal-footer');
+        var modalFooter = document.getElementById('modal-footer')!;
         while (modalFooter.firstChild) {
           modalFooter.removeChild(modalFooter.firstChild);
         }
