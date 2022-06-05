@@ -14,13 +14,13 @@ function deleteSite(uuid: string) {
 }
 
 window.onload = () => {
-  var feedListBtn = document.getElementById('feedList');
+  var feedListBtn = document.getElementById('feedList')!;
   feedListBtn.addEventListener('click', () => {
     var url = new URL(location.href);
     location.href = url.origin;
   });
 
-  var feedUpdate = document.getElementById('feedUpdate');
+  var feedUpdate = document.getElementById('feedUpdate')!;
   feedUpdate.addEventListener('click', () => {
     window.location.href = '/site/lastUpdateDate';
   });

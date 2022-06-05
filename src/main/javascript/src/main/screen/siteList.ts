@@ -1,9 +1,9 @@
 function getSiteList(): HTMLElement {
-  return document.getElementById('siteList');
+  return document.getElementById('siteList')!;
 }
 
 function getSite(identifier: string) {
-  var target = document.getElementById(identifier);
+  var target = document.getElementById(identifier)!;
   var parent = target.parentElement;
 
   var prevParentElement = parent ? <HTMLElement>parent.previousElementSibling : null;

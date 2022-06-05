@@ -26,7 +26,7 @@ window.onload = () => {
       sort: true,
       search: true,
       data: res.data,
-    }).render(document.getElementById('wrapper'));
+    }).render(document.getElementById('wrapper')!);
   });
 };
 
