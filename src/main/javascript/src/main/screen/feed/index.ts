@@ -105,7 +105,7 @@ window.onload = async () => {
         sort: true,
         search: true,
         data: res.data,
-      }).render(document.getElementById('wrapper'));
+      }).render(<HTMLInputElement>document.getElementById('wrapper'));
       new ElementEvent(new UpdateFeed('identifier', grid)).setup(
         'click',
         document.getElementById('updateFeed'),
@@ -117,15 +117,15 @@ window.onload = async () => {
       );
 
       grid.on('rowClick', (event, row) => {
-        var link = null;
+        var link: string | undefined = undefined;
         if ((event.target as any).localName == 'path') {
-          var uuid = row.cell(7).data.toLocaleString();
-          link = row.cell(1).data.toLocaleString();
+          var uuid = row?.cell(7).data?.toLocaleString();
+          link = row?.cell(1).data?.toLocaleString();
           stack(uuid, link);
           return;
         }
 
-        link = row.cell(1).data.toLocaleString();
+        link = row?.cell(1).data?.toLocaleString();
         if ((event.target as any).localName != 'a') {
           window.open(link);
         }
@@ -139,7 +139,7 @@ window.onload = async () => {
           .then((response) => {
             // 未読数の更新
             response.data.forEach((element: { uuid: string; count: number }) => {
-              var countElement = document.getElementById(element.uuid + '_count');
+              var countElement = <HTMLInputElement>document.getElementById(element.uuid + '_count');
               countElement.innerText = element.count.toString();
             });
 
@@ -193,7 +193,7 @@ window.onload = async () => {
   new ElementEvent(ps).setup('click', document.getElementById('playTitle'));
 };
 
-function stack(uuid: string, link: string) {
+function stack(uuid: string | null | undefined, link: string | undefined) {
   var api = GaleWingApi.getInstance();
   api.stackFeed(window.location.href, uuid, link);
 }
@@ -211,15 +211,15 @@ function setupSidebar() {
   var mainContent = document.getElementById('mainContent');
 
   // イベント追加
-  sidebarToggler.addEventListener('click', () => {
+  sidebarToggler?.addEventListener('click', () => {
     // 表示状態判別
     if (showSidebar) {
-      sidemenu.classList.add('is-close');
-      mainContent.classList.add('wideMainContent');
+      sidemenu?.classList.add('is-close');
+      mainContent?.classList.add('wideMainContent');
       showSidebar = false;
     } else {
-      sidemenu.classList.remove('is-close');
-      mainContent.classList.remove('wideMainContent');
+      sidemenu?.classList.remove('is-close');
+      mainContent?.classList.remove('wideMainContent');
       showSidebar = true;
     }
   });

@@ -38,7 +38,14 @@ export default class GaleWingApi {
     return axios.get(ajaxUrl);
   }
 
-  stackFeed(url: string, uuid: string, link: string): Promise<AxiosResponse<any>> {
+  stackFeed(
+    url: string,
+    uuid: string | null | undefined,
+    link: string | undefined,
+  ): Promise<AxiosResponse<any>> {
+    if (!uuid) {
+      return Promise.reject();
+    }
     var baseUrl = new URL(url);
     var ajaxUrl = baseUrl.origin + this.apiUrls.stackFeed;
     return axios.post(ajaxUrl, { uuid: uuid, link: link });
