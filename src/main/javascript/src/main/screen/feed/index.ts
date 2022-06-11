@@ -15,6 +15,7 @@ import {
   faBookmark,
   faPlayCircle,
   faBackward,
+  faSearch,
 } from '@fortawesome/free-solid-svg-icons/index';
 
 import { faYoutube } from '@fortawesome/free-brands-svg-icons';
@@ -33,6 +34,7 @@ library.add(
   faPlayCircle,
   faBackward,
   faYoutube,
+  faSearch,
 );
 dom.watch();
 
@@ -57,7 +59,6 @@ import init from '../cardGridLayout';
 import GaleWingApi from '../../api/galeWingApi';
 import PlaySound from '../../events/playSound';
 import SettingApi from '../../api/settingApi';
-import ConfirmModalEvent from '../../events/modal/confirmModal';
 
 var setting: SettingApi;
 
@@ -82,7 +83,14 @@ window.onload = async () => {
             hidden: false,
             formatter: (cell, row) =>
               html(
-                `<a href='${row.cells[1].data}' target="_blank" rel="noopener" class="rss-link">${row.cells[0].data}</a>`,
+                `<a name="analysis" style="margin-right: 5px"  href='${
+                  window.location.origin +
+                  '/analysis/?targetLink=' +
+                  encodeURIComponent(String(row.cells[1].data))
+                }'><i class="fas fa-search"></i></a>
+                <a href='${row.cells[1].data}' target="_blank" rel="noopener" class="rss-link">${
+                  row.cells[0].data
+                }</a>`,
               ),
           },
           { name: 'link', hidden: true },
@@ -122,6 +130,13 @@ window.onload = async () => {
           var uuid = row?.cell(7).data?.toLocaleString();
           link = row?.cell(1).data?.toLocaleString();
           stack(uuid, link);
+          return;
+        }
+
+        if (
+          (event.target as any).name === 'analysis' ||
+          ((event.target as Element).parentElement as HTMLInputElement).name === 'analysis'
+        ) {
           return;
         }
 

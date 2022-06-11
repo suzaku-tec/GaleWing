@@ -136,4 +136,18 @@ public class FeedRepository {
         new ClasspathSqlResource("sql/feed/select_public_from.sql"), params);
   }
 
+  /**
+   * フィード単一取得
+   *
+   * @param link 対象リンク
+   * @return フィード
+   */
+  @Transactional
+  public Feed selectFeedFor(String link) {
+    Map<String, String> params = new HashMap<>();
+    params.put("link", link);
+    return sqlManager.getSingleResult(Feed.class,
+        new ClasspathSqlResource("sql/feed/select_for_link.sql"),
+        params);
+  }
 }
