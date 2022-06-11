@@ -8,6 +8,7 @@ export default class GaleWingApi {
     stackList: '/stack/list',
     stackFeed: '/stack/add',
     settingJson: '/settings/list/json',
+    jaroWinklerDistance: '/analysis/jaroWinklerDistance',
   };
 
   private static singleton: GaleWingApi;
@@ -55,6 +56,12 @@ export default class GaleWingApi {
     var baseUrl = new URL(window.location.href);
     var ajaxUrl = baseUrl.origin + this.apiUrls.settingJson;
     return axios.get(ajaxUrl);
+  }
+
+  jaroWinklerDistance(title: string): Promise<AxiosResponse<any>> {
+    var baseUrl = new URL(window.location.href);
+    var ajaxUrl = baseUrl.origin + this.apiUrls.jaroWinklerDistance;
+    return axios.get(ajaxUrl, { params: { targetTitle: title } });
   }
 
   static getInstance() {

@@ -13,6 +13,7 @@ const config = {
     siteManagement: './src/main/screen/site/index.ts',
     stack: './src/main/screen/stack/index.ts',
     youtube: './src/main/screen/youtube/galeWingYoutube.ts',
+    analysis: './src/main/screen/analysis/index.ts',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
