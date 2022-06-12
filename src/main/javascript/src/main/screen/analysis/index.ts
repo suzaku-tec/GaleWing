@@ -43,13 +43,14 @@ import 'gridjs/dist/theme/mermaid.css';
 
 import SettingApi from '../../api/settingApi';
 import GaleWingApi from '../../api/galeWingApi';
-import ElementEvent from '../../events/elementEvent';
-import UpdateFeed from '../../events/updateFeed';
+import axios from 'axios';
 
 window.onload = async () => {
   var setting = new SettingApi();
   await setting.init();
   setting.outputLog();
+
+  var uri = new URL(window.location.href);
 
   var api = GaleWingApi.getInstance();
   var target = <HTMLAnchorElement>document.getElementById('target')!;
@@ -62,7 +63,7 @@ window.onload = async () => {
           hidden: false,
           formatter: (cell, row) =>
             html(
-              `<a href='${row.cells[1].data}' target="_blank" rel="noopener" class="rss-link">${row.cells[0].data}</a>`,
+              `<a href='javascript:void(0)' target="_blank" rel="noopener" class="rss-link">${row.cells[0].data}</a>`,
             ),
         },
         { name: 'link', hidden: true },
@@ -71,11 +72,6 @@ window.onload = async () => {
         { name: 'comments', hidden: true },
         { name: 'publishedDate', hidden: false },
         { name: 'uuid', hidden: true },
-        {
-          name: '',
-          hidden: false,
-          formatter: (_, row) => html(`<i class="fas fa-bookmark" role="button"></i>`),
-        },
       ],
       pagination: {
         enabled: true,
@@ -85,9 +81,29 @@ window.onload = async () => {
       search: true,
       data: res.data,
     }).render(<HTMLInputElement>document.getElementById('wrapper'));
-    new ElementEvent(new UpdateFeed('identifier', grid)).setup(
-      'click',
-      document.getElementById('updateFeed'),
-    );
+
+    grid.on('rowClick', (event, row) => {
+      var link = row?.cell(1).data?.toLocaleString();
+      if (link) {
+        window.open(link);
+        axios
+          .post(uri.origin + '/readed', {
+            link: link,
+          })
+          .then(() => {
+            // 既読表示に変更
+            if ((event.target as any).localName == 'a') {
+              (event.target as HTMLElement).classList.remove('rss-link');
+              (event.target as HTMLElement).classList.add('rss-readed-link');
+            } else {
+              var innerHTML = (event.target as HTMLElement).innerHTML;
+              (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-readed-link');
+            }
+          })
+          .catch((error: any) => {
+            console.log(error);
+          });
+      }
+    });
   });
 };
