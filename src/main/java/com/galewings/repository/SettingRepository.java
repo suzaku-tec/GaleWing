@@ -40,4 +40,11 @@ public class SettingRepository {
         new ClasspathSqlResource("sql/settings/select_setting.sql"));
   }
 
+  @Transactional
+  public Settings selectOneFor(String id) {
+    Map<String, String> params = new HashMap<>();
+    params.put("id", id);
+    return sqlManager.getSingleResult(Settings.class,
+        new ClasspathSqlResource("sql/settings/select_one_setting.sql"), params);
+  }
 }
