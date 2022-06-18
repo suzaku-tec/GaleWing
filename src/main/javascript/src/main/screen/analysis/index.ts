@@ -44,6 +44,8 @@ import 'gridjs/dist/theme/mermaid.css';
 import SettingApi from '../../api/settingApi';
 import GaleWingApi from '../../api/galeWingApi';
 import axios from 'axios';
+import ElementEvent from '../../events/elementEvent';
+import AnalysisReadAll from '../../events/analysisReadAll';
 
 window.onload = async () => {
   var setting = new SettingApi();
@@ -63,7 +65,7 @@ window.onload = async () => {
           hidden: false,
           formatter: (cell, row) =>
             html(
-              `<a href='javascript:void(0)' target="_blank" rel="noopener" class="rss-link">${row.cells[0].data}</a>`,
+              `<a href='javascript:void(0)' rel="noopener" class="rss-link" data-link="${row.cells[1].data}">${row.cells[0].data}</a>`,
             ),
         },
         { name: 'link', hidden: true },
@@ -105,5 +107,7 @@ window.onload = async () => {
           });
       }
     });
+
+    new ElementEvent(new AnalysisReadAll()).setup('click', document.getElementById('playTitle'));
   });
 };

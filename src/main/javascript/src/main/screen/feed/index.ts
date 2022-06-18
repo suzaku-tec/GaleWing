@@ -230,11 +230,15 @@ function setupSidebar() {
     // 表示状態判別
     if (showSidebar) {
       sidemenu?.classList.add('is-close');
+      sidemenu?.classList.remove('col-md-3');
       mainContent?.classList.add('wideMainContent');
+      mainContent?.classList.remove('col-md-9');
       showSidebar = false;
     } else {
       sidemenu?.classList.remove('is-close');
+      sidemenu?.classList.add('col-md-3');
       mainContent?.classList.remove('wideMainContent');
+      mainContent?.classList.add('col-md-9');
       showSidebar = true;
     }
   });
