@@ -1,9 +1,12 @@
 package com.galewings.service;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import com.galewings.entity.Feed;
+import com.galewings.entity.Settings;
 import com.galewings.repository.FeedRepository;
+import com.galewings.repository.SettingRepository;
 import java.util.List;
 import org.apache.lucene.search.spell.JaroWinklerDistance;
 import org.junit.jupiter.api.Assertions;
@@ -19,6 +22,10 @@ class GwJaroDistanceServiceTest {
   JaroWinklerDistance jaroWinklerDistance;
   @Mock
   FeedRepository feedRepository;
+
+  @Mock
+  SettingRepository settingRepository;
+
   @InjectMocks
   GwJaroDistanceService gwJaroDistanceService;
 
@@ -35,6 +42,10 @@ class GwJaroDistanceServiceTest {
     testData2.title = "親父にもぶたれたことないのに";
     when(feedRepository.getAllFeed()).thenReturn(List.of(testData1, testData2));
 
+    Settings settings = new Settings();
+    settings.setting = "0.6";
+    when(settingRepository.selectOneFor(anyString())).thenReturn(settings);
+
     List<Feed> result = gwJaroDistanceService.resembleTitleForJaroWinkler(
         "胸なんて飾りです。男にはそれが分からんのです。");
     Assertions.assertEquals(List.of(testData1), result);
@@ -44,6 +55,11 @@ class GwJaroDistanceServiceTest {
   void testResembleTitleForJaroWinkler2() {
     Feed testData = new Feed();
     testData.title = "足なんて飾りです。偉い人にはそれが分からんのです。";
+
+    Settings settings = new Settings();
+    settings.setting = "0.6";
+    when(settingRepository.selectOneFor(anyString())).thenReturn(settings);
+
     List<Feed> result = gwJaroDistanceService.resembleTitleForJaroWinkler("胸なんて飾りです。男にはそれが分からんのです。",
         List.of(testData));
     Assertions.assertEquals(List.of(testData), result);
