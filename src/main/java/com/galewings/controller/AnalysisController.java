@@ -1,5 +1,6 @@
 package com.galewings.controller;
 
+import com.galewings.dto.input.AnalysisFeedAllReadDto;
 import com.galewings.entity.Feed;
 import com.galewings.repository.FeedRepository;
 import com.galewings.service.GwJaroDistanceService;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,5 +45,16 @@ public class AnalysisController {
   public List<Feed> jaroWinklerDistance(
       @RequestParam(value = "targetTitle", required = true) String targetTitle) {
     return jaroDistanceService.resembleTitleForJaroWinkler(targetTitle);
+  }
+
+  @PostMapping("/feed/allRead")
+  @ResponseBody
+  public boolean allRead(@RequestBody AnalysisFeedAllReadDto analysisFeedAllReadDto) {
+
+    analysisFeedAllReadDto.links.stream().forEach(link -> {
+      feedRepository.updateReadFeed(link);
+    });
+
+    return true;
   }
 }
