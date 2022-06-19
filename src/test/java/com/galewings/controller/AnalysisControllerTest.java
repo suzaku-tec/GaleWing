@@ -3,6 +3,7 @@ package com.galewings.controller;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
 
+import com.galewings.ModelMock;
 import com.galewings.dto.input.AnalysisFeedAllReadDto;
 import com.galewings.entity.Feed;
 import com.galewings.repository.FeedRepository;
@@ -37,7 +38,7 @@ class AnalysisControllerTest {
   void testIndex() throws UnsupportedEncodingException {
     when(feedRepository.selectFeedFor(anyString())).thenReturn(new Feed());
 
-    String result = analysisController.index("targetLink", null);
+    String result = analysisController.index("targetLink", new ModelMock());
     Assertions.assertEquals("analysis", result);
   }
 
