@@ -42,7 +42,7 @@ export default class ReadAllShowFeed implements IElementEvent {
 
   updateSiteFeedCount(data: [{ uuid: string; title: string; count: number }]) {
     data.forEach((d) => {
-      var cntEl = document.getElementById(d.uuid + '_count');
+      var cntEl = document.getElementById(d.uuid + '_count')!;
       cntEl.innerText = d.count.toString();
     });
   }
