@@ -7,6 +7,8 @@
     overflow-y: auto;
     transition-duration: 1s;
     max-height: 100vh;
+    margin-right: 0px;
+    padding-right: 0px;
 }
 
 /* 見栄え */
@@ -36,6 +38,11 @@ main{
     color: #808080;
 }
 
+.rss-read-link {
+    text-decoration: none;
+    color: #808080;
+}
+
 .page-content {
 	display: block;
 }
@@ -46,12 +53,13 @@ main{
 }
 
 .is-close {
-  transform: translateX(-16em);
+/*  transform: translateX(-17em);*/
   transition-duration: 1s;
+  display: none;
 }
 
 .wideMainContent {
-  transform: translateX(-16em);
+/*  transform: translateX(-17em);*/
   transition-duration: 1s;
 }
 
