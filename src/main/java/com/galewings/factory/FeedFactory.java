@@ -30,7 +30,6 @@ public class FeedFactory {
     try {
       f.publishedDate = sdFormat.format(syndEntry.getPublishedDate());
     } catch (NullPointerException e) {
-      e.printStackTrace();
       f.publishedDate = null;
     }
 

@@ -31,6 +31,11 @@ public class FaviconService {
       URL favGet = new URL("http://www.google.com/s2/favicons?domain=" + domain);
 
       var img = ImageIO.read(favGet);
+
+      if (img == null) {
+        return Optional.empty();
+      }
+
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       ImageIO.write(img, "png", baos);
       baos.flush();
@@ -46,6 +51,9 @@ public class FaviconService {
       e.printStackTrace();
       return Optional.empty();
     } catch (IOException e) {
+      e.printStackTrace();
+      return Optional.empty();
+    } catch (Exception e) {
       e.printStackTrace();
       return Optional.empty();
     }

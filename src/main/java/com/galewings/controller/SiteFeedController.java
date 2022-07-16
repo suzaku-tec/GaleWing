@@ -15,6 +15,7 @@ import com.galewings.factory.FeedFactory;
 import com.galewings.factory.SiteFactory;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.SiteRepository;
+import com.galewings.service.URLService;
 import com.google.common.base.Strings;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
@@ -27,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -58,6 +60,9 @@ public class SiteFeedController {
    */
   @Autowired
   FeedRepository feedRepository;
+
+  @Autowired
+  private URLService urlService;
 
   /**
    * 対象サイトのフィードを取得
@@ -175,20 +180,35 @@ public class SiteFeedController {
       throw new IllegalArgumentException("不正なURLです");
     }
 
-    var rssUrlList = searchRssUrlList(dto.getLink());
+    String protocol = new URL(dto.getLink()).getProtocol();
+    List<String> rssUrlList = searchRssUrlList(dto.getLink());
 
     if (0 < rssUrlList.size()) {
-      var url = rssUrlList.get(0);
-      Optional<SyndFeed> syndFeedOptional = getSyndFeed(url);
-      syndFeedOptional.ifPresent(syndFeed -> {
-        Site site = SiteFactory.create(url, syndFeed);
+      rssUrlList.stream().forEach(url -> {
+        // TODO メソッド化を考える
+        try {
+          Optional<SyndFeed> syndFeedOptional = getSyndFeed(url);
+          syndFeedOptional.ifPresent(syndFeed -> {
 
-        // サイト追加
-        siteRepository.insertEntity(site);
+            int cnt = siteRepository.countSiteForHtmlUrl(syndFeed.getLink());
+            if (0 < cnt) {
+              return;
+            }
 
-        // フィード追加
-        syndFeed.getEntries().stream().map(syndEntry -> FeedFactory.create(syndEntry, site.uuid))
-            .forEach(feedRepository::insertEntity);
+            Site site = SiteFactory.create(url, syndFeed);
+
+            // サイト追加
+            siteRepository.insertEntity(site);
+
+            // フィード追加
+            syndFeed.getEntries().stream()
+                .map(syndEntry -> FeedFactory.create(syndEntry, site.uuid))
+                .forEach(feedRepository::insertEntity);
+          });
+        } catch (Exception e) {
+          // 特に何もしない
+          e.printStackTrace();
+        }
       });
     }
   }
@@ -219,17 +239,35 @@ public class SiteFeedController {
       return List.of(link);
     }
 
+    if (getSyndFeed(link).isPresent()) {
+      return List.of(link);
+    }
+
     try {
+      String domain = urlService.getUrlDomain(link);
+
       Document document = Jsoup.connect(link).get();
-      Elements elements = document.select("link[type*='atom+xml'],link[type*='rss+xml']");
+      Elements elements = document.select(
+          "link[type*='atom+xml'],link[type*='rss+xml'],a[href^='/'],a[href^='" + domain + "']");
 
       if (0 < elements.size()) {
-        return elements.stream().map(element -> element.attr("href")).collect(Collectors.toList());
+        return elements.stream().map(element -> {
+              if ("link".equals(StringUtils.toRootLowerCase(element.tagName()))) {
+                return element.text();
+              } else if ("a".equals(StringUtils.toRootLowerCase(element.tagName()))) {
+                return element.attr("href");
+              } else {
+                return StringUtils.EMPTY;
+              }
+            }).filter(StringUtils::isNoneBlank)
+            .map(url -> urlService.fixUrl(domain, url)).filter(opt -> opt.isPresent())
+            .map(opt -> opt.get()).collect(
+                Collectors.toList());
       } else {
-        return Collections.emptyList();
+        return Collections.EMPTY_LIST;
       }
     } catch (IOException e) {
-      return Collections.emptyList();
+      return Collections.EMPTY_LIST;
     }
   }
 
