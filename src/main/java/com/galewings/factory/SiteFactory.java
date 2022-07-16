@@ -30,7 +30,7 @@ public class SiteFactory {
    */
   public static Site create(String rssUrl, SyndFeed feed) {
     FaviconService faviconUtil = new FaviconService();
-    var favicon = faviconUtil.getBase64Favicon(feed.getLink()).orElse(Strings.EMPTY);
+    String favicon = faviconUtil.getBase64Favicon(feed.getLink()).orElse(Strings.EMPTY);
     return create(rssUrl, feed, favicon);
   }
 

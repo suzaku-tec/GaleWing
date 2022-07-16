@@ -84,6 +84,18 @@ public class SiteRepository {
         new ClasspathSqlResource("sql/site/select_site_count_for_link.sql"), params);
   }
 
+  @Transactional
+  public int countSiteForHtmlUrl(String htmlUrl) {
+    Map<String, String> params = new HashMap<>();
+    params.put("htmlUrl", htmlUrl);
+    int count = sqlManager.getCount(
+        new ClasspathSqlResource("sql/site/select_site_for_htmlUrl.sql"),
+        params
+    );
+
+    return count;
+  }
+
   /**
    * サイト情報追加
    *
