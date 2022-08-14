@@ -176,11 +176,11 @@ public class SiteFeedController {
   public void addSiteFeed(@RequestBody AddFeedDto dto) throws IOException {
     String[] schemes = {"http", "https"};
     UrlValidator urlValidator = new UrlValidator(schemes);
+    dto.setLink(StringUtils.trimToEmpty(dto.getLink()));
     if (!urlValidator.isValid(dto.getLink())) {
       throw new IllegalArgumentException("不正なURLです");
     }
 
-    String protocol = new URL(dto.getLink()).getProtocol();
     List<String> rssUrlList = searchRssUrlList(dto.getLink());
 
     if (0 < rssUrlList.size()) {
@@ -235,7 +235,7 @@ public class SiteFeedController {
    */
   private List<String> searchRssUrlList(String link) {
 
-    if (link.endsWith(".rdf")) {
+    if (link.endsWith(".rdf") || link.endsWith(".rss")) {
       return List.of(link);
     }
 
@@ -253,7 +253,12 @@ public class SiteFeedController {
       if (0 < elements.size()) {
         return elements.stream().map(element -> {
               if ("link".equals(StringUtils.toRootLowerCase(element.tagName()))) {
-                return element.text();
+
+                if (StringUtils.isNotBlank(element.attr("href"))) {
+                  return element.attr("href");
+                } else {
+                  return element.text();
+                }
               } else if ("a".equals(StringUtils.toRootLowerCase(element.tagName()))) {
                 return element.attr("href");
               } else {
