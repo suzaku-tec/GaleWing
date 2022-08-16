@@ -148,7 +148,7 @@ window.onload = async () => {
         console.log('link:', link);
 
         axios
-          .post(uri.origin + '/readed', {
+          .post(uri.origin + '/read', {
             link: link,
           })
           .then((response) => {
@@ -161,10 +161,10 @@ window.onload = async () => {
             // 既読表示に変更
             if ((event.target as any).localName == 'a') {
               (event.target as HTMLElement).classList.remove('rss-link');
-              (event.target as HTMLElement).classList.add('rss-readed-link');
+              (event.target as HTMLElement).classList.add('rss-read-link');
             } else {
               var innerHTML = (event.target as HTMLElement).innerHTML;
-              (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-readed-link');
+              (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-read-link');
             }
           })
           .catch((error) => {

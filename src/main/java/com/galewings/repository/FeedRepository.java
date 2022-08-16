@@ -104,7 +104,7 @@ public class FeedRepository {
     Map<String, String> params = new HashMap<>();
     params.put("link", link);
     return sqlManager.executeUpdate(
-        new ClasspathSqlResource("sql/feed/update_feed_readed.sql")
+        new ClasspathSqlResource("sql/feed/update_feed_read.sql")
         , params
     );
   }
