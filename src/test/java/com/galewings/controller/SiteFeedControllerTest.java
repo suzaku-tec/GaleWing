@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.galewings.dto.AddFeedDto;
 import com.galewings.dto.ReadAllShowFeedDto;
-import com.galewings.dto.ReadiedDto;
+import com.galewings.dto.ReadDto;
 import com.galewings.dto.UpdateFeedDto;
 import com.galewings.entity.Feed;
 import com.galewings.entity.Site;
@@ -59,7 +59,7 @@ class SiteFeedControllerTest {
         List.of(new SiteFeedCount()));
     when(feedRepository.updateReadFeed(anyString())).thenReturn(0);
 
-    String result = siteFeedController.readedFeed(new ReadiedDto());
+    String result = siteFeedController.readFeed(new ReadDto());
     assertEquals("[]", result);
   }
 

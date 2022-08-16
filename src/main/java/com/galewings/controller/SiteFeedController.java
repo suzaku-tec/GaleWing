@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galewings.dto.AddFeedDto;
 import com.galewings.dto.GaleWingSiteFeed;
 import com.galewings.dto.ReadAllShowFeedDto;
-import com.galewings.dto.ReadiedDto;
+import com.galewings.dto.ReadDto;
 import com.galewings.dto.UpdateFeedDto;
 import com.galewings.dto.output.FeedUpdate;
 import com.galewings.entity.Feed;
@@ -94,9 +94,9 @@ public class SiteFeedController {
    * @return サイトの未読フィード件数リスト
    * @throws UnsupportedEncodingException エンコード失敗例外
    */
-  @PostMapping(value = "/readed")
+  @PostMapping(value = "/read")
   @ResponseBody
-  public String readedFeed(@RequestBody ReadiedDto dto)
+  public String readFeed(@RequestBody ReadDto dto)
       throws UnsupportedEncodingException, JsonProcessingException {
     feedRepository.updateReadFeed(dto.getLink());
 
