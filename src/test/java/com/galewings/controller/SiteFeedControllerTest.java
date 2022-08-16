@@ -16,6 +16,7 @@ import com.galewings.entity.Site;
 import com.galewings.entity.SiteFeedCount;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.SiteRepository;
+import com.galewings.service.URLService;
 import com.rometools.rome.io.FeedException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -33,6 +34,9 @@ class SiteFeedControllerTest {
 
   @Mock
   private FeedRepository feedRepository;
+
+  @Mock
+  private URLService urlService;
 
   @InjectMocks
   private SiteFeedController siteFeedController;
@@ -94,6 +98,7 @@ class SiteFeedControllerTest {
   @Test
   void testAddSiteFeed() throws IOException {
     when(siteRepository.insertEntity(any())).thenReturn(0);
+    when(urlService.getUrlDomain(anyString())).thenReturn("http://127.0.0.1");
 
     AddFeedDto testDto = new AddFeedDto();
     testDto.setLink("http://127.0.0.1");
