@@ -33,7 +33,7 @@ main{
     color: #000000;
 }
 
-.rss-readed-link {
+.rss-read-link {
     text-decoration: none;
     color: #808080;
 }
@@ -78,6 +78,15 @@ body {
   display: none;
 }
 
+.list-group-item {
+  background-color: white;
+  padding: 5px;
+}
+
 .list-group-item-selected {
   border: solid 2px #ff6a00;
+}
+
+li#siteList div {
+  padding-bottom: 2px;
 }
