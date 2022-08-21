@@ -13,6 +13,8 @@ export default class AddCategoryEvent implements IElementEvent {
       GaleWingApi.getInstance()
         .addCategory(nameEl.value, descriptionEl.value)
         .then(() => {
+          nameEl.value = '';
+          descriptionEl.value = '';
           modal.hide();
         })
         .catch(() => {
