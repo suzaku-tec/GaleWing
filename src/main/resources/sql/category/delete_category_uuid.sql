@@ -1,0 +1,1 @@
+delete from category where uuid = /*uuid*/0;
