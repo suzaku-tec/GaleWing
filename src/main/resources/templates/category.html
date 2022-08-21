@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html class="h-100" lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="ie=edge" http-equiv="X-UA-Compatible">
+  <meta content="Enter your description here" name="Description"/>
+  <title>Title</title>
+
+  <script src="js/category.js"></script>
+
+  <link href="style.css" rel="stylesheet">
+  <link href="tree.css" rel="stylesheet">
+</head>
+<body class="h-100 bg-light">
+<!-- 全ページを囲む要素 -->
+<main class="h-100">
+  <div class="page-wrapper d-flex flex-row h-100">
+
+    <!-- サイトバーメニュー -->
+    <nav class="sidebar bg-primary bg-gradient side">
+      <div class="brand p-4">
+        <h4>
+          Sidabar Sample
+        </h4>
+      </div>
+      <ul class="nav flex-column m-o p-3" id="navi">
+        <li class="nav-item mb-2">
+          <a class="nav-link" href="/">Feed List</a>
+        </li>
+      </ul>
+    </nav>
+    <!-- サイトバーメニュー -->
+
+    <!-- 全ページの右のコンテンツ -->
+    <div class="page-content main w-100">
+
+      <!-- トップバー -->
+      <nav class="navbar px-3 bg-light border-bottom shadow-sm">
+        <div class="navbar-brand toggle-menu">
+          <button class="btn btn-outline-secondary" id="addCategory" type="button">
+            <span style="font-size: 2em; color: #33cc99;">
+                <i class="fas fa-plus"></i>
+            </span>
+          </button>
+
+        </div>
+      </nav>
+      <!-- トップバー -->
+
+      <!-- 下のコンテンツ -->
+      <div class="container-fuild pt-3">
+        <div>
+          <table border="1" class="table table-hover">
+            <thead>
+            <tr>
+              <th scope="col">uuid</th>
+              <th scope="col">name</th>
+              <th scope="col">description</th>
+              <th scope="col">action</th>
+            </tr>
+            </thead>
+            <tr th:each="category: ${categoryList}">
+              <td th:text="${category.uuid}"></td>
+              <td th:text="${category.name}"></td>
+              <td th:text="${category.description}"></td>
+              <td>
+                <button class="btn btn-danger"
+                        th:onclick="deleteCategory([[${category.uuid}]]);">
+                  delete
+                </button>
+              </td>
+            </tr>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- 下のコンテンツ -->
+
+    </div>
+    <!-- 全ページの右のコンテンツ -->
+
+  </div>
+</main>
+<!-- 全ページを囲む要素 -->
+<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal"
+     tabindex="-1">
+  <div class="modal-dialog" id="modal-dialog">
+    <div class="modal-content" id="modal-content">
+      <div class="modal-header" id="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"
+                id="modal-header-btn-close"
+                type="button"></button>
+      </div>
+      <div class="modal-body" id="modal-body">
+        <div>category name</div>
+        <input class="form-control addSiteUrl" id="name" placeholder="category name" type="text">
+        <div>category description</div>
+        <input class="form-control " id="description" placeholder="description" type="text">
+      </div>
+      <div class="modal-footer" id="modal-footer">
+        <button class="btn btn-primary modal-submit" id="execute" type="button">complete!</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

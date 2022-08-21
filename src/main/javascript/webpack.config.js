@@ -14,6 +14,7 @@ const config = {
     stack: './src/main/screen/stack/index.ts',
     youtube: './src/main/screen/youtube/galeWingYoutube.ts',
     analysis: './src/main/screen/analysis/index.ts',
+    category: './src/main/screen/category/index.ts',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
