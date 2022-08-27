@@ -15,6 +15,7 @@ const config = {
     youtube: './src/main/screen/youtube/galeWingYoutube.ts',
     analysis: './src/main/screen/analysis/index.ts',
     category: './src/main/screen/category/index.ts',
+    siteCategory: './src/main/screen/siteCategory/index.ts',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
