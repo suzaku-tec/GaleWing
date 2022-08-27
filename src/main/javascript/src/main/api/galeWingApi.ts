@@ -13,6 +13,8 @@ export default class GaleWingApi {
     siteCategoryList: '/category/site/list',
     deleteCategory: '/category/delete',
     addCategory: '/category/add',
+    addSiteCategory: '/siteCategory/add',
+    deleteSiteCategory: '/siteCategory/delete',
   };
 
   private static singleton: GaleWingApi;
@@ -90,6 +92,18 @@ export default class GaleWingApi {
     let baseUrl = new URL(window.location.href);
     let ajaxUrl = baseUrl.origin + this.apiUrls.deleteCategory;
     return axios.post(ajaxUrl, { uuid: uuid });
+  }
+
+  addSiteCategory(siteUuid: string, categoryUuid: string): Promise<AxiosResponse<any>> {
+    let baseUrl = new URL(window.location.href);
+    let ajaxUrl = baseUrl.origin + this.apiUrls.addSiteCategory;
+    return axios.post(ajaxUrl, { siteUuid: siteUuid, categoryUuid: categoryUuid });
+  }
+
+  deleteSiteCategory(siteUuid: string, categoryUuid: string): Promise<AxiosResponse<any>> {
+    let baseUrl = new URL(window.location.href);
+    let ajaxUrl = baseUrl.origin + this.apiUrls.deleteSiteCategory;
+    return axios.post(ajaxUrl, { siteUuid: siteUuid, categoryUuid: categoryUuid });
   }
 
   static getInstance() {
