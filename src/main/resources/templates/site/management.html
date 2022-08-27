@@ -56,9 +56,12 @@
             <td><a th:href="@{(${site.htmlUrl})}">[[${site.htmlUrl}]]</a></td>
             <td>[[${site.lastUpdate}]]</td>
             <td>
+              <button class="btn btn-primary" th:onclick="siteCategory([[${site.uuid}]]);">
+                tags
+              </button>
               <button th:onclick="deleteSite([[${site.uuid}]]);"
                       class="btn btn-danger">
-                delete
+                del
               </button>
             </td>
           </tr>
