@@ -1,3 +1,4 @@
+import { uuid } from './../../../@types/readedRes.d';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'gridjs/dist/theme/mermaid.css';
 
@@ -13,6 +14,10 @@ function deleteSite(uuid: string) {
   });
 }
 
+function siteCategory(uuid: string) {
+  location.href = location.origin + `/siteCategory?uuid=${uuid}`;
+}
+
 window.onload = () => {
   var feedListBtn = document.getElementById('feedList')!;
   feedListBtn.addEventListener('click', () => {
@@ -26,4 +31,4 @@ window.onload = () => {
   });
 };
 
-export default { hideModifier, deleteSite };
+export default { hideModifier, deleteSite, siteCategory };
