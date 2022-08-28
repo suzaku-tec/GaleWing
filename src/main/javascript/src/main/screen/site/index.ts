@@ -1,4 +1,3 @@
-import { uuid } from './../../../@types/readedRes.d';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'gridjs/dist/theme/mermaid.css';
 
