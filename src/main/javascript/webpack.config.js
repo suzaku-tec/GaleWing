@@ -16,6 +16,7 @@ const config = {
     analysis: './src/main/screen/analysis/index.ts',
     category: './src/main/screen/category/index.ts',
     siteCategory: './src/main/screen/siteCategory/index.ts',
+    categoryFeed: './src/main/screen/category/categoryFeed.ts',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

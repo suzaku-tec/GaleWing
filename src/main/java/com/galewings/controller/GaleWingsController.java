@@ -37,5 +37,4 @@ public class GaleWingsController {
     model.addAttribute("identifier", uuid);
     return "index";
   }
-
 }

@@ -1,8 +1,10 @@
 package com.galewings.controller;
 
 import com.galewings.dto.input.AddSiteCategoryDto;
+import com.galewings.dto.input.CategoryFeedDto;
 import com.galewings.dto.input.DeleteSiteCategory;
 import com.galewings.entity.Category;
+import com.galewings.entity.Feed;
 import com.galewings.entity.Site;
 import com.galewings.repository.CategoryRepository;
 import com.galewings.repository.SiteCategoryRepository;
@@ -60,5 +62,11 @@ public class SiteCategoryController {
   public void delete(@RequestBody DeleteSiteCategory deleteSiteCategory) {
     siteCategoryRepository.deleteCategory(deleteSiteCategory.categoryUuid,
         deleteSiteCategory.siteUuid);
+  }
+
+  @PostMapping("/feed")
+  @ResponseBody
+  public List<Feed> categoryFeed(@RequestBody CategoryFeedDto categoryFeedDto) {
+    return siteCategoryRepository.selectCategory(categoryFeedDto.category);
   }
 }

@@ -4,6 +4,7 @@ import com.galewings.dto.input.AddCategory;
 import com.galewings.dto.input.DeleteCategory;
 import com.galewings.entity.Category;
 import com.galewings.repository.CategoryRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,4 +43,12 @@ public class CategoryController {
   public void delete(@RequestBody DeleteCategory deleteCategory) {
     categoryRepository.delete(deleteCategory.uuid);
   }
+
+  @GetMapping("/feed")
+  public String categoryFeed(Model model) {
+    List<Category> categoryList = categoryRepository.selectAll();
+    model.addAttribute("categoryList", categoryList);
+    return "category/feed";
+  }
+
 }

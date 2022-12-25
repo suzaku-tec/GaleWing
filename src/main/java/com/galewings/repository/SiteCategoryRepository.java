@@ -1,6 +1,7 @@
 package com.galewings.repository;
 
 import com.galewings.entity.Category;
+import com.galewings.entity.Feed;
 import com.miragesql.miragesql.ClasspathSqlResource;
 import com.miragesql.miragesql.SqlManager;
 import java.util.HashMap;
@@ -41,5 +42,13 @@ public class SiteCategoryRepository {
     param.put("siteUuid", siteUuid);
     return sqlManager.executeUpdate(
         new ClasspathSqlResource("sql/siteCategory/delete_site_category.sql"), param);
+  }
+
+  public List<Feed> selectCategory(List<String> categoryList) {
+    Map<String, List<String>> param = new HashMap<>();
+    param.put("categoryList", categoryList);
+
+    return sqlManager.getResultList(Feed.class,
+        new ClasspathSqlResource("sql/siteCategory/select_category_list.sql"), param);
   }
 }
