@@ -2,9 +2,12 @@ package com.galewings.repository;
 
 import com.galewings.entity.Feed;
 import com.galewings.entity.Site;
+import com.google.common.base.Strings;
 import com.miragesql.miragesql.ClasspathSqlResource;
 import com.miragesql.miragesql.SqlManager;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -149,5 +152,19 @@ public class FeedRepository {
     return sqlManager.getSingleResult(Feed.class,
         new ClasspathSqlResource("sql/feed/select_for_link.sql"),
         params);
+  }
+
+  @Transactional
+  public void deleteReadFeed(String daysRetained) {
+
+    LocalDate now = LocalDate.now();
+    now.minusDays(Strings.isNullOrEmpty(daysRetained) ? 0 : Integer.parseInt(daysRetained));
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    Map<String, String> params = new HashMap<>();
+    params.put("daysRetained", now.format(formatter));
+    sqlManager.executeUpdate(
+        new ClasspathSqlResource("sql/feed/delete_read_feed.sql"), params
+    );
   }
 }
