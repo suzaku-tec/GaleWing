@@ -158,7 +158,7 @@ public class FeedRepository {
   public void deleteReadFeed(String daysRetained) {
 
     LocalDate now = LocalDate.now();
-    now.minusDays(Strings.isNullOrEmpty(daysRetained) ? 0 : Integer.parseInt(daysRetained));
+    now = now.minusDays(Strings.isNullOrEmpty(daysRetained) ? 0 : Integer.parseInt(daysRetained));
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     Map<String, String> params = new HashMap<>();
