@@ -4,6 +4,7 @@ import com.galewings.dto.output.SiteLastFeedDto;
 import com.galewings.entity.Site;
 import com.galewings.entity.SiteFeedCount;
 import com.galewings.service.FaviconService;
+import com.galewings.service.GwDateService;
 import com.miragesql.miragesql.ClasspathSqlResource;
 import com.miragesql.miragesql.SqlManager;
 import java.util.HashMap;
@@ -31,6 +32,12 @@ public class SiteRepository {
    */
   @Autowired
   FaviconService faviconUtil;
+
+  @Autowired
+  SiteRepository siteRepository;
+
+  @Autowired
+  GwDateService gwDateService;
 
   /**
    * サイト情報取得
@@ -171,5 +178,20 @@ public class SiteRepository {
   public List<SiteLastFeedDto> selectSiteLastFeed() {
     return sqlManager.getResultList(SiteLastFeedDto.class,
         new ClasspathSqlResource("sql/feed/select_last_feed.sql"));
+  }
+
+  @Transactional
+  public int updateFeedUpdateDate(String uuid, String feedUpdateDate) {
+    if (gwDateService.checkFormatDate(feedUpdateDate,
+        GwDateService.DateFormat.SQLITE_DATE_FORMAT)) {
+      Map<String, String> param = new HashMap<>();
+      param.put("uuid", uuid);
+      param.put("feedUpdateDate", feedUpdateDate);
+
+      return sqlManager.executeUpdate(
+          new ClasspathSqlResource("sql/site/update_feed_updateDate.sql"), param);
+    } else {
+      return 0;
+    }
   }
 }
