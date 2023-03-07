@@ -6,7 +6,9 @@ import static org.mockito.Mockito.when;
 import com.galewings.entity.Site;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.SiteRepository;
+import com.galewings.service.GwDateService;
 import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,8 +19,13 @@ class AutoUpdateTaskTest {
 
   @Mock
   SiteRepository siteRepository;
+
   @Mock
   FeedRepository feedRepository;
+
+  @Mock
+  GwDateService gwDateService;
+
   @InjectMocks
   AutoUpdateTask autoUpdateTask;
 
@@ -29,7 +36,7 @@ class AutoUpdateTaskTest {
 
   @Test
   void testAllUpdate() {
-    when(siteRepository.getAllSite()).thenReturn(Arrays.asList(new Site()));
+    when(siteRepository.getAllSite()).thenReturn(List.of(new Site()));
     when(feedRepository.existFeed(anyString())).thenReturn(true);
 
     autoUpdateTask.allUpdate();
