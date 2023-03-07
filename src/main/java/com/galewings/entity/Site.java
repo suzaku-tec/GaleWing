@@ -24,4 +24,8 @@ public class Site {
 
   @Column(name = "lastUpdate")
   public String lastUpdate;
+
+  @Column(name = "feedUpdateDate")
+  public String feedUpdateDate;
+
 }
