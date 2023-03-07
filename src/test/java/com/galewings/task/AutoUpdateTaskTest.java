@@ -7,7 +7,6 @@ import com.galewings.entity.Site;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.SiteRepository;
 import com.galewings.service.GwDateService;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
