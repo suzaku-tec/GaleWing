@@ -9,7 +9,6 @@ import com.galewings.dto.input.SiteDeleteDto;
 import com.galewings.dto.output.SiteLastFeedDto;
 import com.galewings.entity.Site;
 import com.galewings.repository.SiteRepository;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
