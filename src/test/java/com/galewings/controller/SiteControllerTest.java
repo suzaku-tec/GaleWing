@@ -10,6 +10,7 @@ import com.galewings.dto.output.SiteLastFeedDto;
 import com.galewings.entity.Site;
 import com.galewings.repository.SiteRepository;
 import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,17 +28,17 @@ class SiteControllerTest {
 
   @Test
   void testGetSiteList() throws JsonProcessingException {
-    when(siteRepository.getAllSite()).thenReturn(Arrays.asList(new Site()));
+    when(siteRepository.getAllSite()).thenReturn(List.of(new Site()));
 
     String result = siteController.getSiteList();
     Assertions.assertEquals(
-        "[{\"uuid\":null,\"title\":null,\"htmlUrl\":null,\"xmlUrl\":null,\"faviconBase64\":null,\"lastUpdate\":null}]",
+        "[{\"uuid\":null,\"title\":null,\"htmlUrl\":null,\"xmlUrl\":null,\"faviconBase64\":null,\"lastUpdate\":null,\"feedUpdateDate\":null}]",
         result);
   }
 
   @Test
   void testIndex() {
-    when(siteRepository.getAllSite()).thenReturn(Arrays.asList(new Site()));
+    when(siteRepository.getAllSite()).thenReturn(List.of(new Site()));
 
     ModelMock modelMock = new ModelMock();
 
@@ -69,10 +70,10 @@ class SiteControllerTest {
 
     ModelMock modelMock = new ModelMock();
 
-    when(siteRepository.getAllSite()).thenReturn(Arrays.asList(testSiteData));
+    when(siteRepository.getAllSite()).thenReturn(List.of(testSiteData));
     when(siteRepository.updateSiteLastUpdateDate(anyString(), anyString())).thenReturn(0);
     when(siteRepository.selectSiteLastFeed()).thenReturn(
-        Arrays.asList(slfDto));
+        List.of(slfDto));
 
     String result = siteController.fixLastUpdate(modelMock);
     Assertions.assertEquals("/site/management", result);
