@@ -1,10 +1,10 @@
 package com.galewings.service;
 
 import com.google.common.base.Strings;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,16 +15,13 @@ public class GwDateService {
   private String daysRetained;
 
   public boolean checkFormatDate(String dateText, DateFormat df) {
-    SimpleDateFormat sdf = new SimpleDateFormat(df.format);
-    sdf.setLenient(false);
-
     try {
-      sdf.parse(dateText);
-      String formatDate = sdf.format(dateText);
+      LocalDate.parse(dateText,
+          df.dtf.withResolverStyle(ResolverStyle.STRICT));
 
       // 適応させた書式と同じ文字列化判定
-      return dateText.equals(formatDate);
-    } catch (ParseException e) {
+      return true;
+    } catch (DateTimeParseException e) {
       // 日付変換できなかったらエラー
       return false;
     }
@@ -40,19 +37,23 @@ public class GwDateService {
   }
 
   public boolean isRetainedDateAfter(String targetDate) {
-    DateTimeFormatter dtFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+    DateTimeFormatter dtFormat = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss");
 
     LocalDate date = LocalDate.parse(targetDate, dtFormat);
-    return !retainedDate().isAfter(date);
+    LocalDate retainedDate = retainedDate();
+    return !retainedDate.isAfter(date);
   }
 
   public enum DateFormat {
-    SQLITE_DATE_FORMAT("yyyy-MM-dd");
+    SQLITE_DATE_FORMAT("yyyy-MM-dd", "uuuu-MM-dd");
 
-    public final String format;
+    public final String stringFormat;
 
-    DateFormat(String format) {
-      this.format = format;
+    public final DateTimeFormatter dtf;
+
+    DateFormat(String format, String dateTimeFormat) {
+      this.stringFormat = format;
+      this.dtf = DateTimeFormatter.ofPattern(dateTimeFormat);
     }
   }
 }
