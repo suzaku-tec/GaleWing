@@ -43,7 +43,7 @@ public class GwDateService {
     LocalDate retainedDate = retainedDate();
     return !retainedDate.isAfter(date);
   }
-
+  
   public enum DateFormat {
     SQLITE_DATE_FORMAT("yyyy-MM-dd", "uuuu-MM-dd");
 
