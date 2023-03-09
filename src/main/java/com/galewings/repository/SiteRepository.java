@@ -5,8 +5,10 @@ import com.galewings.entity.Site;
 import com.galewings.entity.SiteFeedCount;
 import com.galewings.service.FaviconService;
 import com.galewings.service.GwDateService;
+import com.galewings.service.GwDateService.DateFormat;
 import com.miragesql.miragesql.ClasspathSqlResource;
 import com.miragesql.miragesql.SqlManager;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -193,5 +195,10 @@ public class SiteRepository {
     } else {
       return 0;
     }
+  }
+
+  public int updateFeedLastUpdateDate(String uuid, LocalDate ld) {
+    String feedUpdateDate = ld.format(DateFormat.SQLITE_DATE_FORMAT.dtf);
+    return updateFeedUpdateDate(uuid, feedUpdateDate);
   }
 }

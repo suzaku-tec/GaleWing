@@ -75,6 +75,8 @@ public class AutoUpdateTask {
                 return !feedRepository.existFeed(feed.link);
               })
               .forEach(feedRepository::insertEntity);
+
+          siteRepository.updateFeedLastUpdateDate(siteFeed.getSite().uuid, gwDateService.now());
         });
   }
 }
