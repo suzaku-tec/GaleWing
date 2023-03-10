@@ -3,7 +3,6 @@ package com.galewings.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galewings.dto.AddFeedDto;
-import com.galewings.dto.GaleWingSiteFeed;
 import com.galewings.dto.ReadAllShowFeedDto;
 import com.galewings.dto.ReadDto;
 import com.galewings.dto.UpdateFeedDto;
@@ -15,7 +14,9 @@ import com.galewings.factory.FeedFactory;
 import com.galewings.factory.SiteFactory;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.SiteRepository;
+import com.galewings.service.GwDateService;
 import com.galewings.service.URLService;
+import com.galewings.task.AutoUpdateTask;
 import com.google.common.base.Strings;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
@@ -24,6 +25,7 @@ import com.rometools.rome.io.XmlReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -63,6 +65,12 @@ public class SiteFeedController {
 
   @Autowired
   private URLService urlService;
+
+  @Autowired
+  private AutoUpdateTask autoUpdateTask;
+
+  @Autowired
+  private GwDateService gwDateService;
 
   /**
    * 対象サイトのフィードを取得
@@ -120,35 +128,18 @@ public class SiteFeedController {
 
     List<Feed> feeds;
     if (Strings.isNullOrEmpty(dto.getUuid())) {
-      siteRepository.getAllSite()
-          .parallelStream()
-          .map(site -> {
-            return new GaleWingSiteFeed() {
-              @Override
-              public Site getSite() {
-                return site;
-              }
-
-              @Override
-              public Optional<SyndFeed> getOptionalSyndFeed() {
-                return getSyndFeed(site.xmlUrl);
-              }
-            };
-          })
-          .filter(siteFeed -> siteFeed.getOptionalSyndFeed().isPresent())
-          .sequential()
-          .forEach(siteFeed -> siteFeed.getOptionalSyndFeed().get().getEntries().stream()
-              .filter(syndEntry -> !feedRepository.existFeed(syndEntry.getLink()))
-              .map(syndEntry -> FeedFactory.create(syndEntry, siteFeed.getSite().uuid))
-              .forEach(feedRepository::insertEntity));
+      autoUpdateTask.allUpdate();
 
       feeds = feedRepository.getAllFeed();
     } else {
       Site site = siteRepository.getSite(dto.getUuid());
+      LocalDate retainedDate = gwDateService.retainedDate();
+
       SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(site.xmlUrl)));
       feed.getEntries().stream().filter(syndEntry -> {
             return !feedRepository.existFeed(syndEntry.getLink());
           }).map(syndEntry -> FeedFactory.create(syndEntry, site.uuid))
+          .filter(f -> gwDateService.isRetainedDateAfter(f.publishedDate))
           .forEach(feedRepository::insertEntity);
 
       feeds = feedRepository.getFeed(site.uuid);
