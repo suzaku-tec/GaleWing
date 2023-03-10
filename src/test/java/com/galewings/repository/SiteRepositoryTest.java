@@ -8,7 +8,9 @@ import com.galewings.dto.output.SiteLastFeedDto;
 import com.galewings.entity.Site;
 import com.galewings.entity.SiteFeedCount;
 import com.galewings.service.FaviconService;
+import com.galewings.service.GwDateService;
 import com.miragesql.miragesql.SqlManager;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +29,10 @@ class SiteRepositoryTest {
   SqlManager sqlManager;
   @Mock
   FaviconService faviconUtil;
+
+  @Mock
+  GwDateService gwDateService;
+
   @InjectMocks
   SiteRepository siteRepository;
 
@@ -42,7 +48,7 @@ class SiteRepositoryTest {
 
   @Test
   void testGetAllSite() {
-    List<Object> testSiteList = Collections.singletonList(Arrays.asList(new Site()));
+    List<Object> testSiteList = Collections.singletonList(List.of(new Site()));
 
     when(sqlManager.getResultList(any(), any())).thenReturn(testSiteList);
 
@@ -53,7 +59,7 @@ class SiteRepositoryTest {
   @Test
   void testGetSiteFeedCount() {
     List<Object> testSiteList = Collections.singletonList(
-        Arrays.asList(new SiteFeedCount()));
+        List.of(new SiteFeedCount()));
 
     when(sqlManager.getResultList(any(), any())).thenReturn(testSiteList);
 
@@ -64,7 +70,7 @@ class SiteRepositoryTest {
   @Test
   void testGetSiteFeedCount2() {
     List<Object> testSiteList = Collections.singletonList(
-        Arrays.asList(new SiteFeedCount()));
+        List.of(new SiteFeedCount()));
 
     when(sqlManager.getResultList(any(), any(), any())).thenReturn(testSiteList);
 
@@ -88,7 +94,7 @@ class SiteRepositoryTest {
     when(sqlManager.executeUpdate(any(), any())).thenReturn(0);
 
     boolean result = siteRepository.delete("uuid");
-    Assertions.assertEquals(false, result);
+    Assertions.assertFalse(result);
   }
 
   @Test
@@ -107,11 +113,37 @@ class SiteRepositoryTest {
 
   @Test
   void testSelectSiteLastFeed() {
-    List<Object> testSlfList = Arrays.asList(new SiteLastFeedDto());
+    List<Object> testSlfList = List.of(new SiteLastFeedDto());
     when(sqlManager.getResultList(any(), any())).thenReturn(testSlfList);
     List<SiteLastFeedDto> result = siteRepository.selectSiteLastFeed();
     Assertions.assertEquals(testSlfList, result);
   }
+
+  @Test
+  public void testUpdateFeedUpdateDateCheckFormatError() {
+    when(gwDateService.checkFormatDate(any(), any())).thenReturn(false);
+    int result = siteRepository.updateFeedUpdateDate(null, null);
+    Assertions.assertEquals(0, result);
+  }
+
+  @Test
+  public void testUpdateFeedUpdateDate1() {
+    when(gwDateService.checkFormatDate(any(), any())).thenReturn(true);
+    when(sqlManager.executeUpdate(any(), any())).thenReturn(1);
+
+    int result = siteRepository.updateFeedUpdateDate("test1", "test2");
+    Assertions.assertEquals(1, result);
+  }
+
+  @Test
+  public void testUpdateFeedUpdateDate2() {
+    when(gwDateService.checkFormatDate(any(), any())).thenReturn(true);
+    when(sqlManager.executeUpdate(any(), any())).thenReturn(2);
+
+    int result = siteRepository.updateFeedLastUpdateDate("test1", LocalDate.now());
+    Assertions.assertEquals(2, result);
+  }
+
 }
 
 //Generated with love by TestMe :) Please report issues and submit feature requests at: http://weirddev.com/forum#!/testme
