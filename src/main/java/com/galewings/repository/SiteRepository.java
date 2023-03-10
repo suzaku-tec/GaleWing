@@ -4,8 +4,11 @@ import com.galewings.dto.output.SiteLastFeedDto;
 import com.galewings.entity.Site;
 import com.galewings.entity.SiteFeedCount;
 import com.galewings.service.FaviconService;
+import com.galewings.service.GwDateService;
+import com.galewings.service.GwDateService.DateFormat;
 import com.miragesql.miragesql.ClasspathSqlResource;
 import com.miragesql.miragesql.SqlManager;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +34,11 @@ public class SiteRepository {
    */
   @Autowired
   FaviconService faviconUtil;
+
+  @Autowired
+  GwDateService gwDateService;
+
+  private static final String HTML_URL_STR = "htmlUrl";
 
   /**
    * サイト情報取得
@@ -87,7 +95,7 @@ public class SiteRepository {
   @Transactional
   public int countSiteForHtmlUrl(String htmlUrl) {
     Map<String, String> params = new HashMap<>();
-    params.put("htmlUrl", htmlUrl);
+    params.put(SiteRepository.HTML_URL_STR, htmlUrl);
     int count = sqlManager.getCount(
         new ClasspathSqlResource("sql/site/select_site_for_htmlUrl.sql"),
         params
@@ -104,7 +112,7 @@ public class SiteRepository {
   @Transactional
   public void insertSite(be.ceau.opml.entity.Outline outline) {
     Map<String, String> params = new HashMap<>();
-    params.put("htmlUrl", outline.getAttribute("htmlUrl"));
+    params.put(SiteRepository.HTML_URL_STR, outline.getAttribute(SiteRepository.HTML_URL_STR));
     int count = sqlManager.getCount(
         new ClasspathSqlResource("sql/site/select_site_for_htmlUrl.sql"),
         params
@@ -114,12 +122,13 @@ public class SiteRepository {
       return;
     }
 
-    var faviconBase64 = faviconUtil.getBase64Favicon(outline.getAttribute("htmlUrl")).orElse(null);
+    var faviconBase64 = faviconUtil.getBase64Favicon(
+        outline.getAttribute(SiteRepository.HTML_URL_STR)).orElse(null);
 
     params = new HashMap<>();
     params.put("uuid", UUID.randomUUID().toString());
     params.put("title", outline.getAttribute("text"));
-    params.put("htmlUrl", outline.getAttribute("htmlUrl"));
+    params.put(SiteRepository.HTML_URL_STR, outline.getAttribute(SiteRepository.HTML_URL_STR));
     params.put("xmlUrl", outline.getAttribute("xmlUrl"));
     params.put("faviconBase64", faviconBase64);
 
@@ -171,5 +180,26 @@ public class SiteRepository {
   public List<SiteLastFeedDto> selectSiteLastFeed() {
     return sqlManager.getResultList(SiteLastFeedDto.class,
         new ClasspathSqlResource("sql/feed/select_last_feed.sql"));
+  }
+
+  @Transactional
+  public int updateFeedUpdateDate(String uuid, String feedUpdateDate) {
+    if (gwDateService.checkFormatDate(feedUpdateDate,
+        GwDateService.DateFormat.SQLITE_DATE_FORMAT)) {
+      Map<String, String> param = new HashMap<>();
+      param.put("uuid", uuid);
+      param.put("feedUpdateDate", feedUpdateDate);
+
+      return sqlManager.executeUpdate(
+          new ClasspathSqlResource("sql/site/update_feed_updateDate.sql"), param);
+    } else {
+      return 0;
+    }
+  }
+
+  @Transactional
+  public int updateFeedLastUpdateDate(String uuid, LocalDate ld) {
+    String feedUpdateDate = ld.format(DateFormat.SQLITE_DATE_FORMAT.dtf);
+    return updateFeedUpdateDate(uuid, feedUpdateDate);
   }
 }

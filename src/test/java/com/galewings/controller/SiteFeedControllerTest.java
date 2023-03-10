@@ -17,6 +17,7 @@ import com.galewings.entity.SiteFeedCount;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.SiteRepository;
 import com.galewings.service.URLService;
+import com.galewings.task.AutoUpdateTask;
 import com.rometools.rome.io.FeedException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -37,6 +38,9 @@ class SiteFeedControllerTest {
 
   @Mock
   private URLService urlService;
+
+  @Mock
+  private AutoUpdateTask autoUpdateTask;
 
   @InjectMocks
   private SiteFeedController siteFeedController;
