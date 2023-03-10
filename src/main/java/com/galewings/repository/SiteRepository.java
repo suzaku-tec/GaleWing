@@ -197,6 +197,7 @@ public class SiteRepository {
     }
   }
 
+  @Transactional
   public int updateFeedLastUpdateDate(String uuid, LocalDate ld) {
     String feedUpdateDate = ld.format(DateFormat.SQLITE_DATE_FORMAT.dtf);
     return updateFeedUpdateDate(uuid, feedUpdateDate);
