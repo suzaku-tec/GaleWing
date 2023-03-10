@@ -38,6 +38,8 @@ public class SiteRepository {
   @Autowired
   GwDateService gwDateService;
 
+  private static final String HTML_URL_STR = "htmlUrl";
+
   /**
    * サイト情報取得
    *
@@ -93,7 +95,7 @@ public class SiteRepository {
   @Transactional
   public int countSiteForHtmlUrl(String htmlUrl) {
     Map<String, String> params = new HashMap<>();
-    params.put("htmlUrl", htmlUrl);
+    params.put(SiteRepository.HTML_URL_STR, htmlUrl);
     int count = sqlManager.getCount(
         new ClasspathSqlResource("sql/site/select_site_for_htmlUrl.sql"),
         params
@@ -110,7 +112,7 @@ public class SiteRepository {
   @Transactional
   public void insertSite(be.ceau.opml.entity.Outline outline) {
     Map<String, String> params = new HashMap<>();
-    params.put("htmlUrl", outline.getAttribute("htmlUrl"));
+    params.put(SiteRepository.HTML_URL_STR, outline.getAttribute(SiteRepository.HTML_URL_STR));
     int count = sqlManager.getCount(
         new ClasspathSqlResource("sql/site/select_site_for_htmlUrl.sql"),
         params
@@ -120,12 +122,13 @@ public class SiteRepository {
       return;
     }
 
-    var faviconBase64 = faviconUtil.getBase64Favicon(outline.getAttribute("htmlUrl")).orElse(null);
+    var faviconBase64 = faviconUtil.getBase64Favicon(
+        outline.getAttribute(SiteRepository.HTML_URL_STR)).orElse(null);
 
     params = new HashMap<>();
     params.put("uuid", UUID.randomUUID().toString());
     params.put("title", outline.getAttribute("text"));
-    params.put("htmlUrl", outline.getAttribute("htmlUrl"));
+    params.put(SiteRepository.HTML_URL_STR, outline.getAttribute(SiteRepository.HTML_URL_STR));
     params.put("xmlUrl", outline.getAttribute("xmlUrl"));
     params.put("faviconBase64", faviconBase64);
 
