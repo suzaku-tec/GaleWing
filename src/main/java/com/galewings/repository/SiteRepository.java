@@ -36,9 +36,6 @@ public class SiteRepository {
   FaviconService faviconUtil;
 
   @Autowired
-  SiteRepository siteRepository;
-
-  @Autowired
   GwDateService gwDateService;
 
   /**
