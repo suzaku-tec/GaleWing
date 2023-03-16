@@ -87,6 +87,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.lucene/lucene-spellchecker
     implementation group: 'org.apache.lucene', name: 'lucene-spellchecker', version: '3.6.2'
 
+    // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
+    implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
+
 }
 
 sonarqube {
