@@ -83,14 +83,12 @@ window.onload = async () => {
             hidden: false,
             formatter: (cell, row) =>
               html(
-                `<a name="analysis" style="margin-right: 5px"  href='${
-                  window.location.origin +
-                  '/analysis/?targetLink=' +
-                  encodeURIComponent(String(row.cells[1].data))
-                }'><i class="fas fa-search"></i></a>
-                <a href='${row.cells[1].data}' target="_blank" rel="noopener" class="rss-link">${
-                  row.cells[0].data
-                }</a>`,
+                "<div style='display: flex;'>" +
+                  (row.cells[8].data
+                    ? `<img src='${row.cells[8].data}' style='object-fit: contain; height: 100px'></img>`
+                    : '') +
+                  `<a href='${row.cells[1].data}' target="_blank" rel="noopener" class="rss-link">${row.cells[0].data}</a>` +
+                  '</div>',
               ),
           },
           { name: 'link', hidden: true },
@@ -100,6 +98,7 @@ window.onload = async () => {
           { name: 'comments', hidden: true },
           { name: 'publishedDate', hidden: false },
           { name: 'uuid', hidden: true },
+          { name: 'imageUrl', hidden: true },
           {
             name: '',
             hidden: false,

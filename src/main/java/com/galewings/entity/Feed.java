@@ -50,6 +50,9 @@ public class Feed implements Serializable {
   @Column(name = "readed")
   public boolean readed;
 
+  @Column(name = "imageUrl")
+  public String imageUrl;
+
   public String getTitle() {
     return title;
   }
@@ -84,5 +87,9 @@ public class Feed implements Serializable {
 
   public boolean getReaded() {
     return readed;
+  }
+
+  public String getImageUrl() {
+    return imageUrl;
   }
 }
