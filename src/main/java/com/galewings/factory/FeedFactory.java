@@ -3,6 +3,10 @@ package com.galewings.factory;
 import com.galewings.entity.Feed;
 import com.rometools.rome.feed.synd.SyndEntry;
 import java.text.SimpleDateFormat;
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 /**
  * FeedFactory
@@ -33,6 +37,24 @@ public class FeedFactory {
       f.publishedDate = null;
     }
 
+    f.imageUrl = searchImageUrl(syndEntry);
+
     return f;
   }
+
+  private static String searchImageUrl(SyndEntry syndEntry) {
+    return syndEntry.getContents().stream().map(syndContent -> {
+          if ("text/html".equals(syndContent.getType()) || "html".equals(syndContent.getType())) {
+            Document doc = Jsoup.parseBodyFragment(syndContent.getValue());
+            Element imgEl = doc.select("img").first();
+            if (imgEl != null) {
+              return imgEl.attr("src");
+            }
+          }
+
+          return null;
+        }).filter(StringUtils::isNotEmpty)
+        .findFirst().orElseGet(() -> null);
+  }
+
 }

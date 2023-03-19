@@ -10,6 +10,7 @@ SELECT
     , "comments"                                -- comments
     , "publishedDate"                           -- publishedDate
     , "readed"                                  -- readed
+    , "imageUrl"                                -- imageUrl
 FROM
     "feed" 
 WHERE
