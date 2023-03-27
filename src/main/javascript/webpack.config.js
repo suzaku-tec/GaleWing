@@ -2,6 +2,9 @@
 
 const path = require('path');
 
+// webpack.config.js
+const Dotenv = require('dotenv-webpack');
+
 const isProduction = process.env.NODE_ENV == 'production';
 
 const stylesHandler = 'style-loader';
@@ -28,6 +31,7 @@ const config = {
   plugins: [
     // Add your plugins here
     // Learn more about plugins from https://webpack.js.org/configuration/plugins/
+    new Dotenv(),
   ],
   module: {
     rules: [
