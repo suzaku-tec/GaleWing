@@ -53,6 +53,9 @@ public class Feed implements Serializable {
   @Column(name = "imageUrl")
   public String imageUrl;
 
+  @Column(name = "contentTerxt")
+  public String contentTerxt;
+
   public String getTitle() {
     return title;
   }
@@ -91,5 +94,9 @@ public class Feed implements Serializable {
 
   public String getImageUrl() {
     return imageUrl;
+  }
+
+  public String getContentTerxt() {
+    return contentTerxt;
   }
 }
