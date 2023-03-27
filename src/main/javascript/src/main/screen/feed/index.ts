@@ -60,6 +60,8 @@ import GaleWingApi from '../../api/galeWingApi';
 import PlaySound from '../../events/playSound';
 import SettingApi from '../../api/settingApi';
 
+// import TranslationApi from '../../api/translationApi';
+
 var setting: SettingApi;
 
 window.onload = async () => {
@@ -69,6 +71,17 @@ window.onload = async () => {
 
   // サイドバー初期化
   setupSidebar();
+
+  /*
+  axios.defaults.headers.common = {
+    'X-Requested-With': 'XMLHttpRequest',
+    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
+  };
+  const translationApi = new TranslationApi();
+  translationApi.translation('今日は日曜日、天気は晴れでした').then((res) => {
+    console.log(res.data.resultset.result.text);
+  });
+  */
 
   var uri = new URL(window.location.href);
 
