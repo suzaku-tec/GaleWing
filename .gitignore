@@ -37,3 +37,7 @@ out/
 .vscode/
 library.db
 /src/main/resources/static/js/
+
+# dotenv environment variables file
+src/main/resources/.env
+.env.test
