@@ -42,7 +42,7 @@ class MinhonServiceTest {
     @Test
     void testOkHttpClient() {
         OkHttpClient result = minhonService.okHttpClient();
-        Assertions.assertNull(result);
+        Assertions.assertNotNull(result);
     }
 
     @Test
