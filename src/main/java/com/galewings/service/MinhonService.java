@@ -19,6 +19,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
@@ -79,7 +80,11 @@ public class MinhonService {
                     new HttpEntity<>(params, null),
                     Oauth2AccessToken.class);
 
-            accessToken.set(response.getBody().access_token);
+            String token = Optional.ofNullable(response.getBody())
+                    .map(oauth2AccessToken -> oauth2AccessToken.access_token)
+                    .orElse("");
+
+            accessToken.set(token);
         }
 
         return accessToken.get();
