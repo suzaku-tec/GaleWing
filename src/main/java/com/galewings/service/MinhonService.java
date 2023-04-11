@@ -38,14 +38,14 @@ public class MinhonService {
     private static final String KEY_PARAM = "key";
     private static final String NAME_PARAM = "name";
     private static final String ENGINE = "generalNT_ja_en";
-    private static final AtomicReference<String> accessToken = new AtomicReference<>();
-    private static final Object lock = new Object();
+    private static AtomicReference<String> accessToken = new AtomicReference<>();
+    private static Object lock = new Object();
     @Value("${minhon.client-id}")
-    private final String KEY = "";
+    private String KEY = "";
     @Value("${minhon.client-secret}")
-    private final String SECRET = "";
+    private String SECRET = "";
     @Value("${minhon.name}")
-    private final String NAME = "";
+    private String NAME = "";
     @Autowired
     OkHttpClient client;
     @Autowired
