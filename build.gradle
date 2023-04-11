@@ -90,6 +90,26 @@ dependencies {
     // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
     implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
 
+// https://mvnrepository.com/artifact/io.github.cdimascio/dotenv-java
+
+    implementation group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.4.11'
+
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5'
+
+    implementation group: 'oauth.signpost', name: 'signpost-commonshttp4', version: '1.1'
+
+    implementation group: 'commons-io', name: 'commons-io', version: '1.2'
+
+// https://mvnrepository.com/artifact/io.github.cdimascio/dotenv-java
+    implementation group: 'io.github.cdimascio', name: 'dotenv-java', version: '2.3.2'
+
+// https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.10.0'
+
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+
 }
 
 sonarqube {
@@ -97,7 +117,7 @@ sonarqube {
         property "sonar.projectKey", "suzaku-tec_GaleWing"
         property "sonar.organization", "suzaku-tec"
         property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.exclusions", "src/main/java/com/galewings/entity/**, src/main/java/com/galewings/exception/**, src/main/java/com/galewings/dto/**, src/test/java/**/*Test.java, src/main/java/com/galewings/controller/SiteFeedController.java, src/main/java/com/galewings/task/AutoUpdateTask.java, src/main/javascript/src/index.ts, src/main/java/com/galewings/controller/FeedSampleController.java"
+        property "sonar.exclusions", "src/main/java/com/galewings/entity/**, src/main/java/com/galewings/exception/**, src/main/java/com/galewings/dto/**, src/test/java/**/*Test.java, src/main/java/com/galewings/controller/SiteFeedController.java, src/main/java/com/galewings/task/AutoUpdateTask.java, src/main/javascript/src/index.ts, src/main/java/com/galewings/controller/FeedSampleController.java, src/main/java/com/galewings/GaleWingsApplication.java"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
