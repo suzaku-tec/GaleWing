@@ -68,6 +68,12 @@ public class MinhonService {
         return client;
     }
 
+    @Bean
+    public RestTemplate restTemplate() {
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate;
+    }
+
     public String oauth() {
         synchronized (lock) {
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
