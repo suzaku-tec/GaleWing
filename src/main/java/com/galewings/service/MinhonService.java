@@ -29,16 +29,9 @@ public class MinhonService {
 
     private static final String BASE_URL = "https://mt-auto-minhon-mlt.ucri.jgn-x.jp/";
 
-    private static final String CREDENTIALS_URL = BASE_URL + "/oauth2/token.php";
+    private static final String CREDENTIALS_URL = BASE_URL + "oauth2/token.php";
 
-    private static final int MAX_CONNECTIONS = 200;
-    private static final int CONNECTION_TIMEOUT = 2 * 60 * 1000;
-    private static final int SO_TIMEOUT = 10 * 60 * 1000;
-
-    private static final String USERNAME = "";
-    private static final String KEY_PARAM = "key";
-    private static final String NAME_PARAM = "name";
-    private static final String ENGINE = "generalNT_ja_en";
+    private static final String ENGINE_EN_JA = "generalNT_en_ja";
     private static AtomicReference<String> accessToken = new AtomicReference<>();
     private static Object lock = new Object();
     @Value("${minhon.client-id}")
@@ -82,7 +75,7 @@ public class MinhonService {
             params.add("client_id", KEY);
             params.add("client_secret", SECRET);
             ResponseEntity<Oauth2AccessToken> response = restTemplate.exchange(
-                    "https://mt-auto-minhon-mlt.ucri.jgn-x.jp/oauth2/token.php",
+                    CREDENTIALS_URL,
                     HttpMethod.POST,
                     new HttpEntity<>(params, null),
                     Oauth2AccessToken.class);
@@ -128,7 +121,7 @@ public class MinhonService {
                 .addFormDataPart("text", text)
                 .addFormDataPart("type", "json")
                 .addFormDataPart("api_name", "mt")
-                .addFormDataPart("api_param", "generalNT_en_ja")
+                .addFormDataPart("api_param", ENGINE_EN_JA)
                 .addFormDataPart("access_token", accessToken.get())
                 .build();
         Request request = new Request.Builder()
