@@ -17,24 +17,28 @@ export default class TranslationEnJp implements IElementEvent {
         return;
       }
       resolve.then(() => {
-        return new Promise((resolve, reject) => {
-          const dataOriginTxt = element.dataset.originTxt;
-          if (!dataOriginTxt) {
-            resolve('');
-            return;
-          }
-          GaleWingApi.getInstance()
-            .translationEnJp(dataOriginTxt)
-            .then((res) => {
-              element.innerText = res.data;
-              element.dataset.translationJpTxt = res.data;
-              resolve('');
-            })
-            .catch(() => {
-              reject();
-            });
-        });
+        return this.createTranslationEnJpPromise(element);
       });
+    });
+  }
+
+  createTranslationEnJpPromise(element: HTMLElement): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const dataOriginTxt = element.dataset.originTxt;
+      if (!dataOriginTxt) {
+        resolve('');
+        return;
+      }
+      GaleWingApi.getInstance()
+        .translationEnJp(dataOriginTxt)
+        .then((res) => {
+          element.innerText = res.data;
+          element.dataset.translationJpTxt = res.data;
+          resolve('');
+        })
+        .catch(() => {
+          reject();
+        });
     });
   }
 }
