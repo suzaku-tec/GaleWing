@@ -46,6 +46,12 @@ class MinhonServiceTest {
     }
 
     @Test
+    void testRestTemplate() {
+        RestTemplate result = minhonService.restTemplate();
+        Assertions.assertNotNull(result);
+    }
+
+    @Test
     void testOauth() {
         Oauth2AccessToken oat = new Oauth2AccessToken();
         oat.access_token = "test";
@@ -65,6 +71,30 @@ class MinhonServiceTest {
 
         // 翻訳部分のモック化
         Response res = createOkHttpResponce("hello world");
+        Call call = mock(Call.class);
+        when(call.execute()).thenReturn(res);
+        when(client.newCall(any())).thenReturn(call);
+
+        String result = minhonService.transelate("text");
+        Assertions.assertEquals("hello world", result);
+    }
+
+    @Test
+    void testTranselate2() throws IOException {
+        String result = minhonService.transelate("");
+        Assertions.assertEquals("", result);
+    }
+
+    @Test
+    void testTranselate3() throws IOException {
+        // Oauth部分のモック化
+        Oauth2AccessToken oat = new Oauth2AccessToken();
+        oat.access_token = "test";
+        when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), any(Class.class)))
+                .thenReturn(new ResponseEntity(oat, HttpStatus.OK));
+
+        // 翻訳部分のモック化
+        Response res = createOkHttp510Responce("hello world");
         Call call = mock(Call.class);
         when(call.execute()).thenReturn(res);
         when(client.newCall(any())).thenReturn(call);
@@ -96,6 +126,31 @@ class MinhonServiceTest {
                 .build();
         return response;
     }
+
+    private Response createOkHttp510Responce(String resultText) {
+// 応答のステータスコードを定義
+        int statusCode = 510;
+
+// 応答のヘッダーを定義
+        Headers headers = new Headers.Builder()
+                .add("Content-Type", "application/json")
+                .build();
+
+// 応答のボディを定義
+        String body = "{\"resultset\":{result:{text: \"" + resultText + "\"}}}";
+
+// Responseオブジェクトを作成
+        Response response = new Response.Builder()
+                .code(statusCode)
+                .headers(headers)
+                .body(ResponseBody.create(MediaType.parse("application/json"), body))
+                .message("OK")
+                .request(new Request.Builder().url("http://example.com").build())
+                .protocol(Protocol.HTTP_1_1)
+                .build();
+        return response;
+    }
+
 }
 
 //Generated with love by TestMe :) Please report issues and submit feature requests at: http://weirddev.com/forum#!/testme
