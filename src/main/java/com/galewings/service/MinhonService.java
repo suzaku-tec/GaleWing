@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import okhttp3.*;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -97,6 +98,10 @@ public class MinhonService {
     }
 
     public String transelate(String text) throws IOException {
+        if (StringUtils.isEmpty(text)) {
+            return "";
+        }
+
         if (accessToken.get() == null) {
             oauth();
         }
@@ -116,8 +121,6 @@ public class MinhonService {
 
     @NotNull
     private Response generalNTJaEn(String text) throws IOException {
-//        OkHttpClient client = new OkHttpClient().newBuilder()
-//                .build();
         MediaType mediaType = MediaType.parse("text/plain");
         RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
                 .addFormDataPart("key", KEY)
@@ -125,7 +128,7 @@ public class MinhonService {
                 .addFormDataPart("text", text)
                 .addFormDataPart("type", "json")
                 .addFormDataPart("api_name", "mt")
-                .addFormDataPart("api_param", "generalNT_ja_en")
+                .addFormDataPart("api_param", "generalNT_en_ja")
                 .addFormDataPart("access_token", accessToken.get())
                 .build();
         Request request = new Request.Builder()

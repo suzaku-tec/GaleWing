@@ -59,8 +59,7 @@ import init from '../cardGridLayout';
 import GaleWingApi from '../../api/galeWingApi';
 import PlaySound from '../../events/playSound';
 import SettingApi from '../../api/settingApi';
-
-import TranslationApi from '../../api/translationApi';
+import TranslationEnJp from '../../events/translationEnJpEvent';
 
 var setting: SettingApi;
 
@@ -76,10 +75,6 @@ window.onload = async () => {
     'X-Requested-With': 'XMLHttpRequest',
     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
   };
-  const translationApi = new TranslationApi();
-  translationApi.translation('今日は日曜日、天気は晴れでした').then((res) => {
-    console.log(res.data.resultset.result.text);
-  });
 
   var uri = new URL(window.location.href);
 
@@ -98,7 +93,7 @@ window.onload = async () => {
                   (row.cells[8].data
                     ? `<img src='${row.cells[8].data}' style='object-fit: contain; height: 100px'></img>`
                     : '') +
-                  `<a href='${row.cells[1].data}' target="_blank" rel="noopener" class="rss-link">${row.cells[0].data}</a>` +
+                  `<a href='${row.cells[1].data}' target="_blank" rel="noopener" class="rss-link" data-origin-txt="${row.cells[0].data}" data-translation-jp-txt="">${row.cells[0].data}</a>` +
                   '</div>',
               ),
           },
@@ -110,11 +105,6 @@ window.onload = async () => {
           { name: 'publishedDate', hidden: false },
           { name: 'uuid', hidden: true },
           { name: 'imageUrl', hidden: true },
-          {
-            name: '',
-            hidden: false,
-            formatter: (_, row) => html(`<i class="fas fa-bookmark" role="button"></i>`),
-          },
         ],
         pagination: {
           enabled: true,
@@ -195,6 +185,11 @@ window.onload = async () => {
   new ElementEvent(new GridLayoutChgEvent()).setup(
     'click',
     document.getElementById('gridLayoutItem'),
+  );
+
+  new ElementEvent(new TranslationEnJp()).setup(
+    'click',
+    document.getElementById('translationEnJp'),
   );
 
   new ElementEvent(new CardLayoutChgEvent()).setup(
