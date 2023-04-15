@@ -20,6 +20,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -35,11 +36,11 @@ public class MinhonService {
     private static AtomicReference<String> accessToken = new AtomicReference<>();
     private static Object lock = new Object();
     @Value("${minhon.client-id}")
-    private String KEY = "";
+    private String key = "";
     @Value("${minhon.client-secret}")
-    private String SECRET = "";
+    private String secret = "";
     @Value("${minhon.name}")
-    private String NAME = "";
+    private String name = "";
     @Autowired
     OkHttpClient client;
     @Autowired
@@ -57,23 +58,20 @@ public class MinhonService {
 
     @Bean
     public OkHttpClient okHttpClient() {
-        OkHttpClient client = new OkHttpClient();
-        // add custom configurations to the client if needed
-        return client;
+        return new OkHttpClient();
     }
 
     @Bean
     public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate;
+        return new RestTemplate();
     }
 
     public String oauth() {
         synchronized (lock) {
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
             params.add("grant_type", "client_credentials");
-            params.add("client_id", KEY);
-            params.add("client_secret", SECRET);
+            params.add("client_id", key);
+            params.add("client_secret", secret);
             ResponseEntity<Oauth2AccessToken> response = restTemplate.exchange(
                     CREDENTIALS_URL,
                     HttpMethod.POST,
@@ -108,7 +106,7 @@ public class MinhonService {
             response = generalNTJaEn(text);
         }
 
-        JsonElement jsonObject = new JsonParser().parse(response.body().string()).getAsJsonObject();
+        JsonElement jsonObject = JsonParser.parseString(Objects.requireNonNull(response.body()).string()).getAsJsonObject();
         return getValueForPath(jsonObject, "resultset.result.text");
     }
 
@@ -116,8 +114,8 @@ public class MinhonService {
     private Response generalNTJaEn(String text) throws IOException {
         MediaType mediaType = MediaType.parse("text/plain");
         RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                .addFormDataPart("key", KEY)
-                .addFormDataPart("name", "suzaku380")
+                .addFormDataPart("key", key)
+                .addFormDataPart("name", name)
                 .addFormDataPart("text", text)
                 .addFormDataPart("type", "json")
                 .addFormDataPart("api_name", "mt")
