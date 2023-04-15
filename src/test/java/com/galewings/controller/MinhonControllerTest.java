@@ -1,5 +1,6 @@
 package com.galewings.controller;
 
+import com.galewings.dto.input.TextDto;
 import com.galewings.service.MinhonService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +28,11 @@ class MinhonControllerTest {
     @Test
     void testTranselate() throws IOException {
         when(service.transelate(anyString())).thenReturn("transelateResponse");
-        String result = minhonController.transelate("text");
+
+        TextDto dto = new TextDto();
+        dto.setText("text");
+
+        String result = minhonController.transelate(dto);
         Assertions.assertEquals("transelateResponse", result);
     }
 }
