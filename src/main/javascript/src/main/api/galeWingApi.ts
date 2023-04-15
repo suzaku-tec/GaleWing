@@ -15,6 +15,7 @@ export default class GaleWingApi {
     addCategory: '/category/add',
     addSiteCategory: '/siteCategory/add',
     deleteSiteCategory: '/siteCategory/delete',
+    translationEnJp: '/minhon/transelate',
   };
 
   private static singleton: GaleWingApi;
@@ -104,6 +105,12 @@ export default class GaleWingApi {
     let baseUrl = new URL(window.location.href);
     let ajaxUrl = baseUrl.origin + this.apiUrls.deleteSiteCategory;
     return axios.post(ajaxUrl, { siteUuid: siteUuid, categoryUuid: categoryUuid });
+  }
+
+  translationEnJp(text: string): Promise<AxiosResponse<any>> {
+    let baseUrl = new URL(window.location.href);
+    let ajaxUrl = baseUrl.origin + this.apiUrls.translationEnJp;
+    return axios.post(ajaxUrl, { text: text }, { headers: { 'Content-Type': 'application/json' } });
   }
 
   static getInstance() {

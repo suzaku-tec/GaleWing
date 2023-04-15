@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import okhttp3.*;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +20,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -28,24 +30,17 @@ public class MinhonService {
 
     private static final String BASE_URL = "https://mt-auto-minhon-mlt.ucri.jgn-x.jp/";
 
-    private static final String CREDENTIALS_URL = BASE_URL + "/oauth2/token.php";
+    private static final String CREDENTIALS_URL = BASE_URL + "oauth2/token.php";
 
-    private static final int MAX_CONNECTIONS = 200;
-    private static final int CONNECTION_TIMEOUT = 2 * 60 * 1000;
-    private static final int SO_TIMEOUT = 10 * 60 * 1000;
-
-    private static final String USERNAME = "";
-    private static final String KEY_PARAM = "key";
-    private static final String NAME_PARAM = "name";
-    private static final String ENGINE = "generalNT_ja_en";
-    private static final AtomicReference<String> accessToken = new AtomicReference<>();
-    private static final Object lock = new Object();
+    private static final String ENGINE_EN_JA = "generalNT_en_ja";
+    private static AtomicReference<String> accessToken = new AtomicReference<>();
+    private static Object lock = new Object();
     @Value("${minhon.client-id}")
-    private final String KEY = "";
+    private String key = "";
     @Value("${minhon.client-secret}")
-    private final String SECRET = "";
+    private String secret = "";
     @Value("${minhon.name}")
-    private final String NAME = "";
+    private String name = "";
     @Autowired
     OkHttpClient client;
     @Autowired
@@ -63,25 +58,22 @@ public class MinhonService {
 
     @Bean
     public OkHttpClient okHttpClient() {
-        OkHttpClient client = new OkHttpClient();
-        // add custom configurations to the client if needed
-        return client;
+        return new OkHttpClient();
     }
 
     @Bean
     public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate;
+        return new RestTemplate();
     }
 
     public String oauth() {
         synchronized (lock) {
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
             params.add("grant_type", "client_credentials");
-            params.add("client_id", KEY);
-            params.add("client_secret", SECRET);
+            params.add("client_id", key);
+            params.add("client_secret", secret);
             ResponseEntity<Oauth2AccessToken> response = restTemplate.exchange(
-                    "https://mt-auto-minhon-mlt.ucri.jgn-x.jp/oauth2/token.php",
+                    CREDENTIALS_URL,
                     HttpMethod.POST,
                     new HttpEntity<>(params, null),
                     Oauth2AccessToken.class);
@@ -97,6 +89,10 @@ public class MinhonService {
     }
 
     public String transelate(String text) throws IOException {
+        if (StringUtils.isEmpty(text)) {
+            return "";
+        }
+
         if (accessToken.get() == null) {
             oauth();
         }
@@ -110,22 +106,20 @@ public class MinhonService {
             response = generalNTJaEn(text);
         }
 
-        JsonElement jsonObject = new JsonParser().parse(response.body().string()).getAsJsonObject();
+        JsonElement jsonObject = JsonParser.parseString(Objects.requireNonNull(response.body()).string()).getAsJsonObject();
         return getValueForPath(jsonObject, "resultset.result.text");
     }
 
     @NotNull
     private Response generalNTJaEn(String text) throws IOException {
-//        OkHttpClient client = new OkHttpClient().newBuilder()
-//                .build();
         MediaType mediaType = MediaType.parse("text/plain");
         RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                .addFormDataPart("key", KEY)
-                .addFormDataPart("name", "suzaku380")
+                .addFormDataPart("key", key)
+                .addFormDataPart("name", name)
                 .addFormDataPart("text", text)
                 .addFormDataPart("type", "json")
                 .addFormDataPart("api_name", "mt")
-                .addFormDataPart("api_param", "generalNT_ja_en")
+                .addFormDataPart("api_param", ENGINE_EN_JA)
                 .addFormDataPart("access_token", accessToken.get())
                 .build();
         Request request = new Request.Builder()
