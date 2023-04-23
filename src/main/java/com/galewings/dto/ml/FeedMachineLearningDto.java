@@ -55,10 +55,10 @@ public class FeedMachineLearningDto {
         Map<String, Attribute> attributes = new HashMap<>();
         attributes.put(TokenAttribute.SURFACE.name, new Attribute(TokenAttribute.SURFACE.name,
                 tokens.stream().map(Token::getSurface).distinct().collect(Collectors.toList())));
-        attributes.put(TokenAttribute.KNOWN.name, new Attribute(TokenAttribute.KNOWN.name,
-                Stream.of(Boolean.TRUE, Boolean.FALSE).map(bl -> bl.toString()).collect(Collectors.toList())));
-        attributes.put(TokenAttribute.USER.name, new Attribute(TokenAttribute.USER.name,
-                Stream.of(Boolean.TRUE, Boolean.FALSE).map(bl -> bl.toString()).collect(Collectors.toList())));
+        List<String> boolList =
+                Stream.of(Boolean.TRUE, Boolean.FALSE).map(bl -> bl.toString()).collect(Collectors.toList());
+        attributes.put(TokenAttribute.KNOWN.name, new Attribute(TokenAttribute.KNOWN.name, boolList));
+        attributes.put(TokenAttribute.USER.name, new Attribute(TokenAttribute.USER.name, boolList));
         attributes.put(TokenAttribute.POSITION.name, new Attribute(TokenAttribute.POSITION.name));
         attributes.put(TokenAttribute.PART_OF_SPEECH_LEVEL_1.name, new Attribute(TokenAttribute.PART_OF_SPEECH_LEVEL_1.name,
                 tokens.stream().map(Token::getPartOfSpeechLevel1).distinct().collect(Collectors.toList())));
