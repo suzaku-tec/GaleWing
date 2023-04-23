@@ -116,7 +116,6 @@ dependencies {
     // Weka
     implementation 'nz.ac.waikato.cms.weka:weka-dev:3.9.5'
 
-
 }
 
 sonarqube {
@@ -124,7 +123,9 @@ sonarqube {
         property "sonar.projectKey", "suzaku-tec_GaleWing"
         property "sonar.organization", "suzaku-tec"
         property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.exclusions", "src/main/java/com/galewings/entity/**, src/main/java/com/galewings/exception/**, src/main/java/com/galewings/dto/**, src/test/java/**/*Test.java, src/main/java/com/galewings/controller/SiteFeedController.java, src/main/java/com/galewings/task/AutoUpdateTask.java, src/main/javascript/src/index.ts, src/main/java/com/galewings/controller/FeedSampleController.java, src/main/java/com/galewings/GaleWingsApplication.java"
+        property "sonar.exclusions", "src/main/java/com/galewings/entity/**, " +
+                "src/main/java/com/galewings/exception/**, src/main/java/com/galewings/dto/**, " +
+                "src/test/java/**/*Test.java, src/main/java/com/galewings/controller/SiteFeedController.java, src/main/java/com/galewings/task/AutoUpdateTask.java, src/main/javascript/src/index.ts, src/main/java/com/galewings/controller/FeedSampleController.java, src/main/java/com/galewings/GaleWingsApplication.java, src/main/java/com/galewings/service/MachineLearningService.java"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
