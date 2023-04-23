@@ -1,5 +1,5 @@
 checks:
-  size:
+  method-lines:
     enabled: true
     config:
-      max-method-lines: 35
+      threshold: 35
