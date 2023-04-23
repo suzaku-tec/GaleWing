@@ -1,0 +1,7 @@
+plugins:
+  - codeclimate-java
+checks:
+  size:
+    enabled: true
+    config:
+      max-method-lines: 35
