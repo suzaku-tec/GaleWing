@@ -1,5 +1,3 @@
-plugins:
-  - codeclimate-java
 checks:
   size:
     enabled: true
