@@ -16,6 +16,7 @@ import {
   faPlayCircle,
   faBackward,
   faSearch,
+  faListCheck,
 } from '@fortawesome/free-solid-svg-icons/index';
 
 import { faYoutube } from '@fortawesome/free-brands-svg-icons';
@@ -35,6 +36,7 @@ library.add(
   faBackward,
   faYoutube,
   faSearch,
+  faListCheck,
 );
 dom.watch();
 
@@ -60,6 +62,7 @@ import GaleWingApi from '../../api/galeWingApi';
 import PlaySound from '../../events/playSound';
 import SettingApi from '../../api/settingApi';
 import TranslationEnJp from '../../events/translationEnJpEvent';
+import ReadDispListEvent from '../../events/readDispListEvent';
 
 var setting: SettingApi;
 
@@ -196,6 +199,8 @@ window.onload = async () => {
     'click',
     document.getElementById('cardLayoutItem'),
   );
+
+  new ElementEvent(new ReadDispListEvent()).setup('click', document.getElementById('checkList'));
 
   var ps = new PlaySound();
   ps.setTalking(() => {
