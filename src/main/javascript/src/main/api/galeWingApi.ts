@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import FeedApi from './disp/feedApi';
 
 export default class GaleWingApi {
   public readonly apiUrls = {
@@ -16,6 +17,7 @@ export default class GaleWingApi {
     addSiteCategory: '/siteCategory/add',
     deleteSiteCategory: '/siteCategory/delete',
     translationEnJp: '/minhon/transelate',
+    read: '/read',
   };
 
   private static singleton: GaleWingApi;
@@ -111,6 +113,18 @@ export default class GaleWingApi {
     let baseUrl = new URL(window.location.href);
     let ajaxUrl = baseUrl.origin + this.apiUrls.translationEnJp;
     return axios.post(ajaxUrl, { text: text }, { headers: { 'Content-Type': 'application/json' } });
+  }
+
+  async read(link: string) {
+    let baseUrl = new URL(window.location.href);
+    let ajaxUrl = baseUrl.origin + this.apiUrls.read;
+    const response = await axios.post(ajaxUrl, {
+      link: link,
+    });
+    // 未読数の更新
+    response.data.forEach((element: { uuid: string; count: number }) => {
+      FeedApi.getInstance().unreadUpdate(element.uuid, element.count.toString());
+    });
   }
 
   static getInstance() {
