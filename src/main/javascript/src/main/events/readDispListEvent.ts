@@ -1,3 +1,4 @@
+import FeedApi from '../api/disp/feedApi';
 import { IElementEvent } from './elementEvent';
 import axios from 'axios';
 
@@ -19,8 +20,7 @@ export default class ReadDispListEvent implements IElementEvent {
           .then((response) => {
             // 未読数の更新
             response.data.forEach((element: { uuid: string; count: number }) => {
-              let countElement = <HTMLInputElement>document.getElementById(element.uuid + '_count');
-              countElement.innerText = element.count.toString();
+              FeedApi.getInstance().unreadUpdate(element.uuid, element.count.toString());
             });
 
             // 既読表示に変更
