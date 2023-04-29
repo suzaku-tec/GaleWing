@@ -88,21 +88,9 @@ window.onload = async () => {
       var link = row?.cell(1).data?.toLocaleString();
       if (link) {
         window.open(link);
-        api
-          .read(link)
-          .then(() => {
-            // 既読表示に変更
-            if ((event.target as any).localName == 'a') {
-              (event.target as HTMLElement).classList.remove('rss-link');
-              (event.target as HTMLElement).classList.add('rss-readed-link');
-            } else {
-              var innerHTML = (event.target as HTMLElement).innerHTML;
-              (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-readed-link');
-            }
-          })
-          .catch((error: any) => {
-            console.log(error);
-          });
+        api.read(link).catch((error: any) => {
+          console.log(error);
+        });
       }
     });
 
