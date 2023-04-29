@@ -88,10 +88,8 @@ window.onload = async () => {
       var link = row?.cell(1).data?.toLocaleString();
       if (link) {
         window.open(link);
-        axios
-          .post(uri.origin + '/readed', {
-            link: link,
-          })
+        api
+          .read(link)
           .then(() => {
             // 既読表示に変更
             if ((event.target as any).localName == 'a') {
