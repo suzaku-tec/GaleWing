@@ -152,22 +152,19 @@ window.onload = async () => {
 
         console.log('link:', link);
 
-        axios
-          .post(uri.origin + '/read', {
-            link: link,
-          })
-          .then((response) => {
-            // 未読数の更新
-            response.data.forEach((element: { uuid: string; count: number }) => {
-              FeedApi.getInstance().unreadUpdate(element.uuid, element.count.toString());
-            });
+        if (!link) {
+          return;
+        }
 
+        GaleWingApi.getInstance()
+          .read(link)
+          .then(() => {
             // 既読表示に変更
             if ((event.target as any).localName == 'a') {
               (event.target as HTMLElement).classList.remove('rss-link');
               (event.target as HTMLElement).classList.add('rss-read-link');
             } else {
-              var innerHTML = (event.target as HTMLElement).innerHTML;
+              let innerHTML = (event.target as HTMLElement).innerHTML;
               (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-read-link');
             }
           })

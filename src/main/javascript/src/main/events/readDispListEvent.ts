@@ -1,3 +1,4 @@
+import GaleWingApi from '../api/galeWingApi';
 import FeedApi from '../api/disp/feedApi';
 import { IElementEvent } from './elementEvent';
 import axios from 'axios';
@@ -13,16 +14,9 @@ export default class ReadDispListEvent implements IElementEvent {
       .filter((el) => el !== null)
       .map((el) => <HTMLAnchorElement>el)
       .forEach((anchorEl) => {
-        axios
-          .post(uri.origin + '/read', {
-            link: anchorEl.href,
-          })
-          .then((response) => {
-            // 未読数の更新
-            response.data.forEach((element: { uuid: string; count: number }) => {
-              FeedApi.getInstance().unreadUpdate(element.uuid, element.count.toString());
-            });
-
+        GaleWingApi.getInstance()
+          .read(anchorEl.href)
+          .then(() => {
             // 既読表示に変更
             anchorEl.classList.remove('rss-link');
             anchorEl.classList.add('rss-read-link');
