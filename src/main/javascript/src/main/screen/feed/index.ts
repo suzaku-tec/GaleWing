@@ -79,9 +79,9 @@ window.onload = async () => {
     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
   };
 
-  var uri = new URL(window.location.href);
+  let uri = new URL(window.location.href);
 
-  var api = GaleWingApi.getInstance();
+  let api = GaleWingApi.getInstance();
   api
     .getFeedList(window.location.href)
     .then((res) => {
