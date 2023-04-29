@@ -63,8 +63,6 @@ import PlaySound from '../../events/playSound';
 import SettingApi from '../../api/settingApi';
 import TranslationEnJp from '../../events/translationEnJpEvent';
 import ReadDispListEvent from '../../events/readDispListEvent';
-import FeedApi from '../../api/disp/feedApi';
-import { count } from 'readedRes';
 
 var setting: SettingApi;
 
@@ -156,7 +154,7 @@ window.onload = async () => {
           return;
         }
 
-        GaleWingApi.getInstance()
+        api
           .read(link)
           .then(() => {
             // 既読表示に変更
