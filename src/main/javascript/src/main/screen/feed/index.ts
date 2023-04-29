@@ -63,6 +63,8 @@ import PlaySound from '../../events/playSound';
 import SettingApi from '../../api/settingApi';
 import TranslationEnJp from '../../events/translationEnJpEvent';
 import ReadDispListEvent from '../../events/readDispListEvent';
+import FeedApi from '../../api/disp/feedApi';
+import { count } from 'readedRes';
 
 var setting: SettingApi;
 
@@ -157,8 +159,7 @@ window.onload = async () => {
           .then((response) => {
             // 未読数の更新
             response.data.forEach((element: { uuid: string; count: number }) => {
-              var countElement = <HTMLInputElement>document.getElementById(element.uuid + '_count');
-              countElement.innerText = element.count.toString();
+              FeedApi.getInstance().unreadUpdate(element.uuid, element.count.toString());
             });
 
             // 既読表示に変更
