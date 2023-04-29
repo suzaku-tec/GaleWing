@@ -16,6 +16,7 @@ import {
   faPlayCircle,
   faBackward,
   faSearch,
+  faListCheck,
 } from '@fortawesome/free-solid-svg-icons/index';
 
 import { faYoutube } from '@fortawesome/free-brands-svg-icons';
@@ -35,6 +36,7 @@ library.add(
   faBackward,
   faYoutube,
   faSearch,
+  faListCheck,
 );
 dom.watch();
 
@@ -60,6 +62,7 @@ import GaleWingApi from '../../api/galeWingApi';
 import PlaySound from '../../events/playSound';
 import SettingApi from '../../api/settingApi';
 import TranslationEnJp from '../../events/translationEnJpEvent';
+import ReadDispListEvent from '../../events/readDispListEvent';
 
 var setting: SettingApi;
 
@@ -76,9 +79,9 @@ window.onload = async () => {
     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
   };
 
-  var uri = new URL(window.location.href);
+  let uri = new URL(window.location.href);
 
-  var api = GaleWingApi.getInstance();
+  let api = GaleWingApi.getInstance();
   api
     .getFeedList(window.location.href)
     .then((res) => {
@@ -147,23 +150,19 @@ window.onload = async () => {
 
         console.log('link:', link);
 
-        axios
-          .post(uri.origin + '/read', {
-            link: link,
-          })
-          .then((response) => {
-            // 未読数の更新
-            response.data.forEach((element: { uuid: string; count: number }) => {
-              var countElement = <HTMLInputElement>document.getElementById(element.uuid + '_count');
-              countElement.innerText = element.count.toString();
-            });
+        if (!link) {
+          return;
+        }
 
+        api
+          .read(link)
+          .then(() => {
             // 既読表示に変更
             if ((event.target as any).localName == 'a') {
               (event.target as HTMLElement).classList.remove('rss-link');
               (event.target as HTMLElement).classList.add('rss-read-link');
             } else {
-              var innerHTML = (event.target as HTMLElement).innerHTML;
+              let innerHTML = (event.target as HTMLElement).innerHTML;
               (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-read-link');
             }
           })
@@ -196,6 +195,8 @@ window.onload = async () => {
     'click',
     document.getElementById('cardLayoutItem'),
   );
+
+  new ElementEvent(new ReadDispListEvent()).setup('click', document.getElementById('checkList'));
 
   var ps = new PlaySound();
   ps.setTalking(() => {
