@@ -96,7 +96,11 @@ window.onload = async () => {
                   (row.cells[8].data
                     ? `<img src='${row.cells[8].data}' style='object-fit: contain; height: 100px'></img>`
                     : '') +
-                  `<a href='${row.cells[1].data}' target="_blank" rel="noopener" class="rss-link" data-origin-txt="${row.cells[0].data}" data-translation-jp-txt="">${row.cells[0].data}</a>` +
+                  `<a href='${row.cells[1].data}' target="_blank" rel="noopener" class="${
+                    row.cells[9].data ? 'rss-read-link' : 'rss-link'
+                  }" data-origin-txt="${row.cells[0].data}" data-translation-jp-txt="">${
+                    row.cells[0].data
+                  }</a>` +
                   '</div>',
               ),
           },
@@ -108,6 +112,7 @@ window.onload = async () => {
           { name: 'publishedDate', hidden: false },
           { name: 'uuid', hidden: true },
           { name: 'imageUrl', hidden: true },
+          { name: 'chkSts', hidden: true },
         ],
         pagination: {
           enabled: true,
@@ -148,8 +153,6 @@ window.onload = async () => {
           window.open(link);
         }
 
-        console.log('link:', link);
-
         if (!link) {
           return;
         }
@@ -165,6 +168,8 @@ window.onload = async () => {
               let innerHTML = (event.target as HTMLElement).innerHTML;
               (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-read-link');
             }
+
+            row.cells[9].data = '1';
           })
           .catch((error) => {
             console.log(error);
