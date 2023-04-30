@@ -96,9 +96,11 @@ window.onload = async () => {
                   (row.cells[8].data
                     ? `<img src='${row.cells[8].data}' style='object-fit: contain; height: 100px'></img>`
                     : '') +
-                  (row.cells[9].data
-                    ? `<a href='${row.cells[1].data}' target="_blank" rel="noopener" class="rss-read-link" data-origin-txt="${row.cells[0].data}" data-translation-jp-txt="">${row.cells[0].data}</a>`
-                    : `<a href='${row.cells[1].data}' target="_blank" rel="noopener" class="rss-link" data-origin-txt="${row.cells[0].data}" data-translation-jp-txt="">${row.cells[0].data}</a>`) +
+                  `<a href='${row.cells[1].data}' target="_blank" rel="noopener" class="${
+                    row.cells[9].data ? 'rss-read-link' : 'rss-link'
+                  }" data-origin-txt="${row.cells[0].data}" data-translation-jp-txt="">${
+                    row.cells[0].data
+                  }</a>` +
                   '</div>',
               ),
           },
