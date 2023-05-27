@@ -116,6 +116,10 @@ dependencies {
     // Weka
     implementation 'nz.ac.waikato.cms.weka:weka-dev:3.9.5'
 
+    // Gradle
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
+
+    implementation 'org.mozilla:deepspeech:0.8.2'
 }
 
 sonarqube {
