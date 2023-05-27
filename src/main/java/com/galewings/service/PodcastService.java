@@ -11,6 +11,7 @@ import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -67,12 +68,17 @@ public class PodcastService {
                 // XMLデータを解析してDOMオブジェクトを取得
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 factory.setNamespaceAware(true);
+                factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+                factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+                factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+                factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+                factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+                factory.setExpandEntityReferences(false);
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 return Optional.of(builder.parse(new InputSource(new StringReader(xmlData.toString())))) ;
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
             return Optional.empty();
         }
     }
@@ -84,34 +90,5 @@ public class PodcastService {
         return pf;
     }
 
-    public void convertText() {
-        podcastFeedRepository.selectAll().stream().forEach(podcastFeed -> {
-            try {
-                String filePath = downloadAudioFile(podcastFeed.url);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    private String downloadAudioFile(String fileUrl) throws IOException {
-        String saveFilePath = "tmp.mp3";
-        URL url = new URL(fileUrl);
-        URLConnection connection = url.openConnection();
-
-        try(InputStream inputStream = connection.getInputStream();
-                FileOutputStream outputStream = new FileOutputStream(saveFilePath)) {
-
-            byte[] buffer = new byte[4096];
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
-        }
-
-        System.out.println("ファイルのダウンロードが完了しました。");
-
-        return saveFilePath;
-    }
 
 }
