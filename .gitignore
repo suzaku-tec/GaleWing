@@ -41,3 +41,5 @@ library.db
 # dotenv environment variables file
 src/main/resources/.env
 .env.test
+
+.env
