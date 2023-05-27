@@ -32,7 +32,4 @@ public class PodcastController {
         return "";
     }
 
-    public void convertText() {
-        podcastService.convertText();
-    }
 }
