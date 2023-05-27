@@ -118,8 +118,6 @@ dependencies {
 
     // Gradle
     implementation 'org.springframework.boot:spring-boot-starter-logging'
-
-    implementation 'org.mozilla:deepspeech:0.8.2'
 }
 
 sonarqube {
