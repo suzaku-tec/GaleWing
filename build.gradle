@@ -127,7 +127,9 @@ sonarqube {
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.exclusions", "src/main/java/com/galewings/entity/**, " +
                 "src/main/java/com/galewings/exception/**, src/main/java/com/galewings/dto/**, " +
-                "src/test/java/**/*Test.java, src/main/java/com/galewings/controller/SiteFeedController.java, src/main/java/com/galewings/task/AutoUpdateTask.java, src/main/javascript/src/index.ts, src/main/java/com/galewings/controller/FeedSampleController.java, src/main/java/com/galewings/GaleWingsApplication.java, src/main/java/com/galewings/service/MachineLearningService.java"
+                "src/test/java/**/*Test.java, src/main/java/com/galewings/controller/SiteFeedController.java, " +
+                "src/main/java/com/galewings/task/AutoUpdateTask.java, src/main/javascript/src/index.ts, " +
+                "src/main/java/com/galewings/controller/FeedSampleController.java, src/main/java/com/galewings/GaleWingsApplication.java, src/main/java/com/galewings/service/MachineLearningService.java, src/main/java/com/galewings/service/PodcastService"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
