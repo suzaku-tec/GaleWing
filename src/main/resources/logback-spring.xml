@@ -1,47 +1,62 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-  <property name="LOGS" value="./logs"/>
+    <!-- 標準出力用設定 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy/MM/dd HH:mm:ss} %-5level [%thread] - %msg%n</pattern>
+        </encoder>
+    </appender>
 
-  <appender name="Console"
-    class="ch.qos.logback.core.ConsoleAppender">
-    <layout class="ch.qos.logback.classic.PatternLayout">
-      <Pattern>
-        %black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable
-      </Pattern>
-    </layout>
-  </appender>
+    <!-- ファイルA出力用設定 -->
+    <appender name="FILE_A" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 出力先ファイルパス -->
+        <file>/var/log/galewing/alog.log</file>
 
-  <appender name="RollingFile"
-    class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${LOGS}/spring-boot-logger.log</file>
-    <encoder
-      class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
-    </encoder>
+        <!-- ログのローテーション設定 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <!-- 世代管理されるファイルの命名パターン -->
+            <fileNamePattern>/var/log/galewing/alog.log.%i</fileNamePattern>    <!-- %iはインデックス。minIndexからMaxIndexまでの連番 -->
+            <minIndex>1</minIndex>
+            <maxIndex>7</maxIndex>      <!-- 最大7ファイルまで世代管理 -->
+        </rollingPolicy>
 
-    <rollingPolicy
-      class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <!-- rollover daily and when the file reaches 10 MegaBytes -->
-      <fileNamePattern>${LOGS}/archived/spring-boot-%d{yyyy-MM-dd}.%i.log
-      </fileNamePattern>
-      <timeBasedFileNamingAndTriggeringPolicy
-        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-        <maxFileSize>10MB</maxFileSize>
-      </timeBasedFileNamingAndTriggeringPolicy>
-    </rollingPolicy>
-  </appender>
+        <!-- ローテーションのトリガ。10MBに達した時点でローテーション。 -->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
 
-  <!-- LOG everything at INFO level -->
-  <root level="debug">
-    <appender-ref ref="RollingFile"/>
-    <appender-ref ref="Console"/>
-  </root>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy/MM/dd HH:mm:ss} %-5level [%thread] - %msg%n</pattern>
+        </encoder>
+    </appender>
 
-  <!-- LOG "com.baeldung*" at TRACE level -->
-  <logger name="com.baeldung" level="trace" additivity="false">
-    <appender-ref ref="RollingFile"/>
-    <appender-ref ref="Console"/>
-  </logger>
+    <!-- ファイルB出力用設定 -->
+    <appender name="FILE_B" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/var/log/galewing/blog.log</file>
 
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/var/log/galewing/blog.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <!-- %d{yyyy-MM-dd}の設定によって、自動でローテーションがトリガされる。日まで指定すると、毎日ローテーション。 -->
+
+            <!-- 最大３０日間保存 -->
+            <maxHistory>30</maxHistory>
+
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy/MM/dd HH:mm:ss} %-5level [%thread] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- rootロガーを継承したサブロガー。rootロガーの設定を引き継ぎつつ、追加でファイルBにもログを出す --> ・・・④
+    <logger name="com.example" level="INFO">
+        <appender-ref ref="FILE_B" />
+    </logger>
+
+    <!-- rootロガー。ログは原則ファイルAと標準出力に出力する -->
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE_A" />
+    </root>
 </configuration>
