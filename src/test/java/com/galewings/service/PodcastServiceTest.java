@@ -9,8 +9,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -29,8 +32,14 @@ class PodcastServiceTest {
     }
 
     @Test
-    void testSync() {
-        when(podcastRepository.selectAll()).thenReturn(List.of(new Podcast()));
+    void testSync() throws IOException {
+        Podcast test = new Podcast();
+        test.url = "http://localhost:8080";
+
+        BufferedReader reader = Mockito.mock(BufferedReader.class);
+        when(reader.readLine()).thenReturn("").thenReturn(null);
+
+        when(podcastRepository.selectAll()).thenReturn(List.of(test));
 
         podcastService.sync();
     }
