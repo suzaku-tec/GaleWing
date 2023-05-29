@@ -115,7 +115,6 @@ window.onload = async () => {
           { name: 'chkSts', hidden: true },
         ],
         pagination: {
-          enabled: true,
           limit: Number(setting.get('feed_rows')),
         },
         sort: true,
