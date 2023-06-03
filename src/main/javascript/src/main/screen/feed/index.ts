@@ -40,7 +40,7 @@ library.add(
 );
 dom.watch();
 
-import { Grid, html } from 'gridjs';
+import { Grid, Row, html } from 'gridjs';
 import 'gridjs/dist/theme/mermaid.css';
 
 import hideModifier from '@popperjs/core/lib/modifiers/hide';
@@ -63,6 +63,7 @@ import PlaySound from '../../events/playSound';
 import SettingApi from '../../api/settingApi';
 import TranslationEnJp from '../../events/translationEnJpEvent';
 import ReadDispListEvent from '../../events/readDispListEvent';
+import { JSX, VNode } from 'preact';
 
 var setting: SettingApi;
 
@@ -92,42 +93,7 @@ function setupGrid() {
   api
     .getFeedList(window.location.href)
     .then((res) => {
-      var grid = new Grid({
-        columns: [
-          {
-            name: 'title',
-            hidden: false,
-            formatter: (cell, row) =>
-              html(
-                "<div style='display: flex;'>" +
-                  (row.cells[8].data
-                    ? `<img src='${row.cells[8].data}' style='object-fit: contain; height: 100px'></img>`
-                    : '') +
-                  `<a href='${row.cells[1].data}' target="_blank" rel="noopener" class="${
-                    row.cells[9].data ? 'rss-read-link' : 'rss-link'
-                  }" data-origin-txt="${row.cells[0].data}" data-translation-jp-txt="">${
-                    row.cells[0].data
-                  }</a>` +
-                  '</div>',
-              ),
-          },
-          { name: 'link', hidden: true },
-          { name: 'uri', hidden: true },
-          { name: 'type', hidden: true },
-          { name: 'author', hidden: true },
-          { name: 'comments', hidden: true },
-          { name: 'publishedDate', hidden: false },
-          { name: 'uuid', hidden: true },
-          { name: 'imageUrl', hidden: true },
-          { name: 'chkSts', hidden: true },
-        ],
-        pagination: {
-          limit: Number(setting.get('feed_rows')),
-        },
-        sort: true,
-        search: true,
-        data: res.data,
-      }).render(<HTMLInputElement>document.getElementById('wrapper'));
+      let grid = createGrid(res.data);
 
       setupGridEvent(grid);
 
@@ -138,8 +104,69 @@ function setupGrid() {
     });
 }
 
+function createGrid(data: any) {
+  return new Grid({
+    columns: createGridColumn(),
+    pagination: {
+      limit: Number(setting.get('feed_rows')),
+    },
+    sort: true,
+    search: true,
+    data: data,
+  }).render(<HTMLInputElement>document.getElementById('wrapper'));
+}
+
+function createGridColumn() {
+  return [
+    {
+      name: 'title',
+      hidden: false,
+      formatter: (
+        cell: any,
+        row: {
+          cells: {
+            data: string | number | bigint | boolean | object | VNode<any> | null | undefined;
+          }[];
+        },
+      ) =>
+        html(
+          createTitleLinkText(
+            row.cells[0].data,
+            row.cells[1].data,
+            row.cells[8].data,
+            row.cells[9].data,
+          ),
+        ),
+    },
+    { name: 'link', hidden: true },
+    { name: 'uri', hidden: true },
+    { name: 'type', hidden: true },
+    { name: 'author', hidden: true },
+    { name: 'comments', hidden: true },
+    { name: 'publishedDate', hidden: false },
+    { name: 'uuid', hidden: true },
+    { name: 'imageUrl', hidden: true },
+    { name: 'chkSts', hidden: true },
+  ];
+}
+
+function createTitleLinkText(
+  title: string | number | bigint | boolean | object | VNode<any> | null | undefined,
+  link: string | number | bigint | boolean | object | VNode<any> | null | undefined,
+  imageUrl: string | number | bigint | boolean | object | VNode<any> | null | undefined,
+  chkSts: string | number | bigint | boolean | object | VNode<any> | null | undefined,
+) {
+  return (
+    "<div style='display: flex;'>" +
+    (imageUrl ? `<img src='${imageUrl}' style='object-fit: contain; height: 100px'></img>` : '') +
+    `<a href='${link}' target="_blank" rel="noopener" class="${
+      chkSts ? 'rss-read-link' : 'rss-link'
+    }" data-origin-txt="${title}" data-translation-jp-txt="">${title}</a>` +
+    '</div>'
+  );
+}
+
 function setupGridEvent(grid: Grid) {
-  let api = GaleWingApi.getInstance();
   new ElementEvent(new UpdateFeed('identifier', grid)).setup(
     'click',
     document.getElementById('updateFeed'),
@@ -150,6 +177,10 @@ function setupGridEvent(grid: Grid) {
     document.getElementById('readAllShowFeed'),
   );
 
+  setupGridRowClickEvent(grid);
+}
+
+function setupGridRowClickEvent(grid: Grid) {
   grid.on('rowClick', (event, row) => {
     var link: string | undefined = undefined;
     if ((event.target as any).localName == 'path') {
@@ -175,24 +206,29 @@ function setupGridEvent(grid: Grid) {
       return;
     }
 
-    api
-      .read(link)
-      .then(() => {
-        // 既読表示に変更
-        if ((event.target as any).localName == 'a') {
-          (event.target as HTMLElement).classList.remove('rss-link');
-          (event.target as HTMLElement).classList.add('rss-read-link');
-        } else {
-          let innerHTML = (event.target as HTMLElement).innerHTML;
-          (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-read-link');
-        }
-
-        row.cells[9].data = '1';
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    changeRowRead(link, event, row);
   });
+}
+
+function changeRowRead(link: string, event: JSX.TargetedMouseEvent<HTMLTableRowElement>, row: Row) {
+  let api = GaleWingApi.getInstance();
+  api
+    .read(link)
+    .then(() => {
+      // 既読表示に変更
+      if ((event.target as any).localName == 'a') {
+        (event.target as HTMLElement).classList.remove('rss-link');
+        (event.target as HTMLElement).classList.add('rss-read-link');
+      } else {
+        let innerHTML = (event.target as HTMLElement).innerHTML;
+        (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-read-link');
+      }
+
+      row.cells[9].data = '1';
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 
 function setupEvent() {
