@@ -74,13 +74,20 @@ window.onload = async () => {
   // サイドバー初期化
   setupSidebar();
 
+  // axiosのヘッダー設定
   axios.defaults.headers.common = {
     'X-Requested-With': 'XMLHttpRequest',
     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
   };
 
-  let uri = new URL(window.location.href);
+  // grid初期化
+  setupGrid();
 
+  // init event
+  setupEvent();
+};
+
+function setupGrid() {
   let api = GaleWingApi.getInstance();
   api
     .getFeedList(window.location.href)
@@ -121,67 +128,74 @@ window.onload = async () => {
         search: true,
         data: res.data,
       }).render(<HTMLInputElement>document.getElementById('wrapper'));
-      new ElementEvent(new UpdateFeed('identifier', grid)).setup(
-        'click',
-        document.getElementById('updateFeed'),
-      );
 
-      new ElementEvent(new ReadAllShowFeed(grid)).setup(
-        'click',
-        document.getElementById('readAllShowFeed'),
-      );
-
-      grid.on('rowClick', (event, row) => {
-        var link: string | undefined = undefined;
-        if ((event.target as any).localName == 'path') {
-          var uuid = row?.cell(7).data?.toLocaleString();
-          link = row?.cell(1).data?.toLocaleString();
-          stack(uuid, link);
-          return;
-        }
-
-        if (
-          (event.target as any).name === 'analysis' ||
-          ((event.target as Element).parentElement as HTMLInputElement).name === 'analysis'
-        ) {
-          return;
-        }
-
-        link = row?.cell(1).data?.toLocaleString();
-        if ((event.target as any).localName != 'a') {
-          window.open(link);
-        }
-
-        if (!link) {
-          return;
-        }
-
-        api
-          .read(link)
-          .then(() => {
-            // 既読表示に変更
-            if ((event.target as any).localName == 'a') {
-              (event.target as HTMLElement).classList.remove('rss-link');
-              (event.target as HTMLElement).classList.add('rss-read-link');
-            } else {
-              let innerHTML = (event.target as HTMLElement).innerHTML;
-              (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-read-link');
-            }
-
-            row.cells[9].data = '1';
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      });
+      setupGridEvent(grid);
 
       init(9, 3, res.data);
     })
     .catch((error) => {
       throw new Error(error);
     });
+}
 
-  // init event
+function setupGridEvent(grid: Grid) {
+  let api = GaleWingApi.getInstance();
+  new ElementEvent(new UpdateFeed('identifier', grid)).setup(
+    'click',
+    document.getElementById('updateFeed'),
+  );
+
+  new ElementEvent(new ReadAllShowFeed(grid)).setup(
+    'click',
+    document.getElementById('readAllShowFeed'),
+  );
+
+  grid.on('rowClick', (event, row) => {
+    var link: string | undefined = undefined;
+    if ((event.target as any).localName == 'path') {
+      var uuid = row?.cell(7).data?.toLocaleString();
+      link = row?.cell(1).data?.toLocaleString();
+      stack(uuid, link);
+      return;
+    }
+
+    if (
+      (event.target as any).name === 'analysis' ||
+      ((event.target as Element).parentElement as HTMLInputElement).name === 'analysis'
+    ) {
+      return;
+    }
+
+    link = row?.cell(1).data?.toLocaleString();
+    if ((event.target as any).localName != 'a') {
+      window.open(link);
+    }
+
+    if (!link) {
+      return;
+    }
+
+    api
+      .read(link)
+      .then(() => {
+        // 既読表示に変更
+        if ((event.target as any).localName == 'a') {
+          (event.target as HTMLElement).classList.remove('rss-link');
+          (event.target as HTMLElement).classList.add('rss-read-link');
+        } else {
+          let innerHTML = (event.target as HTMLElement).innerHTML;
+          (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-read-link');
+        }
+
+        row.cells[9].data = '1';
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
+}
+
+function setupEvent() {
   new ElementEvent(new AddSiteEvent()).setup('click', document.getElementById('addSite'));
   new ElementEvent(new ExportOpml()).setup('click', document.getElementById('exportOpml'));
   new ElementEvent(new ImportOpml()).setup('click', document.getElementById('importOpml'));
@@ -202,7 +216,12 @@ window.onload = async () => {
 
   new ElementEvent(new ReadDispListEvent()).setup('click', document.getElementById('checkList'));
 
-  var ps = new PlaySound();
+  let ps = setupPlayer();
+  new ElementEvent(ps).setup('click', document.getElementById('playTitle'));
+}
+
+function setupPlayer() {
+  let ps = new PlaySound();
   ps.setTalking(() => {
     // TODO 再生のコントロールを検討する
     var rssLinks = document.getElementsByClassName('rss-link');
@@ -215,8 +234,9 @@ window.onload = async () => {
       }, Promise.resolve());
     })();
   });
-  new ElementEvent(ps).setup('click', document.getElementById('playTitle'));
-};
+
+  return ps;
+}
 
 function stack(uuid: string | null | undefined, link: string | undefined) {
   var api = GaleWingApi.getInstance();
