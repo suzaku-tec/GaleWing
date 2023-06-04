@@ -40,7 +40,6 @@ library.add(
 );
 dom.watch();
 
-import { Grid, html } from 'gridjs';
 import 'gridjs/dist/theme/mermaid.css';
 
 import hideModifier from '@popperjs/core/lib/modifiers/hide';
@@ -48,140 +47,36 @@ import hideModifier from '@popperjs/core/lib/modifiers/hide';
 import axios from 'axios';
 
 import ElementEvent from '../../events/elementEvent';
-import UpdateFeed from '../../events/updateFeed';
 import AddSiteEvent from '../../events/modal/addSiteEvent';
 import ExportOpml from '../../events/exportOpml';
 import ImportOpml from '../../events/modal/importOpml';
 import GridLayoutChgEvent from '../../events/gridLayoutChgEvent';
 import CardLayoutChgEvent from '../../events/cardLayoutChgEvent';
-import ReadAllShowFeed from '../../events/readAllShowFeed';
 
-import init from '../cardGridLayout';
-
-import GaleWingApi from '../../api/galeWingApi';
 import PlaySound from '../../events/playSound';
-import SettingApi from '../../api/settingApi';
 import TranslationEnJp from '../../events/translationEnJpEvent';
 import ReadDispListEvent from '../../events/readDispListEvent';
-
-var setting: SettingApi;
+import GaleWingGrid from './galeWingGrid';
 
 window.onload = async () => {
-  setting = new SettingApi();
-  await setting.init();
-  setting.outputLog();
-
   // サイドバー初期化
   setupSidebar();
 
+  // axiosのヘッダー設定
   axios.defaults.headers.common = {
     'X-Requested-With': 'XMLHttpRequest',
     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
   };
 
-  let uri = new URL(window.location.href);
-
-  let api = GaleWingApi.getInstance();
-  api
-    .getFeedList(window.location.href)
-    .then((res) => {
-      var grid = new Grid({
-        columns: [
-          {
-            name: 'title',
-            hidden: false,
-            formatter: (cell, row) =>
-              html(
-                "<div style='display: flex;'>" +
-                  (row.cells[8].data
-                    ? `<img src='${row.cells[8].data}' style='object-fit: contain; height: 100px'></img>`
-                    : '') +
-                  `<a href='${row.cells[1].data}' target="_blank" rel="noopener" class="${
-                    row.cells[9].data ? 'rss-read-link' : 'rss-link'
-                  }" data-origin-txt="${row.cells[0].data}" data-translation-jp-txt="">${
-                    row.cells[0].data
-                  }</a>` +
-                  '</div>',
-              ),
-          },
-          { name: 'link', hidden: true },
-          { name: 'uri', hidden: true },
-          { name: 'type', hidden: true },
-          { name: 'author', hidden: true },
-          { name: 'comments', hidden: true },
-          { name: 'publishedDate', hidden: false },
-          { name: 'uuid', hidden: true },
-          { name: 'imageUrl', hidden: true },
-          { name: 'chkSts', hidden: true },
-        ],
-        pagination: {
-          limit: Number(setting.get('feed_rows')),
-        },
-        sort: true,
-        search: true,
-        data: res.data,
-      }).render(<HTMLInputElement>document.getElementById('wrapper'));
-      new ElementEvent(new UpdateFeed('identifier', grid)).setup(
-        'click',
-        document.getElementById('updateFeed'),
-      );
-
-      new ElementEvent(new ReadAllShowFeed(grid)).setup(
-        'click',
-        document.getElementById('readAllShowFeed'),
-      );
-
-      grid.on('rowClick', (event, row) => {
-        var link: string | undefined = undefined;
-        if ((event.target as any).localName == 'path') {
-          var uuid = row?.cell(7).data?.toLocaleString();
-          link = row?.cell(1).data?.toLocaleString();
-          stack(uuid, link);
-          return;
-        }
-
-        if (
-          (event.target as any).name === 'analysis' ||
-          ((event.target as Element).parentElement as HTMLInputElement).name === 'analysis'
-        ) {
-          return;
-        }
-
-        link = row?.cell(1).data?.toLocaleString();
-        if ((event.target as any).localName != 'a') {
-          window.open(link);
-        }
-
-        if (!link) {
-          return;
-        }
-
-        api
-          .read(link)
-          .then(() => {
-            // 既読表示に変更
-            if ((event.target as any).localName == 'a') {
-              (event.target as HTMLElement).classList.remove('rss-link');
-              (event.target as HTMLElement).classList.add('rss-read-link');
-            } else {
-              let innerHTML = (event.target as HTMLElement).innerHTML;
-              (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-read-link');
-            }
-
-            row.cells[9].data = '1';
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      });
-
-      init(9, 3, res.data);
-    })
-    .catch((error) => {
-      throw new Error(error);
-    });
+  // grid初期化
+  let grid = GaleWingGrid.getInstance();
+  grid.setupGrid();
 
   // init event
+  setupEvent();
+};
+
+function setupEvent() {
   new ElementEvent(new AddSiteEvent()).setup('click', document.getElementById('addSite'));
   new ElementEvent(new ExportOpml()).setup('click', document.getElementById('exportOpml'));
   new ElementEvent(new ImportOpml()).setup('click', document.getElementById('importOpml'));
@@ -202,7 +97,12 @@ window.onload = async () => {
 
   new ElementEvent(new ReadDispListEvent()).setup('click', document.getElementById('checkList'));
 
-  var ps = new PlaySound();
+  let ps = setupPlayer();
+  new ElementEvent(ps).setup('click', document.getElementById('playTitle'));
+}
+
+function setupPlayer() {
+  let ps = new PlaySound();
   ps.setTalking(() => {
     // TODO 再生のコントロールを検討する
     var rssLinks = document.getElementsByClassName('rss-link');
@@ -215,12 +115,8 @@ window.onload = async () => {
       }, Promise.resolve());
     })();
   });
-  new ElementEvent(ps).setup('click', document.getElementById('playTitle'));
-};
 
-function stack(uuid: string | null | undefined, link: string | undefined) {
-  var api = GaleWingApi.getInstance();
-  api.stackFeed(window.location.href, uuid, link);
+  return ps;
 }
 
 /**
