@@ -40,7 +40,6 @@ library.add(
 );
 dom.watch();
 
-import { Grid, Row, html } from 'gridjs';
 import 'gridjs/dist/theme/mermaid.css';
 
 import hideModifier from '@popperjs/core/lib/modifiers/hide';
@@ -48,30 +47,18 @@ import hideModifier from '@popperjs/core/lib/modifiers/hide';
 import axios from 'axios';
 
 import ElementEvent from '../../events/elementEvent';
-import UpdateFeed from '../../events/updateFeed';
 import AddSiteEvent from '../../events/modal/addSiteEvent';
 import ExportOpml from '../../events/exportOpml';
 import ImportOpml from '../../events/modal/importOpml';
 import GridLayoutChgEvent from '../../events/gridLayoutChgEvent';
 import CardLayoutChgEvent from '../../events/cardLayoutChgEvent';
-import ReadAllShowFeed from '../../events/readAllShowFeed';
 
-import init from '../cardGridLayout';
-
-import GaleWingApi from '../../api/galeWingApi';
 import PlaySound from '../../events/playSound';
-import SettingApi from '../../api/settingApi';
 import TranslationEnJp from '../../events/translationEnJpEvent';
 import ReadDispListEvent from '../../events/readDispListEvent';
-import { JSX, VNode } from 'preact';
-
-var setting: SettingApi;
+import GaleWingGrid from './galeWingGrid';
 
 window.onload = async () => {
-  setting = new SettingApi();
-  await setting.init();
-  setting.outputLog();
-
   // サイドバー初期化
   setupSidebar();
 
@@ -82,154 +69,12 @@ window.onload = async () => {
   };
 
   // grid初期化
-  setupGrid();
+  let grid = GaleWingGrid.getInstance();
+  grid.setupGrid();
 
   // init event
   setupEvent();
 };
-
-function setupGrid() {
-  let api = GaleWingApi.getInstance();
-  api
-    .getFeedList(window.location.href)
-    .then((res) => {
-      let grid = createGrid(res.data);
-
-      setupGridEvent(grid);
-
-      init(9, 3, res.data);
-    })
-    .catch((error) => {
-      throw new Error(error);
-    });
-}
-
-function createGrid(data: any) {
-  return new Grid({
-    columns: createGridColumn(),
-    pagination: {
-      limit: Number(setting.get('feed_rows')),
-    },
-    sort: true,
-    search: true,
-    data: data,
-  }).render(<HTMLInputElement>document.getElementById('wrapper'));
-}
-
-function createGridColumn() {
-  return [
-    {
-      name: 'title',
-      hidden: false,
-      formatter: (
-        cell: any,
-        row: {
-          cells: {
-            data: string | number | bigint | boolean | object | VNode<any> | null | undefined;
-          }[];
-        },
-      ) =>
-        html(
-          createTitleLinkText(
-            row.cells[0].data,
-            row.cells[1].data,
-            row.cells[8].data,
-            row.cells[9].data,
-          ),
-        ),
-    },
-    { name: 'link', hidden: true },
-    { name: 'uri', hidden: true },
-    { name: 'type', hidden: true },
-    { name: 'author', hidden: true },
-    { name: 'comments', hidden: true },
-    { name: 'publishedDate', hidden: false },
-    { name: 'uuid', hidden: true },
-    { name: 'imageUrl', hidden: true },
-    { name: 'chkSts', hidden: true },
-  ];
-}
-
-function createTitleLinkText(
-  title: string | number | bigint | boolean | object | VNode<any> | null | undefined,
-  link: string | number | bigint | boolean | object | VNode<any> | null | undefined,
-  imageUrl: string | number | bigint | boolean | object | VNode<any> | null | undefined,
-  chkSts: string | number | bigint | boolean | object | VNode<any> | null | undefined,
-) {
-  return (
-    "<div style='display: flex;'>" +
-    (imageUrl ? `<img src='${imageUrl}' style='object-fit: contain; height: 100px'></img>` : '') +
-    `<a href='${link}' target="_blank" rel="noopener" class="${
-      chkSts ? 'rss-read-link' : 'rss-link'
-    }" data-origin-txt="${title}" data-translation-jp-txt="">${title}</a>` +
-    '</div>'
-  );
-}
-
-function setupGridEvent(grid: Grid) {
-  new ElementEvent(new UpdateFeed('identifier', grid)).setup(
-    'click',
-    document.getElementById('updateFeed'),
-  );
-
-  new ElementEvent(new ReadAllShowFeed(grid)).setup(
-    'click',
-    document.getElementById('readAllShowFeed'),
-  );
-
-  setupGridRowClickEvent(grid);
-}
-
-function setupGridRowClickEvent(grid: Grid) {
-  grid.on('rowClick', (event, row) => {
-    var link: string | undefined = undefined;
-    if ((event.target as any).localName == 'path') {
-      var uuid = row?.cell(7).data?.toLocaleString();
-      link = row?.cell(1).data?.toLocaleString();
-      stack(uuid, link);
-      return;
-    }
-
-    if (
-      (event.target as any).name === 'analysis' ||
-      ((event.target as Element).parentElement as HTMLInputElement).name === 'analysis'
-    ) {
-      return;
-    }
-
-    link = row?.cell(1).data?.toLocaleString();
-    if ((event.target as any).localName != 'a') {
-      window.open(link);
-    }
-
-    if (!link) {
-      return;
-    }
-
-    changeRowRead(link, event, row);
-  });
-}
-
-function changeRowRead(link: string, event: JSX.TargetedMouseEvent<HTMLTableRowElement>, row: Row) {
-  let api = GaleWingApi.getInstance();
-  api
-    .read(link)
-    .then(() => {
-      // 既読表示に変更
-      if ((event.target as any).localName == 'a') {
-        (event.target as HTMLElement).classList.remove('rss-link');
-        (event.target as HTMLElement).classList.add('rss-read-link');
-      } else {
-        let innerHTML = (event.target as HTMLElement).innerHTML;
-        (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-read-link');
-      }
-
-      row.cells[9].data = '1';
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
 
 function setupEvent() {
   new ElementEvent(new AddSiteEvent()).setup('click', document.getElementById('addSite'));
@@ -272,11 +117,6 @@ function setupPlayer() {
   });
 
   return ps;
-}
-
-function stack(uuid: string | null | undefined, link: string | undefined) {
-  var api = GaleWingApi.getInstance();
-  api.stackFeed(window.location.href, uuid, link);
 }
 
 /**
