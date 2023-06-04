@@ -4,18 +4,18 @@ import axios from 'axios';
 
 export default class AddSiteEvent implements IElementEvent {
   execute() {
-    var modalBody = document.getElementById('modal-body');
-    var modalFooter = document.getElementById('modal-footer');
+    let modalBody = document.getElementById('modal-body')!;
+    let modalFooter = document.getElementById('modal-footer')!;
 
-    var modalAddSiteBody = document.getElementById('modalAddSiteBody');
-    var modalAddSiteFooter = document.getElementById('modalAddSiteFooter');
+    let modalAddSiteBody = document.getElementById('modalAddSiteBody')!;
+    let modalAddSiteFooter = document.getElementById('modalAddSiteFooter')!;
 
     modalBody.appendChild(modalAddSiteBody.cloneNode(true));
     modalFooter.appendChild(modalAddSiteFooter.cloneNode(true));
 
     modalFooter.getElementsByClassName('modal-submit')[0].addEventListener('click', () => {
-      var link = (modalBody.getElementsByClassName('addSiteUrl')[0] as HTMLInputElement).value;
-      var uri = new URL(window.location.href);
+      let link = (modalBody.getElementsByClassName('addSiteUrl')[0] as HTMLInputElement).value;
+      let uri = new URL(window.location.href);
       axios
         .post(uri.origin + '/addFeed', {
           link: link,
@@ -30,18 +30,18 @@ export default class AddSiteEvent implements IElementEvent {
         });
     });
 
-    var modal = new Modal(document.getElementById('exampleModal'));
+    let modal = new Modal(document.getElementById('exampleModal')!);
     modal.show();
 
-    document.getElementById('exampleModal').addEventListener(
+    document.getElementById('exampleModal')!.addEventListener(
       'hidden.bs.modal',
       (event) => {
-        var modalBody = document.getElementById('modal-body');
+        let modalBody = document.getElementById('modal-body')!;
         while (modalBody.firstChild) {
           modalBody.removeChild(modalBody.firstChild);
         }
 
-        var modalFooter = document.getElementById('modal-footer');
+        let modalFooter = document.getElementById('modal-footer')!;
         while (modalFooter.firstChild) {
           modalFooter.removeChild(modalFooter.firstChild);
         }
