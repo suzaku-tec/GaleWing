@@ -5,18 +5,58 @@ export default class ConfirmModalEvent {
   private modal: Modal;
 
   constructor(msg: string, execute: () => void) {
-    var div = document.createElement('div');
+    let div = document.createElement('div');
     div.innerText = msg;
 
-    var modalBody = document.getElementById('modal-body');
+    let modalBody = document.getElementById('modal-body')!;
     modalBody.appendChild(div);
 
-    var footer = document.getElementById('modal-footer');
-    var confirmFooter = document.getElementsByClassName('confirmFooter')[0];
+    let confirmFooter = document.getElementsByClassName('confirmFooter')[0];
+    let footer = this.initFooter(confirmFooter, execute);
+
+    let modalHeaderCloseBtn = document.getElementById('modal-header-btn-close')!;
+    modalHeaderCloseBtn.style.display = 'none';
+
+    document.getElementById('exampleModal')!.addEventListener(
+      'hidden.bs.modal',
+      (event) => {
+        this.disposeModal(modalBody, footer, modalHeaderCloseBtn);
+      },
+      { once: true },
+    );
+
+    this.modal = new Modal(document.getElementById('exampleModal')!, {
+      backdrop: 'static',
+    });
+    this.modal.show();
+  }
+
+  private disposeModal(
+    modalBody: HTMLElement,
+    footer: HTMLElement,
+    modalHeaderCloseBtn: HTMLElement,
+  ) {
+    // body削除
+    while (modalBody.firstChild) {
+      modalBody.removeChild(modalBody.firstChild);
+    }
+
+    // footer削除
+    while (footer.firstChild) {
+      footer.removeChild(footer.firstChild);
+    }
+
+    modalHeaderCloseBtn.style.display = '';
+
+    this.modal.dispose();
+  }
+
+  private initFooter(confirmFooter: Element, execute: () => void) {
+    let footer = document.getElementById('modal-footer')!;
     footer.appendChild(confirmFooter.cloneNode(true));
     footer
-      .getElementsByClassName('confirmOk')
-      .item(0)
+      .getElementsByClassName('confirmOk')!
+      .item(0)!
       .addEventListener('click', () => {
         execute();
 
@@ -24,40 +64,13 @@ export default class ConfirmModalEvent {
           this.modal.hide();
         }
       });
-
-    var modalHeaderCloseBtn = document.getElementById('modal-header-btn-close');
-    modalHeaderCloseBtn.style.display = 'none';
-
-    document.getElementById('exampleModal').addEventListener(
-      'hidden.bs.modal',
-      (event) => {
-        // body削除
-        while (modalBody.firstChild) {
-          modalBody.removeChild(modalBody.firstChild);
-        }
-
-        // footer削除
-        while (footer.firstChild) {
-          footer.removeChild(footer.firstChild);
-        }
-
-        modalHeaderCloseBtn.style.display = '';
-
-        this.modal.dispose();
-      },
-      { once: true },
-    );
-
-    this.modal = new Modal(document.getElementById('exampleModal'), {
-      backdrop: 'static',
-    });
-    this.modal.show();
+    return footer;
   }
 
   close() {
     if (this.modal) {
       this.modal.hide();
-      document.getElementById('modal-dialog').classList.remove('modal-dialog-centered');
+      document.getElementById('modal-dialog')!.classList.remove('modal-dialog-centered');
     }
   }
 }
