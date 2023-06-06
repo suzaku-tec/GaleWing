@@ -13,42 +13,47 @@ export default class AddSiteEvent implements IElementEvent {
     modalBody.appendChild(modalAddSiteBody.cloneNode(true));
     modalFooter.appendChild(modalAddSiteFooter.cloneNode(true));
 
-    modalFooter.getElementsByClassName('modal-submit')[0].addEventListener('click', () => {
-      let link = (modalBody.getElementsByClassName('addSiteUrl')[0] as HTMLInputElement).value;
-      let uri = new URL(window.location.href);
-      axios
-        .post(uri.origin + '/addFeed', {
-          link: link,
-        })
-        .then((response) => {
-          console.log(response.data);
-
-          modal.hide();
-        })
-        .catch((error) => {
-          modal.hide();
-        });
-    });
-
     let modal = new Modal(document.getElementById('exampleModal')!);
+    modalFooter.getElementsByClassName('modal-submit')[0].addEventListener('click', () => {
+      this.modalAddSite(modal, modalBody);
+    });
     modal.show();
 
-    document.getElementById('exampleModal')!.addEventListener(
-      'hidden.bs.modal',
-      (event) => {
-        let modalBody = document.getElementById('modal-body')!;
-        while (modalBody.firstChild) {
-          modalBody.removeChild(modalBody.firstChild);
-        }
+    document
+      .getElementById('exampleModal')!
+      .addEventListener('hidden.bs.modal', this.disposeModal(modal), { once: true });
+  }
 
-        let modalFooter = document.getElementById('modal-footer')!;
-        while (modalFooter.firstChild) {
-          modalFooter.removeChild(modalFooter.firstChild);
-        }
+  private disposeModal(modal: Modal): EventListenerOrEventListenerObject {
+    return (event) => {
+      let modalBody = document.getElementById('modal-body')!;
+      while (modalBody.firstChild) {
+        modalBody.removeChild(modalBody.firstChild);
+      }
 
-        modal.dispose();
-      },
-      { once: true },
-    );
+      let modalFooter = document.getElementById('modal-footer')!;
+      while (modalFooter.firstChild) {
+        modalFooter.removeChild(modalFooter.firstChild);
+      }
+
+      modal.dispose();
+    };
+  }
+
+  private modalAddSite(modal: Modal, modalBody: HTMLElement) {
+    let link = (modalBody.getElementsByClassName('addSiteUrl')[0] as HTMLInputElement).value;
+    let uri = new URL(window.location.href);
+    axios
+      .post(uri.origin + '/addFeed', {
+        link: link,
+      })
+      .then((response) => {
+        console.log(response.data);
+
+        modal.hide();
+      })
+      .catch((error) => {
+        modal.hide();
+      });
   }
 }
