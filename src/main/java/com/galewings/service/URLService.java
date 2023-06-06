@@ -1,5 +1,6 @@
 package com.galewings.service;
 
+import com.galewings.exception.GaleWingsSystemException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.stereotype.Component;
@@ -58,6 +59,6 @@ public class URLService {
             }
         }
 
-        throw new RuntimeException();
+        throw new GaleWingsSystemException();
     }
 }
