@@ -91,21 +91,19 @@ export default class GaleWingApi {
   }
 
   addSiteCategory(siteUuid: string, categoryUuid: string): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.addSiteCategory;
-    return this.fixSiteCategory(ajaxUrl, siteUuid, categoryUuid);
+    return this.fixSiteCategory(this.apiUrls.addSiteCategory, siteUuid, categoryUuid);
   }
 
   deleteSiteCategory(siteUuid: string, categoryUuid: string): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.deleteSiteCategory;
-    return this.fixSiteCategory(ajaxUrl, siteUuid, categoryUuid);
+    return this.fixSiteCategory(this.apiUrls.deleteSiteCategory, siteUuid, categoryUuid);
   }
 
   private fixSiteCategory(
-    url: string,
+    kbn: string,
     siteUuid: string,
     categoryUuid: string,
   ): Promise<AxiosResponse<any>> {
-    return axios.post(url, { siteUuid: siteUuid, categoryUuid: categoryUuid });
+    return axios.post(this.getBaseUrl() + kbn, { siteUuid: siteUuid, categoryUuid: categoryUuid });
   }
 
   translationEnJp(text: string): Promise<AxiosResponse<any>> {
