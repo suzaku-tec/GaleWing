@@ -25,22 +25,19 @@ export default class GaleWingApi {
   private constructor() {}
 
   getFeedList(url: string): Promise<AxiosResponse<any>> {
-    let baseUrl = new URL(url);
-    this.checkUrl(baseUrl);
+    let baseUrl = this.getBaseUrl();
     let ajaxUrl = baseUrl.origin + this.apiUrls.feedList + baseUrl.search;
     return axios.get(ajaxUrl);
   }
 
   getSiteList(url: string): Promise<AxiosResponse<any>> {
-    let baseUrl = new URL(url);
-    this.checkUrl(baseUrl);
+    let baseUrl = this.getBaseUrl();
     let ajaxUrl = baseUrl.origin + this.apiUrls.siteList;
     return axios.get(ajaxUrl);
   }
 
   deleteSite(location: string, uuid: string) {
-    let baseUrl = new URL(location);
-    this.checkUrl(baseUrl);
+    let baseUrl = this.getBaseUrl();
     let ajaxUrl = baseUrl.origin + this.apiUrls.deleteSite;
     return axios.post(ajaxUrl, { uuid: uuid });
   }
@@ -60,78 +57,67 @@ export default class GaleWingApi {
     if (!uuid) {
       return Promise.reject();
     }
-    let baseUrl = new URL(url);
-    this.checkUrl(baseUrl);
+    let baseUrl = this.getBaseUrl();
     let ajaxUrl = baseUrl.origin + this.apiUrls.stackFeed;
     return axios.post(ajaxUrl, { uuid: uuid, link: link });
   }
 
   settingJson(): Promise<AxiosResponse<any>> {
-    let baseUrl = new URL(window.location.href);
-    this.checkUrl(baseUrl);
+    let baseUrl = this.getBaseUrl();
     let ajaxUrl = baseUrl.origin + this.apiUrls.settingJson;
     return axios.get(ajaxUrl);
   }
 
   jaroWinklerDistance(title: string): Promise<AxiosResponse<any>> {
-    let baseUrl = new URL(window.location.href);
-    this.checkUrl(baseUrl);
+    let baseUrl = this.getBaseUrl();
     let ajaxUrl = baseUrl.origin + this.apiUrls.jaroWinklerDistance;
     return axios.get(ajaxUrl, { params: { targetTitle: title } });
   }
 
   analysisFeedAllRead(links: string[]): Promise<AxiosResponse<any>> {
-    let baseUrl = new URL(window.location.href);
-    this.checkUrl(baseUrl);
+    let baseUrl = this.getBaseUrl();
     let ajaxUrl = baseUrl.origin + this.apiUrls.analysisFeedAllRead;
     return axios.post(ajaxUrl, { links: links });
   }
 
   siteCategoryList(siteUuid: string): Promise<AxiosResponse<any>> {
-    let baseUrl = new URL(window.location.href);
-    this.checkUrl(baseUrl);
+    let baseUrl = this.getBaseUrl();
     let ajaxUrl = baseUrl.origin + this.apiUrls.siteCategoryList;
     return axios.post(ajaxUrl, { siteUuid: siteUuid });
   }
 
   addCategory(name: string, description: string): Promise<AxiosResponse<any>> {
-    let baseUrl = new URL(window.location.href);
-    this.checkUrl(baseUrl);
+    let baseUrl = this.getBaseUrl();
     let ajaxUrl = baseUrl.origin + this.apiUrls.addCategory;
     return axios.post(ajaxUrl, { name: name, description: description });
   }
 
   deleteCategory(uuid: string): Promise<AxiosResponse<any>> {
-    let baseUrl = new URL(window.location.href);
-    this.checkUrl(baseUrl);
+    let baseUrl = this.getBaseUrl();
     let ajaxUrl = baseUrl.origin + this.apiUrls.deleteCategory;
     return axios.post(ajaxUrl, { uuid: uuid });
   }
 
   addSiteCategory(siteUuid: string, categoryUuid: string): Promise<AxiosResponse<any>> {
-    let baseUrl = new URL(window.location.href);
-    this.checkUrl(baseUrl);
+    let baseUrl = this.getBaseUrl();
     let ajaxUrl = baseUrl.origin + this.apiUrls.addSiteCategory;
     return axios.post(ajaxUrl, { siteUuid: siteUuid, categoryUuid: categoryUuid });
   }
 
   deleteSiteCategory(siteUuid: string, categoryUuid: string): Promise<AxiosResponse<any>> {
-    let baseUrl = new URL(window.location.href);
-    this.checkUrl(baseUrl);
+    let baseUrl = this.getBaseUrl();
     let ajaxUrl = baseUrl.origin + this.apiUrls.deleteSiteCategory;
     return axios.post(ajaxUrl, { siteUuid: siteUuid, categoryUuid: categoryUuid });
   }
 
   translationEnJp(text: string): Promise<AxiosResponse<any>> {
-    let baseUrl = new URL(window.location.href);
-    this.checkUrl(baseUrl);
+    let baseUrl = this.getBaseUrl();
     let ajaxUrl = baseUrl.origin + this.apiUrls.translationEnJp;
     return axios.post(ajaxUrl, { text: text }, { headers: { 'Content-Type': 'application/json' } });
   }
 
   async read(link: string) {
-    let baseUrl = new URL(window.location.href);
-    this.checkUrl(baseUrl);
+    let baseUrl = this.getBaseUrl();
     let ajaxUrl = baseUrl.origin + this.apiUrls.read;
     const response = await axios.post(ajaxUrl, {
       link: link,
@@ -142,6 +128,11 @@ export default class GaleWingApi {
     });
   }
 
+  private getBaseUrl(): URL {
+    let baseUrl = new URL(window.location.href);
+    this.checkUrl(baseUrl);
+    return baseUrl;
+  }
   private checkUrl(url: URL) {
     if (url.protocol !== 'https:' && url.protocol !== 'http:') {
       throw new GaleWingURLError();
