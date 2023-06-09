@@ -103,7 +103,8 @@ export default class GaleWingApi {
     siteUuid: string,
     categoryUuid: string,
   ): Promise<AxiosResponse<any>> {
-    return axios.post(this.getBaseUrl() + kbn, { siteUuid: siteUuid, categoryUuid: categoryUuid });
+    let url = this.getBaseUrl() + kbn;
+    return axios.post(url, { siteUuid: siteUuid, categoryUuid: categoryUuid });
   }
 
   translationEnJp(text: string): Promise<AxiosResponse<any>> {
