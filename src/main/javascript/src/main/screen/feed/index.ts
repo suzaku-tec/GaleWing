@@ -57,6 +57,7 @@ import PlaySound from '../../events/playSound';
 import TranslationEnJp from '../../events/translationEnJpEvent';
 import ReadDispListEvent from '../../events/readDispListEvent';
 import GaleWingGrid from './galeWingGrid';
+import TitleListEvent from '../../events/markdown/titleListEvent';
 
 window.onload = async () => {
   // サイドバー初期化
@@ -96,6 +97,8 @@ function setupEvent() {
   );
 
   new ElementEvent(new ReadDispListEvent()).setup('click', document.getElementById('checkList'));
+
+  new ElementEvent(new TitleListEvent()).setup('click', document.getElementById('mdTitleList'));
 
   let ps = setupPlayer();
   new ElementEvent(ps).setup('click', document.getElementById('playTitle'));

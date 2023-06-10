@@ -164,6 +164,15 @@
                     <!-- メインコンテンツ -->
                     <div id="gridLayout" class="contentLayout">
                         <button id="translationEnJp" type="button" class="btn btn-outline-dark">翻訳(EN→JP)</button>
+                        <button data-bs-toggle="dropdown" type="button" class="btn btn-outline-dark"
+                                aria-expanded="false"
+                                id="mdBtn">
+                            MarkDown
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="mdBtn">
+                            <li><a class="dropdown-item" href="#" id="mdTitleList">title list</a></li>
+                            <li><a class="dropdown-item" href="#" id="mdListTable">list table</a></li>
+                        </ul>
                         <div id="wrapper"></div>
                     </div>
                     <div id="cardLayout" class="contentLayout hiddenContent">
