@@ -24,6 +24,7 @@
     "axios": "^1.4.0",
     "axios-oauth-client": "^2.0.2",
     "bootstrap": "^5.2.3",
+    "clipboard-copy": "^4.0.1",
     "dotenv": "^16.0.3",
     "dotenv-webpack": "^8.0.1",
     "gridjs": "^6.0.6",
