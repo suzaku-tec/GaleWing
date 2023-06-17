@@ -12,6 +12,8 @@ export default class GaleWingGrid {
 
   private constructor() {}
 
+  private stopRowClickFlg: boolean = false;
+
   static getInstance() {
     if (!this.singleton) {
       this.singleton = new GaleWingGrid();
@@ -134,8 +136,10 @@ export default class GaleWingGrid {
       }
 
       link = row?.cell(1).data?.toLocaleString();
-      if ((event.target as any).localName != 'a') {
-        window.open(link);
+      if (this.stopRowClickFlg) {
+        if ((event.target as any).localName != 'a') {
+          window.open(link);
+        }
       }
 
       if (!link) {
@@ -170,5 +174,9 @@ export default class GaleWingGrid {
   stack(uuid: string | null | undefined, link: string | undefined) {
     let api = GaleWingApi.getInstance();
     api.stackFeed(window.location.href, uuid, link);
+  }
+
+  setStopRowClickFlg(flg: boolean): void {
+    this.stopRowClickFlg = flg;
   }
 }
