@@ -1,5 +1,4 @@
 import GaleWingGrid from '../screen/feed/galeWingGrid';
-import GaleWingApi from '../api/galeWingApi';
 import { IElementEvent } from './elementEvent';
 
 export default class ReadDispListEvent implements IElementEvent {
@@ -14,15 +13,8 @@ export default class ReadDispListEvent implements IElementEvent {
         .filter((el) => el !== null)
         .map((el) => <HTMLAnchorElement>el)
         .map((anchorEl) => {
-          GaleWingApi.getInstance()
-            .read(anchorEl.href)
-            .then(() => {
-              // 既読表示に変更
-              anchorEl.parentElement?.click();
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+          // 既読表示に変更
+          anchorEl.parentElement?.click();
         }),
     )
       .then(() => {
