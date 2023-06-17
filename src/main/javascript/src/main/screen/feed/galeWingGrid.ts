@@ -136,7 +136,7 @@ export default class GaleWingGrid {
       }
 
       link = row?.cell(1).data?.toLocaleString();
-      if (this.stopRowClickFlg) {
+      if (!this.stopRowClickFlg) {
         if ((event.target as any).localName != 'a') {
           window.open(link);
         }
