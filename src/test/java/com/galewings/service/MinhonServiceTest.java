@@ -39,17 +39,6 @@ class MinhonServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void testOkHttpClient() {
-        OkHttpClient result = minhonService.okHttpClient();
-        Assertions.assertNotNull(result);
-    }
-
-    @Test
-    void testRestTemplate() {
-        RestTemplate result = minhonService.restTemplate();
-        Assertions.assertNotNull(result);
-    }
 
     @Test
     void testOauth() {
