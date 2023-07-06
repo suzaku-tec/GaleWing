@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -33,16 +32,19 @@ public class MinhonService {
     private static final String CREDENTIALS_URL = BASE_URL + "oauth2/token.php";
 
     private static final String ENGINE_EN_JA = "generalNT_en_ja";
-    private static AtomicReference<String> accessToken = new AtomicReference<>();
-    private static Object lock = new Object();
+    private static final AtomicReference<String> accessToken = new AtomicReference<>();
+    private static final Object lock = new Object();
     @Value("${minhon.client-id}")
-    private String key = "";
+    private final String key = "";
     @Value("${minhon.client-secret}")
-    private String secret = "";
+    private final String secret = "";
     @Value("${minhon.name}")
-    private String name = "";
+    private final String name = "";
+
     @Autowired
-    OkHttpClient client;
+    OkHttpClient okHttpClient;
+
+
     @Autowired
     private RestTemplate restTemplate;
 
@@ -56,15 +58,6 @@ public class MinhonService {
         return obj.get(pathKeys[pathKeys.length - 1]).getAsString();
     }
 
-    @Bean
-    public OkHttpClient okHttpClient() {
-        return new OkHttpClient();
-    }
-
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
 
     public String oauth() {
         synchronized (lock) {
@@ -126,7 +119,7 @@ public class MinhonService {
                 .url("https://mt-auto-minhon-mlt.ucri.jgn-x.jp/api/")
                 .method("POST", body)
                 .build();
-        return client.newCall(request).execute();
+        return okHttpClient.newCall(request).execute();
     }
 
 }
