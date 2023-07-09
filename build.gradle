@@ -36,7 +36,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.1'
 
     implementation 'com.miragesql:miragesql:2.1.0'
-    implementation 'org.xerial:sqlite-jdbc:3.36.0.1'
+    implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
 
     // https://mvnrepository.com/artifact/be.ceau/opml-parser
     implementation 'be.ceau:opml-parser:2.2.0'
