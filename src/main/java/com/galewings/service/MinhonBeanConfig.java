@@ -10,7 +10,7 @@ public class MinhonBeanConfig {
 
     @Bean
     public OkHttpClient okHttpClient() {
-        return new OkHttpClient();
+        return new OkHttpClient().newBuilder().build();
     }
 
     @Bean

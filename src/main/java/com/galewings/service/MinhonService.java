@@ -1,6 +1,5 @@
 package com.galewings.service;
 
-import com.galewings.dto.Oauth2AccessToken;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -9,18 +8,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
@@ -35,11 +28,11 @@ public class MinhonService {
     private static final AtomicReference<String> accessToken = new AtomicReference<>();
     private static final Object lock = new Object();
     @Value("${minhon.client-id}")
-    private final String key = "";
+    private String key;
     @Value("${minhon.client-secret}")
-    private final String secret = "";
+    private String secret;
     @Value("${minhon.name}")
-    private final String name = "";
+    private String name;
 
     @Autowired
     OkHttpClient okHttpClient;
@@ -61,21 +54,24 @@ public class MinhonService {
 
     public String oauth() {
         synchronized (lock) {
-            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-            params.add("grant_type", "client_credentials");
-            params.add("client_id", key);
-            params.add("client_secret", secret);
-            ResponseEntity<Oauth2AccessToken> response = restTemplate.exchange(
-                    CREDENTIALS_URL,
-                    HttpMethod.POST,
-                    new HttpEntity<>(params, null),
-                    Oauth2AccessToken.class);
+            RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart("grant_type", "client_credentials")
+                    .addFormDataPart("client_id", key)
+                    .addFormDataPart("client_secret", secret)
+                    .build();
+            Request request = new Request.Builder()
+                    .url(CREDENTIALS_URL)
+                    .method("POST", body)
+                    .build();
+            try {
+                Response response = okHttpClient.newCall(request).execute();
+                String token = JsonParser.parseString(response.body().string()).getAsJsonObject().get(
+                        "access_token").toString();
+                accessToken.set(token);
+            } catch (IOException e) {
+                // 何もしない
+            }
 
-            String token = Optional.ofNullable(response.getBody())
-                    .map(oauth2AccessToken -> oauth2AccessToken.access_token)
-                    .orElse("");
-
-            accessToken.set(token);
         }
 
         return accessToken.get();
