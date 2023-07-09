@@ -65,7 +65,7 @@ public class MinhonService {
                     .build();
             try {
                 Response response = okHttpClient.newCall(request).execute();
-                String token = JsonParser.parseString(response.body().string()).getAsJsonObject().get(
+                String token = JsonParser.parseString(Objects.requireNonNull(response.body()).string()).getAsJsonObject().get(
                         "access_token").toString();
                 accessToken.set(token);
             } catch (IOException e) {
@@ -101,7 +101,6 @@ public class MinhonService {
 
     @NotNull
     private Response generalNTJaEn(String text) throws IOException {
-        MediaType mediaType = MediaType.parse("text/plain");
         RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
                 .addFormDataPart("key", key)
                 .addFormDataPart("name", name)
