@@ -1,6 +1,5 @@
 package com.galewings.service;
 
-import com.galewings.dto.Oauth2AccessToken;
 import okhttp3.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,17 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -37,33 +32,32 @@ class MinhonServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(minhonService, "name", "", String.class);
+        ReflectionTestUtils.setField(minhonService, "key", "", String.class);
+        ReflectionTestUtils.setField(minhonService, "secret", "", String.class);
     }
 
 
     @Test
-    void testOauth() {
-        Oauth2AccessToken oat = new Oauth2AccessToken();
-        oat.access_token = "test";
-        when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), any(Class.class)))
-                .thenReturn(new ResponseEntity(oat, HttpStatus.OK));
+    void testOauth() throws IOException {
+        Response res = createOkHttpResponce("{access_token: test}");
+        Call call = mock(Call.class);
+        when(call.execute()).thenReturn(res);
+        when(client.newCall(any())).thenReturn(call);
         String result = minhonService.oauth();
-        Assertions.assertEquals("test", result);
+        Assertions.assertEquals("\"test\"", result);
     }
 
     @Test
     void testTranselate() throws IOException {
-        // Oauth部分のモック化
-        Oauth2AccessToken oat = new Oauth2AccessToken();
-        oat.access_token = "test";
-        when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), any(Class.class)))
-                .thenReturn(new ResponseEntity(oat, HttpStatus.OK));
-
         // 翻訳部分のモック化
-        Response res = createOkHttpResponce("hello world");
         Call call = mock(Call.class);
-        when(call.execute()).thenReturn(res);
         when(client.newCall(any())).thenReturn(call);
+        Response tranRes = createOkHttpResponce("{resultset: { result: { text: \"hello world\"} } }");
+        Response oauthRes = createOkHttpResponce("{access_token: test}");
+        when(call.execute()).thenReturn(oauthRes).thenReturn(tranRes);
 
+        minhonService.oauth();
         String result = minhonService.transelate("text");
         Assertions.assertEquals("hello world", result);
     }
@@ -76,23 +70,21 @@ class MinhonServiceTest {
 
     @Test
     void testTranselate3() throws IOException {
-        // Oauth部分のモック化
-        Oauth2AccessToken oat = new Oauth2AccessToken();
-        oat.access_token = "test";
-        when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), any(Class.class)))
-                .thenReturn(new ResponseEntity(oat, HttpStatus.OK));
 
         // 翻訳部分のモック化
         Response res = createOkHttp510Responce("hello world");
         Call call = mock(Call.class);
-        when(call.execute()).thenReturn(res);
         when(client.newCall(any())).thenReturn(call);
+        Response tranRes = createOkHttpResponce("{resultset: { result: { text: \"hello world\"} } }");
+        Response oauthRes = createOkHttpResponce("{access_token: test}");
+        when(call.execute()).thenReturn(oauthRes).thenReturn(tranRes);
 
+        minhonService.oauth();
         String result = minhonService.transelate("text");
         Assertions.assertEquals("hello world", result);
     }
 
-    private Response createOkHttpResponce(String resultText) {
+    private Response createOkHttpResponce(String body) {
 // 応答のステータスコードを定義
         int statusCode = 200;
 
@@ -100,9 +92,6 @@ class MinhonServiceTest {
         Headers headers = new Headers.Builder()
                 .add("Content-Type", "application/json")
                 .build();
-
-// 応答のボディを定義
-        String body = "{\"resultset\":{result:{text: \"" + resultText + "\"}}}";
 
 // Responseオブジェクトを作成
         Response response = new Response.Builder()
