@@ -17,6 +17,8 @@ import {
   faBackward,
   faSearch,
   faListCheck,
+  faLeftLong,
+  faRightLong,
 } from '@fortawesome/free-solid-svg-icons/index';
 
 import { faYoutube } from '@fortawesome/free-brands-svg-icons';
@@ -37,6 +39,8 @@ library.add(
   faYoutube,
   faSearch,
   faListCheck,
+  faLeftLong,
+  faRightLong,
 );
 dom.watch();
 
@@ -102,6 +106,13 @@ function setupEvent() {
 
   let ps = setupPlayer();
   new ElementEvent(ps).setup('click', document.getElementById('playTitle'));
+
+  document.getElementById('subPrev')?.addEventListener('click', () => {
+    (<HTMLElement>document.querySelector('button[title="Previous"]')).click();
+  });
+  document.getElementById('subNext')?.addEventListener('click', () => {
+    (<HTMLElement>document.querySelector('button[title="Next"]')).click();
+  });
 }
 
 function setupPlayer() {

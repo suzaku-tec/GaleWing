@@ -163,12 +163,25 @@
 
                     <!-- メインコンテンツ -->
                     <div id="gridLayout" class="contentLayout">
-                        <button id="translationEnJp" type="button" class="btn btn-outline-dark">翻訳(EN→JP)</button>
+                        <button id="translationEnJp" type="button" class="btn btn-outline-dark">翻訳(EN→JP)
+                        </button>
                         <button data-bs-toggle="dropdown" type="button" class="btn btn-outline-dark"
                                 aria-expanded="false"
                                 id="mdBtn">
                             MarkDown
                         </button>
+                        <div class="parent-box float">
+                            <div class="child-box align-left">
+                            </div>
+                            <div class="child-box align-right">
+                                <button id="subPrev" type="button" class="btn btn-outline-primary">
+                                    <i class="fa-solid fa-left-long"></i>
+                                </button>
+                                <button id="subNext" type="button" class="btn btn-outline-primary">
+                                    <i class="fa-solid fa-right-long"></i>
+                                </button>
+                            </div>
+                        </div>
                         <ul class="dropdown-menu" aria-labelledby="mdBtn">
                             <li><a class="dropdown-item" href="#" id="mdTitleList">title list</a></li>
                             <li><a class="dropdown-item" href="#" id="mdListTable">list table</a></li>
