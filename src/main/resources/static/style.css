@@ -91,3 +91,22 @@ body {
 li#siteList div {
   padding-bottom: 2px;
 }
+
+
+.parent-box {
+  width: 100%;
+}
+.child-box {
+}
+.float {
+  overflow: hidden;
+}
+.float .align-left {
+  float: left;
+}
+.float .align-right {
+  float: right;
+}
+.clear {
+  clear: both;
+}
