@@ -2,6 +2,7 @@ package com.galewings.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
@@ -18,7 +19,7 @@ public class OpmlConfig {
      * @return OPMLテンプレートエンジン
      */
     @Bean
-    public SpringTemplateEngine opmlTemplateEngine() {
+    public TemplateEngine opmlTemplateEngine() {
         ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
         SpringTemplateEngine engine = new SpringTemplateEngine();
         resolver.setTemplateMode(TemplateMode.TEXT);
