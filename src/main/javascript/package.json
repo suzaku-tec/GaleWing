@@ -20,6 +20,7 @@
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "@types/bootstrap": "^5.2.6",
+    "@types/google.visualization": "^0.0.69",
     "@types/swiper": "^6.0.0",
     "axios": "^1.4.0",
     "axios-oauth-client": "^2.0.2",
@@ -27,8 +28,10 @@
     "clipboard-copy": "^4.0.1",
     "dotenv": "^16.3.1",
     "dotenv-webpack": "^8.0.1",
+    "google-charts-node": "^2.0.0",
     "gridjs": "^6.0.6",
     "handlebars": "^4.7.7",
+    "path-browserify": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
