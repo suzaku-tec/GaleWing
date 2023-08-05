@@ -18,6 +18,8 @@ export default class GaleWingApi {
     deleteSiteCategory: '/siteCategory/delete',
     translationEnJp: '/minhon/transelate',
     read: '/read',
+    executeStatsSql: '/stats/executeStatsSql',
+    statsIdList: '/stats/statsIdList',
   };
 
   private static singleton: GaleWingApi;
@@ -96,6 +98,16 @@ export default class GaleWingApi {
 
   deleteSiteCategory(siteUuid: string, categoryUuid: string): Promise<AxiosResponse<any>> {
     return this.fixSiteCategory(this.apiUrls.deleteSiteCategory, siteUuid, categoryUuid);
+  }
+
+  executeStatsSql(id: string): Promise<AxiosResponse<any>> {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.executeStatsSql;
+    return axios.post(ajaxUrl, { id: id });
+  }
+
+  getStatsIdList(): Promise<AxiosResponse<any>> {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.statsIdList;
+    return axios.post(ajaxUrl);
   }
 
   private fixSiteCategory(
