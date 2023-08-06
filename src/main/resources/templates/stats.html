@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="Description" content="Enter your description here"/>
+  <link rel="stylesheet" href="/style.css">
+  <title>GalwWing</title>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript"></script>
+  <script src="/js/stats.js"></script>
+</head>
+
+<body>
+<!-- 全ページを囲む要素 -->
+<main class="container mw-100" role="main">
+  <div class="row">
+    <input type="hidden" id="identifier" value="" th:value="${identifier}">
+
+    <!-- サイトバーメニュー -->
+    <nav class="sidebar col-md-3" id="sidemenu">
+      <div class="brand p-2">
+        <p class="h4 mb-0">
+          Link
+        </p>
+      </div>
+      <ul class="nav flex-column m-o p-3 bg-primary" id="navi">
+        <li class="nav-item mb-2">
+          <a href="/settings" class="list-group-item">settings</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="/site/management" class="list-group-item">Site Management</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="/stack" class="list-group-item">積読</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="/youtube" class="list-group-item">
+            <i class="fa-brands fa-youtube"></i> youtube</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a class="list-group-item" href="/category">category</a>
+        </li>
+        <li>
+          <a href="/podcast">podcast</a>
+        </li>
+      </ul>
+      <div class="brand p-2">
+        <p class="h4 mb-0">
+          Site List
+        </p>
+      </div>
+      <ul class="nav flex-column m-o p-3 bg-primary">
+        <li class="nav-item mb-2">
+          <th:block th:if="${#strings.isEmpty(identifier)}">
+            <a href="/" class="list-group-item bg-warning">All</a>
+          </th:block>
+          <th:block th:if="${!#strings.isEmpty(identifier)}">
+            <a href="/" class="list-group-item">All</a>
+          </th:block>
+        </li>
+        <li class="mb-2" id="siteList">
+          <div th:each="site: ${sitelist}">
+            <th:block th:if="${site.uuid == identifier}">
+              <a href="" class="list-group-item bg-warning" th:id="${site.uuid}"
+                 th:href="@{/(uuid=${site.uuid})}"> <img
+                th:src="'data:image/png;base64,' + ${site.faviconBase64}">
+                [[${site.title}]]：
+                <span th:id="${site.uuid} + '_count'"
+                      class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
+            </th:block>
+            <th:block th:if="${!(site.uuid == identifier)}">
+              <a href="" class="list-group-item" th:id="${site.uuid}"
+                 th:href="@{/(uuid=${site.uuid})}"> <img
+                th:src="'data:image/png;base64,' + ${site.faviconBase64}">
+                [[${site.title}]]：
+                <span th:id="${site.uuid} + '_count'"
+                      class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
+            </th:block>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <!-- サイトバーメニュー -->
+
+    <!-- 全ページの右のコンテンツ -->
+    <div class="col-md-9" id="mainContent">
+
+      <!-- トップバー -->
+      <nav class="navbar px-3 bg-light border-bottom shadow-sm">
+      </nav>
+      <!-- トップバー -->
+
+      <!-- 下のコンテンツ -->
+      <div class="content p-3">
+        <div>
+          <!-- アイコン -->
+
+          <!-- メインコンテンツ -->
+          <div id="statsList"></div>
+        </div>
+      </div>
+      <!-- 下のコンテンツ -->
+
+    </div>
+    <!-- 全ページの右のコンテンツ -->
+
+  </div>
+</main>
+<!-- 全ページを囲む要素 -->
+
+<div id="playWav"></div>
+</body>
+
+</html>
