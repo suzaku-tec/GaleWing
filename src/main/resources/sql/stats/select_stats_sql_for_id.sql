@@ -1,0 +1,1 @@
+select sql from stats where id = /*id*/1
