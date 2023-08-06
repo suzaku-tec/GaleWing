@@ -82,7 +82,6 @@ public class DBConfig {
 
     @Bean
     public JdbcTemplate jdbcTemplate() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource());
-        return jdbcTemplate;
+        return new JdbcTemplate(dataSource());
     }
 }
