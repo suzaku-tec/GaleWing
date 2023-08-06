@@ -32,14 +32,6 @@ public class StatsRepository {
     }
 
     @Transactional
-    public String getStatsSql(String id) {
-        Map<String, String> params = new HashMap<>();
-        params.put("id", id);
-        return sqlManager.getSingleResult(String.class,
-                new ClasspathSqlResource("sql/stats/select_stats_sql_for_id.sql"), params);
-    }
-
-    @Transactional
     public Stats getStats(String id) {
         Map<String, String> params = new HashMap<>();
         params.put("id", id);
