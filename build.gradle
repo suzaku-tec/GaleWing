@@ -121,6 +121,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-logging'
 
     runtimeOnly 'org.springframework.boot:spring-boot-properties-migrator'
+
+    // https://mvnrepository.com/artifact/com.atilika.kuromoji/kuromoji-ipadic
+    implementation group: 'com.atilika.kuromoji', name: 'kuromoji-ipadic', version: '0.9.0'
+
 }
 
 sonarqube {
