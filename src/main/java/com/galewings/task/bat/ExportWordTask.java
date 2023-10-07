@@ -18,9 +18,10 @@ public class ExportWordTask implements Runnable {
     private final String NOUN = "名詞";
     private final String PROPER_NOUN = "固有名詞";
 
+    Tokenizer tokenizer = new Tokenizer();
+
     @Override
     public void run() {
-        Tokenizer tokenizer = new Tokenizer();
         feedRepository.getAllFeed().stream()
                 .map(feed -> feed.getTitle())
                 .map(title -> tokenizer.tokenize(title))
