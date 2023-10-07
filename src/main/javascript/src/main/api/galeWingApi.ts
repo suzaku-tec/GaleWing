@@ -20,6 +20,7 @@ export default class GaleWingApi {
     read: '/read',
     executeStatsSql: '/stats/executeStatsSql',
     statsIdList: '/stats/statsIdList',
+    executeTask: '/task/executeTask',
   };
 
   private static singleton: GaleWingApi;
@@ -132,6 +133,13 @@ export default class GaleWingApi {
     // 未読数の更新
     response.data.forEach((element: { uuid: string; count: number }) => {
       FeedApi.getInstance().unreadUpdate(element.uuid, element.count.toString());
+    });
+  }
+
+  async executeTask(taskName: string) {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.executeTask;
+    await axios.post(ajaxUrl, {
+      name: taskName,
     });
   }
 
