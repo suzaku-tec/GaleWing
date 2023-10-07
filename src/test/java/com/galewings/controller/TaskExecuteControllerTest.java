@@ -1,5 +1,6 @@
 package com.galewings.controller;
 
+import com.galewings.ModelMock;
 import com.galewings.dto.input.TaskExecuteDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +27,7 @@ class TaskExecuteControllerTest {
 
     @Test
     void testIndex() {
-        String result = taskExecuteController.index(null);
+        String result = taskExecuteController.index(new ModelMock());
         Assertions.assertEquals("task", result);
     }
 
