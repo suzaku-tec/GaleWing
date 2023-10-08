@@ -1,6 +1,8 @@
 package com.galewings.task.bat;
 
+import com.atilika.kuromoji.ipadic.Token;
 import com.atilika.kuromoji.ipadic.Tokenizer;
+import com.atilika.kuromoji.viterbi.ViterbiNode;
 import com.galewings.entity.Feed;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.TitleWordRepository;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 
@@ -36,8 +39,10 @@ class ExportSiteTitleWordTaskTest {
         when(titleWordRepository.isExist(anyString())).thenReturn(true);
         when(titleWordRepository.insert(anyString(), anyString())).thenReturn(0);
 
+        when(tokenizer.tokenize(anyString())).thenReturn(List.of(new Token(1, "", ViterbiNode.Type.UNKNOWN, 1,
+                null)));
+        ReflectionTestUtils.setField(exportSiteTitleWordTask, "tokenizer", tokenizer);
+
         exportSiteTitleWordTask.run();
     }
 }
-
-//Generated with love by TestMe :) Please report issues and submit feature requests at: https://weirddev.com/forum#!/testme

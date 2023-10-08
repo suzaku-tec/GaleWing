@@ -16,8 +16,8 @@ public class ExportSiteTitleWordTask implements Runnable {
     @Autowired
     private TitleWordRepository titleWordRepository;
 
-    private final String NOUN = "名詞";
-    private final String PROPER_NOUN = "固有名詞";
+    private static final String NOUN = "名詞";
+    private static final String PROPER_NOUN = "固有名詞";
 
     Tokenizer tokenizer = new Tokenizer();
 
