@@ -42,8 +42,14 @@
         <li class="nav-item mb-2">
           <a class="list-group-item" href="/category">category</a>
         </li>
-        <li>
-          <a href="/podcast">podcast</a>
+        <li class="nav-item mb-2">
+          <a class="list-group-item" href="/podcast">podcast</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a class="list-group-item" href="/podcast">podcast</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a class="list-group-item" href="/task/">task execute</a>
         </li>
       </ul>
       <div class="brand p-2">
@@ -51,36 +57,6 @@
           Site List
         </p>
       </div>
-      <ul class="nav flex-column m-o p-3 bg-primary">
-        <li class="nav-item mb-2">
-          <th:block th:if="${#strings.isEmpty(identifier)}">
-            <a href="/" class="list-group-item bg-warning">All</a>
-          </th:block>
-          <th:block th:if="${!#strings.isEmpty(identifier)}">
-            <a href="/" class="list-group-item">All</a>
-          </th:block>
-        </li>
-        <li class="mb-2" id="siteList">
-          <div th:each="site: ${sitelist}">
-            <th:block th:if="${site.uuid == identifier}">
-              <a href="" class="list-group-item bg-warning" th:id="${site.uuid}"
-                 th:href="@{/(uuid=${site.uuid})}"> <img
-                th:src="'data:image/png;base64,' + ${site.faviconBase64}">
-                [[${site.title}]]：
-                <span th:id="${site.uuid} + '_count'"
-                      class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
-            </th:block>
-            <th:block th:if="${!(site.uuid == identifier)}">
-              <a href="" class="list-group-item" th:id="${site.uuid}"
-                 th:href="@{/(uuid=${site.uuid})}"> <img
-                th:src="'data:image/png;base64,' + ${site.faviconBase64}">
-                [[${site.title}]]：
-                <span th:id="${site.uuid} + '_count'"
-                      class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
-            </th:block>
-          </div>
-        </li>
-      </ul>
     </nav>
     <!-- サイトバーメニュー -->
 
