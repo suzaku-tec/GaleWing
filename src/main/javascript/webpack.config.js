@@ -20,6 +20,7 @@ const config = {
     category: './src/main/screen/category/index.ts',
     siteCategory: './src/main/screen/siteCategory/index.ts',
     stats: './src/main/screen/stats/stats.ts',
+    task: './src/main/screen/task/task.ts',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

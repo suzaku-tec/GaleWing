@@ -6,6 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="Description" content="Enter your description here"/>
   <script th:src="@{/js/main.js}"></script>
+  <script th:src="@{/js/task.js}"></script>
   <link rel="stylesheet" th:href="@{/style.css}">
   <title>GalwWing</title>
 
@@ -41,11 +42,11 @@
         <li class="nav-item mb-2">
           <a class="list-group-item" href="/category">category</a>
         </li>
-        <li>
-          <a href="/podcast">podcast</a>
+        <li class="nav-item mb-2">
+          <a class="list-group-item" href="/podcast">podcast</a>
         </li>
-        <li>
-          <a href="/">feed list</a>
+        <li class="nav-item mb-2">
+          <a class="list-group-item" href="/">feed list</a>
         </li>
       </ul>
     </nav>
@@ -133,12 +134,12 @@
 
           <!-- メインコンテンツ -->
           <div id="main">
-            <select class="form-select">
+            <select class="form-select" id="taskName">
               <option selected>Open this select menu</option>
               <option th:each="task:${taskList}" th:value="${task}" th:text="${task}"></option>
             </select>
 
-            <button type="button" class="btn">実行</button>
+            <button type="button" class="btn" id="executeBtn">実行</button>
           </div>
         </div>
       </div>
