@@ -26,10 +26,12 @@ public class ExportSiteTitleWordTask implements Runnable {
         feedRepository.getAllFeed().stream().map(feed -> {
                     SiteTitleWordListDto dto = new SiteTitleWordListDto();
                     dto.link = feed.link;
-                    dto.wordList = tokenizer.tokenize(feed.title).stream()
+                    var tokenList = tokenizer.tokenize(feed.title);
+                    dto.wordList = tokenList.stream()
                             .filter(token -> !"*".equals(token.getBaseForm()))
                             .filter(token -> NOUN.equals(token.getPartOfSpeechLevel1()))
-                            .filter(token -> !PROPER_NOUN.equals(token.getPartOfSpeechLevel2())).toList();
+                            .filter(token -> !PROPER_NOUN.equals(token.getPartOfSpeechLevel2()))
+                            .toList();
                     return dto;
                 }).filter(dto -> !titleWordRepository.isExist(dto.link))
                 .forEach(dto -> {
