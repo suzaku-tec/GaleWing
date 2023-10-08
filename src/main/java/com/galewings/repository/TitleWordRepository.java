@@ -16,6 +16,12 @@ public class TitleWordRepository {
     @Autowired
     private SqlManager sqlManager;
 
+    /**
+     * URLがDBに登録済みか判定する
+     *
+     * @param link URS
+     * @return true:存在 false:未存在
+     */
     public boolean isExist(String link) {
         Map<String, String> params = new HashMap<>();
         params.put("link", link);
@@ -27,6 +33,13 @@ public class TitleWordRepository {
         return 0 < count;
     }
 
+    /**
+     * URLのタイトルのワードを登録する
+     *
+     * @param link URL
+     * @param word タイトルワード
+     * @return 実行結果
+     */
     public int insert(String link, String word) {
         Map<String, String> params = new HashMap<>();
         params.put("link", link);
