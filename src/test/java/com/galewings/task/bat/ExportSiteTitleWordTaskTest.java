@@ -1,5 +1,6 @@
 package com.galewings.task.bat;
 
+import com.atilika.kuromoji.dict.Dictionary;
 import com.atilika.kuromoji.ipadic.Token;
 import com.atilika.kuromoji.ipadic.Tokenizer;
 import com.atilika.kuromoji.viterbi.ViterbiNode;
@@ -34,7 +35,7 @@ class ExportSiteTitleWordTaskTest {
     }
 
     @Test
-    void testRun() {
+    void testRun1() {
         when(feedRepository.getAllFeed()).thenReturn(List.of(new Feed()));
         when(titleWordRepository.isExist(anyString())).thenReturn(true);
         when(titleWordRepository.insert(anyString(), anyString())).thenReturn(0);
@@ -44,5 +45,65 @@ class ExportSiteTitleWordTaskTest {
         ReflectionTestUtils.setField(exportSiteTitleWordTask, "tokenizer", tokenizer);
 
         exportSiteTitleWordTask.run();
+    }
+
+    @Test
+    void testRun2() {
+        when(feedRepository.getAllFeed()).thenReturn(List.of(new Feed()));
+        when(titleWordRepository.isExist(anyString())).thenReturn(false);
+        when(titleWordRepository.insert(anyString(), anyString())).thenReturn(0);
+
+        when(tokenizer.tokenize(anyString())).thenReturn(List.of(new Token(1, "", ViterbiNode.Type.UNKNOWN, 1,
+                null)));
+        ReflectionTestUtils.setField(exportSiteTitleWordTask, "tokenizer", tokenizer);
+
+        exportSiteTitleWordTask.run();
+    }
+
+    @Test
+    void testRun3() {
+        when(feedRepository.getAllFeed()).thenReturn(List.of(new Feed()));
+        when(titleWordRepository.isExist(anyString())).thenReturn(true);
+        when(titleWordRepository.insert(anyString(), anyString())).thenReturn(0);
+
+        when(tokenizer.tokenize(anyString())).thenReturn(List.of(new Token(1, "", ViterbiNode.Type.UNKNOWN, 1,
+                createMockDictionary("test"))));
+        ReflectionTestUtils.setField(exportSiteTitleWordTask, "tokenizer", tokenizer);
+
+        exportSiteTitleWordTask.run();
+    }
+
+    private Dictionary createMockDictionary(String retGetFeature) {
+        return new Dictionary() {
+            @Override
+            public int getLeftId(int wordId) {
+                return 0;
+            }
+
+            @Override
+            public int getRightId(int wordId) {
+                return 0;
+            }
+
+            @Override
+            public int getWordCost(int wordId) {
+                return 0;
+            }
+
+            @Override
+            public String getAllFeatures(int wordId) {
+                return null;
+            }
+
+            @Override
+            public String[] getAllFeaturesArray(int wordId) {
+                return new String[0];
+            }
+
+            @Override
+            public String getFeature(int wordId, int... fields) {
+                return retGetFeature;
+            }
+        };
     }
 }
