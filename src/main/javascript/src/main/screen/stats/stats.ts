@@ -1,5 +1,52 @@
 import { Exception } from 'handlebars/runtime';
 import GaleWingApi from '../../api/galeWingApi';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { library, dom } from '@fortawesome/fontawesome-svg-core';
+import {
+  faBars,
+  faCheck,
+  faSyncAlt,
+  faPlus,
+  faWrench,
+  faTh,
+  faIdCard,
+  faCogs,
+  faStepBackward,
+  faBookmark,
+  faPlayCircle,
+  faBackward,
+  faSearch,
+  faListCheck,
+  faLeftLong,
+  faRightLong,
+} from '@fortawesome/free-solid-svg-icons/index';
+
+import { faYoutube } from '@fortawesome/free-brands-svg-icons';
+
+library.add(
+  faBars,
+  faCheck,
+  faSyncAlt,
+  faPlus,
+  faWrench,
+  faTh,
+  faIdCard,
+  faCogs,
+  faStepBackward,
+  faBookmark,
+  faPlayCircle,
+  faBackward,
+  faYoutube,
+  faSearch,
+  faListCheck,
+  faLeftLong,
+  faRightLong,
+);
+dom.watch();
+
+import 'gridjs/dist/theme/mermaid.css';
+
+import hideModifier from '@popperjs/core/lib/modifiers/hide';
 
 document.addEventListener('DOMContentLoaded', async () => {
   let api = GaleWingApi.getInstance();

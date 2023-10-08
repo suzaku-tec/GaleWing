@@ -1,0 +1,1 @@
+select count(*) from title_word where link = /*link*/'a'
