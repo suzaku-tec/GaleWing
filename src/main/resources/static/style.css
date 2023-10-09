@@ -84,6 +84,10 @@ body {
   padding: 5px;
 }
 
+.list-group-item:hover {
+  background-color: #FFCC33;
+}
+
 .list-group-item-selected {
   border: solid 2px #ff6a00;
 }
