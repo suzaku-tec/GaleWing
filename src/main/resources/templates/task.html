@@ -20,35 +20,7 @@
 
     <!-- サイトバーメニュー -->
     <nav class="sidebar col-md-3" id="sidemenu">
-      <div class="brand p-2">
-        <p class="h4 mb-0">
-          Link
-        </p>
-      </div>
-      <ul class="nav flex-column m-o p-3 bg-primary" id="navi">
-        <li class="nav-item mb-2">
-          <a href="/settings" class="list-group-item">settings</a>
-        </li>
-        <li class="nav-item mb-2">
-          <a href="/site/management" class="list-group-item">Site Management</a>
-        </li>
-        <li class="nav-item mb-2">
-          <a href="/stack" class="list-group-item">積読</a>
-        </li>
-        <li class="nav-item mb-2">
-          <a href="/youtube" class="list-group-item">
-            <i class="fa-brands fa-youtube"></i> youtube</a>
-        </li>
-        <li class="nav-item mb-2">
-          <a class="list-group-item" href="/category">category</a>
-        </li>
-        <li class="nav-item mb-2">
-          <a class="list-group-item" href="/podcast">podcast</a>
-        </li>
-        <li class="nav-item mb-2">
-          <a class="list-group-item" href="/">feed list</a>
-        </li>
-      </ul>
+      <div th:replace="linkMenu"/>
     </nav>
     <!-- サイトバーメニュー -->
 
