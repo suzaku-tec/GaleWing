@@ -33,6 +33,7 @@ jar {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.1.0'
     implementation 'org.springframework.boot:spring-boot-starter-web:3.1.0'
+    implementation 'com.epages:wiremock-spring-boot-starter:0.8.5'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.0'
 
     implementation 'com.miragesql:miragesql:2.1.0'
@@ -139,7 +140,7 @@ sonarqube {
                 "src/main/java/com/galewings/controller/FeedSampleController.java, " +
                 "src/main/java/com/galewings/GaleWingsApplication.java, " +
                 "src/main/java/com/galewings/service/MachineLearningService.java, " +
-                "src/main/java/com/galewings/service/PodcastService.java"
+                "src/main/java/com/galewings/service/PodcastService.java, src/main/java/com/galewings/task/QiitaRankingTask.java"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
