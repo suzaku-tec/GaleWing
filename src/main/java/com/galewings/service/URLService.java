@@ -3,8 +3,12 @@ package com.galewings.service;
 import com.galewings.exception.GaleWingsSystemException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.http.client.utils.URIBuilder;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,6 +43,26 @@ public class URLService {
         } else {
             return null;
         }
+    }
+
+    public String buildQueryString(String baseUrl, Map<String, String> params) {
+        try {
+            return buildQueryStringURI(baseUrl, params).toString();
+        } catch (URISyntaxException e) {
+            return StringUtils.EMPTY;
+        }
+    }
+
+    public URI buildQueryStringURI(String baseUrl, Map<String, String> params) throws URISyntaxException {
+        URIBuilder uriBuilder = new URIBuilder(baseUrl);
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            uriBuilder.setParameter(
+                    entry.getKey(),
+                    entry.getValue()
+            );
+        }
+
+        return uriBuilder.build();
     }
 
     private String appendPath(String base, String addPath) {
