@@ -139,7 +139,7 @@ sonarqube {
                 "src/main/java/com/galewings/controller/FeedSampleController.java, " +
                 "src/main/java/com/galewings/GaleWingsApplication.java, " +
                 "src/main/java/com/galewings/service/MachineLearningService.java, " +
-                "src/main/java/com/galewings/service/PodcastService.java"
+                "src/main/java/com/galewings/service/PodcastService.java, src/main/java/com/galewings/task/QiitaRankingTask.java"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
