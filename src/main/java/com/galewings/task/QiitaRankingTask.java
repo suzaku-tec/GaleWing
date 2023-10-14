@@ -39,6 +39,8 @@ public class QiitaRankingTask {
     @Autowired
     private URLService urlService;
 
+    private static final String QIITA_API_ITEMS = "https://qiita.com/api/v2/items";
+
     public void ranking() throws URISyntaxException, IOException, InterruptedException {
 
         String accessToken = settingRepository.selectOneFor("qiita_access_token").setting;
@@ -51,7 +53,6 @@ public class QiitaRankingTask {
 
         String weekStartDate = getWeekStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
 
-        // テスト用のパラメータを作成
         Map<String, String> params = Map.of(
                 "page", "1",
                 "per_page", "10",
@@ -60,7 +61,7 @@ public class QiitaRankingTask {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
-                .uri(urlService.buildQueryStringURI("https://qiita.com/api/v2/items", params))
+                .uri(urlService.buildQueryStringURI(QIITA_API_ITEMS, params))
                 .header("Authorization", "Bearer " + accessToken)
                 .header("accept", "application/json")
                 .build();
