@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="Description" content="Enter your description here"/>
-  <script src="js/main.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <script src="../js/cardLayout.js"></script>
+  <link rel="stylesheet" href="../style.css">
   <title>GalwWing</title>
 
 </head>
@@ -56,17 +56,17 @@
       <ul class="nav flex-column m-o p-3 bg-primary">
         <li class="nav-item mb-2">
           <th:block th:if="${#strings.isEmpty(identifier)}">
-            <a href="/" class="list-group-item bg-warning">All</a>
+            <a href="/card" class="list-group-item bg-warning">All</a>
           </th:block>
           <th:block th:if="${!#strings.isEmpty(identifier)}">
-            <a href="/" class="list-group-item">All</a>
+            <a href="/card" class="list-group-item">All</a>
           </th:block>
         </li>
         <li class="mb-2" id="siteList">
           <div th:each="site: ${sitelist}">
             <th:block th:if="${site.uuid == identifier}">
               <a href="" class="list-group-item bg-warning" th:id="${site.uuid}"
-                 th:href="@{/(uuid=${site.uuid})}"> <img
+                 th:href="@{/card/(uuid=${site.uuid})}"> <img
                 th:src="'data:image/png;base64,' + ${site.faviconBase64}">
                 [[${site.title}]]：
                 <span th:id="${site.uuid} + '_count'"
@@ -74,7 +74,7 @@
             </th:block>
             <th:block th:if="${!(site.uuid == identifier)}">
               <a href="" class="list-group-item" th:id="${site.uuid}"
-                 th:href="@{/(uuid=${site.uuid})}"> <img
+                 th:href="@{/card/(uuid=${site.uuid})}"> <img
                 th:src="'data:image/png;base64,' + ${site.faviconBase64}">
                 [[${site.title}]]：
                 <span th:id="${site.uuid} + '_count'"
@@ -96,18 +96,29 @@
             <i class="fas fa-bars fa-lg"></i>
           </button>
         </div>
+        <ul class="navbar-nav">
+          <li class="nav-item ml-3 text-muted">
+            Home
+          </li>
+          <li class="nav-item ml-3 text-muted">
+            Test
+          </li>
+          <li class="nav-item ml-3 text-muted">
+            Login
+          </li>
+        </ul>
         <ul class="nav nav-tabs">
           <li class="nav-item" id="gridLayoutItem">
-            <div class="nav-link active" aria-current="page" data-layout="gridLayout">
-              <i class="fas fa-th"></i>
-            </div>
-          </li>
-          <li class="nav-item" id="cardLayoutItem">
-            <a href="/card/">
-              <div class="nav-link" aria-current="page" data-layout="cardLayout">
-                <i class="fas fa-id-card"></i>
+            <a href="/">
+              <div class="nav-link active" aria-current="page" data-layout="gridLayout">
+                <i class="fas fa-th"></i>
               </div>
             </a>
+          </li>
+          <li class="nav-item" id="cardLayoutItem">
+            <div class="nav-link" aria-current="page" data-layout="cardLayout">
+              <i class="fas fa-id-card"></i>
+            </div>
           </li>
         </ul>
       </nav>
@@ -158,36 +169,21 @@
           </div>
 
           <!-- メインコンテンツ -->
-          <div id="gridLayout" class="contentLayout">
-            <button id="translationEnJp" type="button" class="btn btn-outline-dark">翻訳(EN→JP)
-            </button>
-            <button data-bs-toggle="dropdown" type="button" class="btn btn-outline-dark"
-                    aria-expanded="false"
-                    id="mdBtn">
-              MarkDown
-            </button>
+          <div>
             <div class="parent-box float">
               <div class="child-box align-left">
-              </div>
-              <div class="child-box align-right">
                 <button id="subPrev" type="button" class="btn btn-outline-primary">
                   <i class="fa-solid fa-left-long"></i>
                 </button>
+              </div>
+              <div class="child-box align-right">
                 <button id="subNext" type="button" class="btn btn-outline-primary">
                   <i class="fa-solid fa-right-long"></i>
                 </button>
               </div>
             </div>
-            <ul class="dropdown-menu" aria-labelledby="mdBtn">
-              <li><a class="dropdown-item" href="#" id="mdTitleList">title list</a></li>
-              <li><a class="dropdown-item" href="#" id="mdListTable">list table</a></li>
-            </ul>
-            <div id="wrapper"></div>
           </div>
-          <div id="cardLayout" class="contentLayout hiddenContent">
-            <div id="cardWrapper"></div>
-            <div id="app"></div>
-          </div>
+          <div id="cardLayout" class="contentLayout"></div>
         </div>
       </div>
       <!-- 下のコンテンツ -->
