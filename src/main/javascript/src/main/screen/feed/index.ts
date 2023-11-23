@@ -55,7 +55,6 @@ import AddSiteEvent from '../../events/modal/addSiteEvent';
 import ExportOpml from '../../events/exportOpml';
 import ImportOpml from '../../events/modal/importOpml';
 import GridLayoutChgEvent from '../../events/gridLayoutChgEvent';
-import CardLayoutChgEvent from '../../events/cardLayoutChgEvent';
 
 import PlaySound from '../../events/playSound';
 import TranslationEnJp from '../../events/translationEnJpEvent';
@@ -93,11 +92,6 @@ function setupEvent() {
   new ElementEvent(new TranslationEnJp()).setup(
     'click',
     document.getElementById('translationEnJp'),
-  );
-
-  new ElementEvent(new CardLayoutChgEvent()).setup(
-    'click',
-    document.getElementById('cardLayoutItem'),
   );
 
   new ElementEvent(new ReadDispListEvent()).setup('click', document.getElementById('checkList'));
