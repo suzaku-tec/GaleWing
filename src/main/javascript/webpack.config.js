@@ -21,6 +21,7 @@ const config = {
     siteCategory: './src/main/screen/siteCategory/index.ts',
     stats: './src/main/screen/stats/stats.ts',
     task: './src/main/screen/task/task.ts',
+    cardLayout: './src/main/screen/layout/cardLayout.ts',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
