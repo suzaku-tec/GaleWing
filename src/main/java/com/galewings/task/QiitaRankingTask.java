@@ -8,7 +8,6 @@ import com.galewings.repository.QiitaTagRepository;
 import com.galewings.repository.SettingRepository;
 import com.galewings.service.URLService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -42,7 +41,6 @@ public class QiitaRankingTask {
 
     private static final String QIITA_API_ITEMS = "https://qiita.com/api/v2/items";
 
-    @Scheduled(cron = "${qiita.ranking.scheduler.cron}")
     public void ranking() throws URISyntaxException, IOException, InterruptedException {
 
         String accessToken = settingRepository.selectOneFor("qiita_access_token").setting;
