@@ -110,13 +110,13 @@
         <ul class="nav nav-tabs">
           <li class="nav-item" id="gridLayoutItem">
             <a href="/">
-              <div class="nav-link active" aria-current="page" data-layout="gridLayout">
+              <div class="nav-link" aria-current="page" data-layout="gridLayout">
                 <i class="fas fa-th"></i>
               </div>
             </a>
           </li>
           <li class="nav-item" id="cardLayoutItem">
-            <div class="nav-link" aria-current="page" data-layout="cardLayout">
+            <div class="nav-link active" aria-current="page" data-layout="cardLayout">
               <i class="fas fa-id-card"></i>
             </div>
           </li>
@@ -171,16 +171,32 @@
           <!-- メインコンテンツ -->
           <div>
             <div class="parent-box float">
-              <div class="child-box align-left">
-                <button id="subPrev" type="button" class="btn btn-outline-primary">
-                  <i class="fa-solid fa-left-long"></i>
-                </button>
-              </div>
-              <div class="child-box align-right">
-                <button id="subNext" type="button" class="btn btn-outline-primary">
-                  <i class="fa-solid fa-right-long"></i>
-                </button>
-              </div>
+              <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                  <input type="hidden" th:value="${pageIndex}"/>
+                  <li id="previous" class="page-item" th:classappend="${startIndex == previousIndex ? 'disabled':
+                  '' }">
+                    <a id="previous-link" class="page-link">Previous</a>
+                  </li>
+                  <li id="startSpace" class="page-item disabled" th:classappend="${startSpace ? '' : 'hiddenContent'}">
+                    <a class="page-link">...</a>
+                  </li>
+                  <li id="previousIndex" class="page-item" th:if="${previousIndex != pageIndex}">
+                    <a id="previousIndexVal" class="page-link page-item" th:text="${previousIndex}"></a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link page-item" th:text="${pageIndex}" id="pageIndexVal"></a>
+                  </li>
+                  <li id="nextIndex" class="page-item" th:if="${nextIndex != pageIndex}">
+                    <a id="nextIndexVal" class="page-link page-item" th:text="${nextIndex}"></a></li>
+                  <li id="endSpace" class="page-item disabled" th:classappend="${endSpace ? '' : 'hiddenContent'}">
+                    <a class="page-link">...</a>
+                  </li>
+                  <li id="next" class="page-item ${endIndex == nextIndex ? 'disabled': ''}">
+                    <a id="next-link" class="page-link">Next</a>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </div>
           <div id="cardLayout" class="contentLayout"></div>
