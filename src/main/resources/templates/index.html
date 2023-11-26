@@ -67,7 +67,7 @@
             <th:block th:if="${site.uuid == identifier}">
               <a href="" class="list-group-item bg-warning" th:id="${site.uuid}"
                  th:href="@{/(uuid=${site.uuid})}"> <img
-                th:src="'data:image/png;base64,' + ${site.faviconBase64}">
+                th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16" height="16">
                 [[${site.title}]]：
                 <span th:id="${site.uuid} + '_count'"
                       class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
@@ -75,7 +75,7 @@
             <th:block th:if="${!(site.uuid == identifier)}">
               <a href="" class="list-group-item" th:id="${site.uuid}"
                  th:href="@{/(uuid=${site.uuid})}"> <img
-                th:src="'data:image/png;base64,' + ${site.faviconBase64}">
+                th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16" height="16">
                 [[${site.title}]]：
                 <span th:id="${site.uuid} + '_count'"
                       class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
