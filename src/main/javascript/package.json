@@ -19,7 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "@popperjs/core": "^2.11.8",
-    "@types/bootstrap": "^5.2.6",
+    "@types/bootstrap": "^5.2.7",
     "@types/google.visualization": "^0.0.69",
     "@types/swiper": "^6.0.0",
     "axios": "^1.6.0",
