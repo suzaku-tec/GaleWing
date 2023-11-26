@@ -84,7 +84,7 @@ export default class CardLayout {
     api.getFeedList(window.location.href).then((res) => {
       this.feedJson = res.data;
 
-      const displayDataJson = this.feedJson.slice(this.startIndex, this.displayCount + 1);
+      const displayDataJson = this.feedJson.slice(this.startIndex, this.startIndex + this.displayCount + 1);
       this.createList(displayDataJson);
     });
 
@@ -95,23 +95,27 @@ export default class CardLayout {
 
     previousLink?.addEventListener("click", () => {
       if(!previousLink?.parentElement?.classList.contains("disabled")) {
-        var str = document.getElementById("pageIndexVal")?.innerText
+        var pageIndexValEL = document.getElementById("pageIndexVal");
+        var str = pageIndexValEL?.innerText
         var page = Number(str) - 1;
         this.startIndex = page * this.displayCount
-        const displayDataJson = this.feedJson.slice(this.startIndex, this.displayCount + 1);
+        const displayDataJson = this.feedJson.slice(this.startIndex, this.startIndex + this.displayCount);
         this.deleteDispList();
         this.createList(displayDataJson);
+        this.initPager(page - 1);
       }
     })
 
     nextLink?.addEventListener("click", () => {
       if(!nextLink?.parentElement?.classList.contains("disabled")) {
-        var str = document.getElementById("pageIndexVal")?.innerText
+        var pageIndexValEL = document.getElementById("pageIndexVal");
+        var str = pageIndexValEL?.innerText
         var page = Number(str);
         this.startIndex = page * this.displayCount
-        const displayDataJson = this.feedJson.slice(this.startIndex, this.displayCount + 1);
+        const displayDataJson = this.feedJson.slice(this.startIndex, this.startIndex + this.displayCount);
         this.deleteDispList();
         this.createList(displayDataJson);
+        this.initPager(page + 1);
       }
     })
 
@@ -122,6 +126,53 @@ export default class CardLayout {
     while(layout?.firstChild ){
       layout.removeChild( layout.firstChild );
     }
+  }
+
+  private initPager(page: number) {
+    var pageIndexValEL = document.getElementById("pageIndexVal");
+    if(pageIndexValEL) pageIndexValEL.innerText = page.toString();
+
+    var previous = document.getElementById("previous");
+    var startSpace = document.getElementById("startSpace");
+    var previousIndex = document.getElementById("previousIndex");
+    var previousIndexVal = document.getElementById("previousIndexVal");
+    var nextIndex = document.getElementById("nextIndex");
+    var nextIndexVal = document.getElementById("nextIndexVal");
+    var endSpace = document.getElementById("endSpace");
+    var next = document.getElementById("next");
+
+    var max = this.deleteDispList.length / this.displayCount + 1;
+
+    if(page == 1) {
+      previous?.classList.add("disabled");
+      previousIndex?.classList.add("hiddenContent");
+    } else {
+      previous?.classList.remove("disabled");
+      previousIndex?.classList.remove("hiddenContent");
+      if(previousIndexVal) previousIndexVal.innerText = (page - 1).toString();
+    }
+
+    if(1 < page) {
+      startSpace?.classList.remove("hiddenContent");
+    } else {
+      startSpace?.classList.add("hiddenContent");
+    }
+
+    if(page == max) {
+      next?.classList.add("disabled");
+      nextIndex?.classList.add("hiddenContent");
+    } else {
+      next?.classList.remove("disabled");
+      nextIndex?.classList.remove("hiddenContent");
+      if(nextIndexVal) nextIndexVal.innerText = (page + 1).toString();
+    }
+
+    if(page < max) {
+      endSpace?.classList.add("hiddenContent");
+    } else {
+      endSpace?.classList.remove("hiddenContent");
+    }
+
   }
 
   /**
