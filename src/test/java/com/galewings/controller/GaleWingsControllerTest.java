@@ -42,6 +42,16 @@ class GaleWingsControllerTest {
         String result = galeWingsController.cardLayout(modelMock, "uuid", "1");
         Assertions.assertEquals("card", result);
     }
+
+    @Test
+    void testCardLayout2() {
+        when(siteRepository.getSiteFeedCount()).thenReturn(List.of(new SiteFeedCount()));
+
+        ModelMock modelMock = new ModelMock();
+        String result = galeWingsController.cardLayout(modelMock, "uuid", "2");
+        Assertions.assertEquals("card", result);
+    }
+
 }
 
 //Generated with love by TestMe :) Please report issues and submit feature requests at: https://weirddev.com/forum#!/testme
