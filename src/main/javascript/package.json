@@ -22,7 +22,7 @@
     "@types/bootstrap": "^5.2.7",
     "@types/google.visualization": "^0.0.69",
     "@types/swiper": "^6.0.0",
-    "axios": "^1.6.0",
+    "axios": "^1.6.1",
     "axios-oauth-client": "^2.0.2",
     "bootstrap": "^5.3.1",
     "clipboard-copy": "^4.0.1",
