@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="Description" content="Enter your description here"/>
+  <script src="/js/circulation.js"></script>
+  <link rel="stylesheet" href="../style.css">
+  <title>GalwWing</title>
+
+</head>
+
+<body>
+<!-- 全ページを囲む要素 -->
+<main class="container mw-100" role="main">
+  <div class="row">
+    <input type="hidden" id="identifier" value="" th:value="${identifier}">
+
+    <!-- サイトバーメニュー -->
+    <nav class="sidebar col-md-3" id="sidemenu">
+      <div class="brand p-2">
+        <p class="h4 mb-0">
+          Link
+        </p>
+      </div>
+      <ul class="nav flex-column m-o p-3 bg-primary" id="navi">
+        <li class="nav-item mb-2">
+          <a href="/" class="list-group-item">list</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="/settings" class="list-group-item">settings</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="/site/management" class="list-group-item">Site Management</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="/stack" class="list-group-item">積読</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="/youtube" class="list-group-item">
+            <i class="fa-brands fa-youtube"></i> youtube</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a class="list-group-item" href="/category">category</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a class="list-group-item" href="/podcast">podcast</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a class="list-group-item" href="/task/">task execute</a>
+        </li>
+      </ul>
+    </nav>
+    <!-- サイトバーメニュー -->
+
+    <!-- 全ページの右のコンテンツ -->
+    <div class="col-md-9" id="mainContent">
+
+      <!-- トップバー -->
+
+      <!-- 下のコンテンツ -->
+      <div class="content p-3">
+        <div>
+          <!-- アイコン -->
+
+          <!-- メインコンテンツ -->
+          <div id="gridLayout" class="contentLayout">
+            <div id="wrapper"></div>
+          </div>
+
+        </div>
+      </div>
+      <!-- 下のコンテンツ -->
+
+    </div>
+    <!-- 全ページの右のコンテンツ -->
+
+  </div>
+</main>
+<!-- 全ページを囲む要素 -->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" id="modal-dialog">
+    <div class="modal-content" id="modal-content">
+      <div class="modal-header" id="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" id="modal-header-btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modal-body">
+      </div>
+      <div class="modal-footer" id="modal-footer">
+        <!--                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close-->
+        <!--                </button>-->
+        <!--                <button type="button" class="btn btn-primary">Save changes</button>-->
+      </div>
+    </div>
+  </div>
+</div>
+<div style="display: none;">
+  <div id="modalAddSiteBody">
+    <p>フィードのURL もしくは、WebサイトのURL</p>
+    <div>
+      <input class="form-control addSiteUrl" placeholder="example.com">
+    </div>
+    <div>
+      <input type="checkbox" id="isUseTitle" checked><label
+      for="isUseTitle">フィードのタイトルを表示名に利用する</label>
+    </div>
+  </div>
+  <div id="modalAddSiteFooter">
+    <button type="button" class="btn btn-primary modal-submit">complete!</button>
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
+  </div>
+  <div id="modalImportOpmlBody">
+    <div>
+      <label for="importOpmlFile" class="form-label">Upload Opml file</label>
+      <input class="form-control" type="file" id="importOpmlFile">
+    </div>
+  </div>
+  <div id="modalImportOpmlFooter">
+    <button type="button" class="btn btn-primary modal-submit">import</button>
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
+  </div>
+  <div id="updateMessageModal">
+    <div style="text-align: center;">
+      <div class="spinner-grow" role="status">
+      </div>
+      <span>Updating...</span>
+    </div>
+  </div>
+  <div class="confirmModal">
+    <div class="confirmFooter">
+      <button type="button" class="btn btn-primary confirmOk">ok</button>
+      <button type="button" class="btn btn-secondary confirmCancel" data-dismiss="modal">cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<a id="downloadLink" style="display: none;"></a>
+<div id="playWav"></div>
+</body>
+
+</html>
