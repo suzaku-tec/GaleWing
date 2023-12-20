@@ -61,16 +61,14 @@ import TranslationEnJp from '../../events/translationEnJpEvent';
 import ReadDispListEvent from '../../events/readDispListEvent';
 import GaleWingGrid from './galeWingGrid';
 import TitleListEvent from '../../events/markdown/titleListEvent';
+import AxiosSetting from '../../setting/AxiosSetting';
 
 window.onload = async () => {
   // サイドバー初期化
   setupSidebar();
 
   // axiosのヘッダー設定
-  axios.defaults.headers.common = {
-    'X-Requested-With': 'XMLHttpRequest',
-    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
-  };
+  axios.defaults.headers.common = AxiosSetting.header;
 
   // grid初期化
   let grid = GaleWingGrid.getInstance();
