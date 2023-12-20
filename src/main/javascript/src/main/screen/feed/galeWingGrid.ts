@@ -6,6 +6,8 @@ import UpdateFeed from '../../events/updateFeed';
 import init from '../cardGridLayout';
 import SettingApi from '../../api/settingApi';
 import ElementEvent from '../../events/elementEvent';
+import { RowSelection } from 'gridjs/plugins/selection';
+import CirculationEvent from '../../events/circulationEvent';
 
 export default class GaleWingGrid {
   private static singleton: GaleWingGrid;
@@ -27,9 +29,14 @@ export default class GaleWingGrid {
     api
       .getFeedList(window.location.href)
       .then(async (res) => {
-        let grid = await this.createGrid(res.data);
+        let setting = new SettingApi();
+        await setting.init();
+        setting.outputLog();
+        var limit = Number(setting.get('feed_rows'));
 
-        this.setupGridEvent(grid);
+        let grid = await this.createGrid(res.data, limit);
+
+        this.setupGridEvent(grid, limit);
 
         init(9, 3, res.data);
       })
@@ -38,15 +45,12 @@ export default class GaleWingGrid {
       });
   }
 
-  async createGrid(data: any) {
-    let setting = new SettingApi();
-    await setting.init();
-    setting.outputLog();
+  async createGrid(data: any, limit: any) {
 
     return new Grid({
       columns: this.createGridColumn(),
       pagination: {
-        limit: Number(setting.get('feed_rows')),
+        limit: Number(limit),
       },
       sort: true,
       search: true,
@@ -56,6 +60,13 @@ export default class GaleWingGrid {
 
   createGridColumn() {
     return [
+      {
+        id: 'chk',
+        name: '',
+        plugin: {
+          component: RowSelection,
+        }
+      },
       {
         name: 'title',
         hidden: false,
@@ -69,10 +80,10 @@ export default class GaleWingGrid {
         ) =>
           html(
             this.createTitleLinkText(
-              row.cells[0].data,
               row.cells[1].data,
-              row.cells[8].data,
+              row.cells[2].data,
               row.cells[9].data,
+              row.cells[10].data,
             ),
           ),
       },
@@ -104,7 +115,7 @@ export default class GaleWingGrid {
     );
   }
 
-  setupGridEvent(grid: Grid) {
+  setupGridEvent(grid: Grid, limit: Number) {
     new ElementEvent(new UpdateFeed('identifier', grid)).setup(
       'click',
       document.getElementById('updateFeed'),
@@ -115,15 +126,26 @@ export default class GaleWingGrid {
       document.getElementById('readAllShowFeed'),
     );
 
+    new ElementEvent(new CirculationEvent(grid, limit)).setup(
+      "click",
+      document.getElementById("circulation")
+    )
+
     this.setupGridRowClickEvent(grid);
   }
 
   setupGridRowClickEvent(grid: Grid) {
     grid.on('rowClick', (event, row) => {
+      var tmp = event as any;
+      if(tmp.originalTarget.type == "checkbox") {
+        return
+      }
+
+
       let link: string | undefined = undefined;
       if ((event.target as any).localName == 'path') {
-        let uuid = row?.cell(7).data?.toLocaleString();
-        link = row?.cell(1).data?.toLocaleString();
+        let uuid = row?.cell(8).data?.toLocaleString();
+        link = row?.cell(2).data?.toLocaleString();
         this.stack(uuid, link);
         return;
       }
@@ -135,7 +157,7 @@ export default class GaleWingGrid {
         return;
       }
 
-      link = row?.cell(1).data?.toLocaleString();
+      link = row?.cell(2).data?.toLocaleString();
       if (!this.stopRowClickFlg) {
         if ((event.target as any).localName != 'a') {
           window.open(link);
