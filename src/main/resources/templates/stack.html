@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja" class="h-100">
+<html lang="ja" class="h-100" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="UTF-8">
@@ -19,21 +19,8 @@
 
     <!-- サイトバーメニュー -->
     <nav class="sidebar col-md-3" id="sidemenu">
-      <div class="brand p-4">
-        <h4>
-          Sidabar Sample
-        </h4>
-      </div>
-      <ul class="nav flex-column m-o p-3 bg-primary" id="navi">
-        <li class="nav-item mb-2">
-          <a href="/" class="nav-link">Feed List</a>
-        <li class="nav-item mb-2">
-          <a href="/settings" class="list-group-item">settings</a>
-        </li>
-        <li class="nav-item mb-2">
-          <a href="/site/management" class="list-group-item">Site Management</a>
-        </li>
-      </ul>
+      <div th:replace="linkMenu"/>
+
     </nav>
     <!-- サイトバーメニュー -->
 
