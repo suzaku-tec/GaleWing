@@ -1,0 +1,1 @@
+delete from circulation where id =/*uuid*/'0'

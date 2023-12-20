@@ -21,6 +21,9 @@ export default class GaleWingApi {
     executeStatsSql: '/stats/executeStatsSql',
     statsIdList: '/stats/statsIdList',
     executeTask: '/task/executeTask',
+    circulationAdd: "/circulation/add",
+    circulationList: "/circulation/list",
+    circulationStatusList: "/circulation/status/list",
   };
 
   private static singleton: GaleWingApi;
@@ -141,6 +144,24 @@ export default class GaleWingApi {
     await axios.post(ajaxUrl, {
       name: taskName,
     });
+  }
+
+  async circulationAdd(link: string, title: string) {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.circulationAdd;
+    await axios.post(ajaxUrl, {
+      link: link,
+      title: title
+    });
+  }
+
+  async circulationList() {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.circulationList;
+    return await axios.post(ajaxUrl);
+  }
+
+  async circulationStatusList() {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.circulationStatusList;
+    return await axios.post(ajaxUrl);
   }
 
   private getBaseUrl(): string {
