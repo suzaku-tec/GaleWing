@@ -51,13 +51,12 @@ import hideModifier from '@popperjs/core/lib/modifiers/hide';
 import axios from 'axios';
 import GaleWingApi from '../../api/galeWingApi';
 import { Grid } from 'gridjs';
+import AxiosSetting from '../../setting/AxiosSetting';
 
 window.onload = async () => {
   // axiosのヘッダー設定
-  axios.defaults.headers.common = {
-    'X-Requested-With': 'XMLHttpRequest',
-    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
-  };
+  axios.defaults.headers.common = AxiosSetting.header;
+
   let api = GaleWingApi.getInstance();
   const circulationList = await api.circulationList();
 

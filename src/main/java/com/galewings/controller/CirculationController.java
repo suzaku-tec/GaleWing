@@ -17,7 +17,7 @@ import java.util.UUID;
 @Controller
 public class CirculationController {
 
-    private enum Status {
+    enum Status {
         Application("application") // 申請
         , Approved("approved") // 承認
         , Rejection("rejection") // 却下
