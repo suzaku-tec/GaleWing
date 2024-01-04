@@ -186,7 +186,7 @@ export default class GaleWingGrid {
           (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-read-link');
         }
 
-        row.cells[9].data = '1';
+        row.cells[10].data = '1';
       })
       .catch((error) => {
         console.log(error);
