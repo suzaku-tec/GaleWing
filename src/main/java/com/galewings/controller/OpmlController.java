@@ -9,14 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -27,7 +23,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * OpmlController
@@ -35,20 +30,20 @@ import java.util.stream.Collectors;
  * opml関連の操作を提供する
  */
 @RequestMapping("/opml")
-@Controller
+@RestController
 public class OpmlController {
 
     /**
      * opmlTemplateEngine
      */
     @Autowired
-    SpringTemplateEngine opmlTemplateEngine;
+    private TemplateEngine opmlTemplateEngine;
 
     /**
      * siteRepository
      */
     @Autowired
-    SiteRepository siteRepository;
+    private SiteRepository siteRepository;
 
     /**
      * OPMLファイルエクスポート
@@ -56,17 +51,17 @@ public class OpmlController {
      * 全サイトの情報をOPMLファイルに出力する
      *
      * @return OPMLファイル
-     * @throws UnsupportedEncodingException
+     * @throws UnsupportedEncodingException エンコード未サポートエラー
      */
-    @RequestMapping(value = "/export", method = RequestMethod.GET)
+    @GetMapping(value = "/export")
     public ResponseEntity<byte[]> export() throws UnsupportedEncodingException {
         List<Site> allSite = siteRepository.getAllSite();
 
         Context context = new Context();
 
         List<Map<String, String>> collect = allSite.stream().map(Outline::new)
-                .map(outline -> getFieldMap(outline))
-                .collect(Collectors.toList());
+                .map(this::getFieldMap)
+                .toList();
         context.setVariable("outlines", collect);
         context.setVariable("title", "GaleWings");
         context.setVariable("date", LocalDateTime.now().format(
@@ -74,7 +69,6 @@ public class OpmlController {
 
         String opmlStr = opmlTemplateEngine.process("export", context);
 
-        // ResponseHeader
         HttpHeaders header = new HttpHeaders();
         header.add("Content-Type", "text/opml");
         header.add("Content-Disposition",
@@ -86,21 +80,19 @@ public class OpmlController {
      * OPMLファイルのインポート
      *
      * @param multipartFile OPMLファイル情報
-     * @throws IOException
-     * @throws OpmlParseException
+     * @throws IOException        入出力エラー
+     * @throws OpmlParseException OPMLパースエラー
      */
-    @RequestMapping(value = "/import", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping(value = "/import")
     public void importOpml(@RequestParam("file") MultipartFile multipartFile)
             throws IOException, OpmlParseException {
         if (multipartFile.isEmpty()) {
-            System.out.println("file is empty");
+            return;
         }
 
         byte[] bytes = multipartFile.getBytes();
         Opml opml = new OpmlParser().parse(new String(bytes));
-        opml.getBody().getOutlines().forEach(outline -> importOpml(outline));
-
+        opml.getBody().getOutlines().forEach(this::importOpml);
     }
 
     /**
@@ -114,14 +106,14 @@ public class OpmlController {
         if ("rss".equals(outline.getAttribute("type"))) {
             siteRepository.insertSite(outline);
         } else {
-            outline.getSubElements().forEach(ol -> importOpml(ol));
+            outline.getSubElements().forEach(this::importOpml);
         }
     }
 
     /**
      * サイト情報
      */
-    private class Outline {
+    private static class Outline {
 
         String title;
         String htmlUrl;
@@ -141,7 +133,7 @@ public class OpmlController {
      * @return サイト情報(Map形式)
      */
     private Map<String, String> getFieldMap(Outline obj) {
-        Map<String, String> map = new HashMap();
+        Map<String, String> map = new HashMap<>();
         map.put("htmlUrl", obj.htmlUrl);
         map.put("title", obj.title);
         map.put("xmlUrl", obj.xmlUrl);

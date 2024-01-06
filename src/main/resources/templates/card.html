@@ -7,7 +7,7 @@
   <meta name="Description" content="Enter your description here"/>
   <script src="../js/cardLayout.js"></script>
   <link rel="stylesheet" href="../style.css">
-  <title>GalwWing</title>
+  <title>GaleWing</title>
 
 </head>
 
@@ -18,7 +18,7 @@
     <input type="hidden" id="identifier" value="" th:value="${identifier}">
 
     <!-- サイトバーメニュー -->
-    <nav class="sidebar col-md-3" id="sidemenu">
+    <nav class="sidebar col-md-3" id="sidemenu" aria-label="side-menu">
       <div class="brand p-2">
         <p class="h4 mb-0">
           Link
@@ -67,7 +67,7 @@
             <th:block th:if="${site.uuid == identifier}">
               <a href="" class="list-group-item bg-warning" th:id="${site.uuid}"
                  th:href="@{/card/(uuid=${site.uuid})}"> <img
-                th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16" height="16">
+                th:src="'data:image/png;base64,' + ${site.faviconBase64}" alt="" src="">
                 [[${site.title}]]：
                 <span th:id="${site.uuid} + '_count'"
                       class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
@@ -75,7 +75,7 @@
             <th:block th:if="${!(site.uuid == identifier)}">
               <a href="" class="list-group-item" th:id="${site.uuid}"
                  th:href="@{/card/(uuid=${site.uuid})}"> <img
-                th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16" height="16">
+                th:src="'data:image/png;base64,' + ${site.faviconBase64}" alt="" src="">
                 [[${site.title}]]：
                 <span th:id="${site.uuid} + '_count'"
                       class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
@@ -90,7 +90,7 @@
     <div class="col-md-9" id="mainContent">
 
       <!-- トップバー -->
-      <nav class="navbar px-3 bg-light border-bottom shadow-sm">
+      <nav class="navbar px-3 bg-light border-bottom shadow-sm" aria-label="top-bar">
         <div class="navbar-brand toggle-menu">
           <button class="btn btn-light btn-sm" id="sidebarToggler">
             <i class="fas fa-bars fa-lg"></i>
@@ -224,9 +224,6 @@
       <div class="modal-body" id="modal-body">
       </div>
       <div class="modal-footer" id="modal-footer">
-        <!--                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close-->
-        <!--                </button>-->
-        <!--                <button type="button" class="btn btn-primary">Save changes</button>-->
       </div>
     </div>
   </div>
@@ -257,11 +254,11 @@
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
   </div>
   <div id="updateMessageModal">
-    <center>
+    <div style="text-align: center;">
       <div class="spinner-grow" role="status">
       </div>
       <span>Updating...</span>
-    </center>
+    </div>
   </div>
   <div class="confirmModal">
     <div class="confirmFooter">
