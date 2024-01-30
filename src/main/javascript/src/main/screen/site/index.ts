@@ -17,6 +17,12 @@ function siteCategory(uuid: string) {
   location.href = location.origin + `/siteCategory?uuid=${uuid}`;
 }
 
+async function fixSiteIcon(uuid: string) {
+  var api = GaleWingApi.getInstance();
+  await api.updateIcon(uuid);
+  location.reload();
+}
+
 window.onload = () => {
   var feedListBtn = document.getElementById('feedList')!;
   feedListBtn.addEventListener('click', () => {
@@ -30,4 +36,4 @@ window.onload = () => {
   });
 };
 
-export default { hideModifier, deleteSite, siteCategory };
+export default { hideModifier, deleteSite, siteCategory, fixSiteIcon };

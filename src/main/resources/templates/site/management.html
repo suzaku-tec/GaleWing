@@ -16,14 +16,16 @@
 
 <body class="h-100 bg-light">
 <!-- 全ページを囲む要素 -->
-<main class="h-100">
+<main class="h-100 mw-100" role="main">
   <div class="page-wrapper d-flex flex-row h-100">
 
     <!-- サイトバーメニュー -->
-    <!-- サイトバーメニュー -->
+    <nav class="sidebar col-md-3" id="sidemenu">
+      <div th:replace="linkMenu"/>
+    </nav>
 
     <!-- 全ページの右のコンテンツ -->
-    <div class="page-content main w-100">
+    <div class="page-content main col-md-9" id="mainContent">
 
       <!-- トップバー -->
       <nav class="navbar px-3 bg-light border-bottom shadow-sm">
@@ -40,10 +42,10 @@
       <div class="mx-5 mt-2">
         <button type="button" class="btn btn-primary" id="feedUpdate">reload&update</button>
       </div>
-      <div class="mx-5 my-2">
-        <table class="table table-hover" border="1">
+      <div class="content p-3 table-container" style="width: 100%;">
+        <table class="table table-hover grid-table" border="1">
           <thead>
-          <tr>
+          <tr class="table-container-tr">
             <th scope="col">title</th>
             <th scope="col">htmlUrl</th>
             <th scope="col">LastUpdate</th>
@@ -51,17 +53,22 @@
           </tr>
           </thead>
           <tbody>
-          <tr th:each="site: ${sitelist}">
-            <td>[[${site.title}]]</td>
-            <td><a th:href="@{(${site.htmlUrl})}">[[${site.htmlUrl}]]</a></td>
-            <td>[[${site.lastUpdate}]]</td>
-            <td>
+          <tr th:each="site: ${sitelist}" class="table-container-tr">
+            <td class="grid-cell">
+              <img th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16" height="16">[[${site.title}]]
+            </td>
+            <td class="grid-cell"><a th:href="@{(${site.htmlUrl})}">[[${site.htmlUrl}]]</a></td>
+            <td class="grid-cell">[[${site.lastUpdate}]]</td>
+            <td class="grid-cell">
               <button class="btn btn-primary" th:onclick="siteCategory([[${site.uuid}]]);">
                 tags
               </button>
               <button th:onclick="deleteSite([[${site.uuid}]]);"
                       class="btn btn-danger">
                 del
+              </button>
+              <button th:onclick="fixSiteIcon([[${site.uuid}]]);" class="btn btn-primary">
+                icon
               </button>
             </td>
           </tr>
