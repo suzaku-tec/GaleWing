@@ -6,8 +6,10 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -85,4 +87,17 @@ public class URLService {
 
         throw new GaleWingsSystemException();
     }
+
+    /**
+     * URLの対象リソースを取得してバイト配列で返す。
+     *
+     * @param resourceUrl
+     * @return
+     * @throws IOException
+     */
+    public byte[] getUrlResourceAllByte(String resourceUrl) throws IOException {
+        URL url = new URL(resourceUrl);
+        return url.openConnection().getInputStream().readAllBytes();
+    }
+    
 }
