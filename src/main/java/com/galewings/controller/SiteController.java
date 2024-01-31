@@ -6,6 +6,7 @@ import com.galewings.dto.input.SiteDeleteDto;
 import com.galewings.dto.input.SiteUpdateIconDto;
 import com.galewings.entity.Site;
 import com.galewings.repository.SiteRepository;
+import com.galewings.service.URLService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Base64;
 import java.util.List;
 
@@ -27,6 +27,9 @@ public class SiteController {
 
     @Autowired
     SiteRepository siteRepository;
+
+    @Autowired
+    private URLService urlService;
 
     /**
      * サイトリスト取得
@@ -95,8 +98,7 @@ public class SiteController {
             String imageUrl = element.absUrl("href");
 
             try {
-                URL url = new URL(imageUrl);
-                byte[] imageBytes = url.openConnection().getInputStream().readAllBytes();
+                byte[] imageBytes = urlService.getUrlResourceAllByte(imageUrl);
                 String base64 = Base64.getEncoder().encodeToString(imageBytes);
                 siteRepository.updateSiteIcon(siteUpdateIconDto.getUuid(), base64);
             } catch (IOException e) {
@@ -104,6 +106,5 @@ public class SiteController {
             }
         });
     }
-
 
 }
