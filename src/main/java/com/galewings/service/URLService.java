@@ -1,5 +1,6 @@
 package com.galewings.service;
 
+import com.galewings.dto.util.GwURL;
 import com.galewings.exception.GaleWingsSystemException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -96,8 +97,8 @@ public class URLService {
      * @throws IOException
      */
     public byte[] getUrlResourceAllByte(String resourceUrl) throws IOException {
-        URL url = new URL(resourceUrl);
-        return url.openConnection().getInputStream().readAllBytes();
+        GwURL url = new GwURL(new URL(resourceUrl));
+        return url.getInputStream().readAllBytes();
     }
-    
+
 }
