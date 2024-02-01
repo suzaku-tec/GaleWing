@@ -24,6 +24,7 @@ export default class GaleWingApi {
     circulationAdd: "/circulation/add",
     circulationList: "/circulation/list",
     circulationStatusList: "/circulation/status/list",
+    updateIcon: "/site/updateIcon"
   };
 
   private static singleton: GaleWingApi;
@@ -112,6 +113,11 @@ export default class GaleWingApi {
   getStatsIdList(): Promise<AxiosResponse<any>> {
     let ajaxUrl = this.getBaseUrl() + this.apiUrls.statsIdList;
     return axios.post(ajaxUrl);
+  }
+
+  updateIcon(uuid: string): Promise<AxiosResponse<any>> {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.updateIcon;
+    return axios.post(ajaxUrl, {uuid: uuid});
   }
 
   private fixSiteCategory(
