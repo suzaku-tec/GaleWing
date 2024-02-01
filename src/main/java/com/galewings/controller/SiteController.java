@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galewings.dto.input.SiteDeleteDto;
 import com.galewings.dto.input.SiteUpdateIconDto;
 import com.galewings.entity.Site;
+import com.galewings.exception.GaleWingsRuntimeException;
 import com.galewings.repository.SiteRepository;
 import com.galewings.service.URLService;
 import org.jsoup.Jsoup;
@@ -94,7 +95,7 @@ public class SiteController {
             els = doc.select("link[rel='icon']");
         }
 
-        els.stream().findFirst().get().forEach(element -> {
+        els.stream().findFirst().ifPresent(element -> {
             String imageUrl = element.absUrl("href");
 
             try {
@@ -102,7 +103,7 @@ public class SiteController {
                 String base64 = Base64.getEncoder().encodeToString(imageBytes);
                 siteRepository.updateSiteIcon(siteUpdateIconDto.getUuid(), base64);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new GaleWingsRuntimeException(e);
             }
         });
     }
