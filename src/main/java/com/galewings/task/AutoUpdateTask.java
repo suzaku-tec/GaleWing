@@ -5,6 +5,7 @@ import com.galewings.entity.Site;
 import com.galewings.factory.FeedFactory;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.SiteRepository;
+import com.galewings.service.GoogleAlertService;
 import com.galewings.service.GwDateService;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
@@ -35,11 +36,20 @@ public class AutoUpdateTask {
     @Autowired
     GwDateService gwDateService;
 
+    @Autowired
+    private GoogleAlertService googleAlertService;
+
     @Scheduled(cron = "${update.scheduler.cron}")
     public void allUpdate() {
+        // Googleアラート用の更新
+        siteRepository.getAllSite()
+                .parallelStream()
+                .filter(site -> !googleAlertService.isGoogleAlert(site))
+                .forEach(googleAlertService::updateFeed);
 
         siteRepository.getAllSite()
                 .parallelStream()
+                .filter(site -> !googleAlertService.isGoogleAlert(site))
                 .map(site -> {
                     return new GaleWingSiteFeed() {
                         @Override
