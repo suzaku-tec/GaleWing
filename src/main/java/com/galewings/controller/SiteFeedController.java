@@ -133,11 +133,17 @@ public class SiteFeedController {
     @ResponseBody
     public String updateFeed(@RequestBody UpdateFeedDto dto) throws IOException, FeedException {
 
-        List<Feed> feeds;
         if (Strings.isNullOrEmpty(dto.getUuid())) {
             autoUpdateTask.allUpdate();
 
-            feeds = feedRepository.getAllFeed();
+            List<Feed> feeds = feedRepository.getAllFeed();
+            List<SiteFeedCount> siteFeedCounts = siteRepository.getSiteFeedCount();
+            FeedUpdate feedUpdate = new FeedUpdate();
+            feedUpdate.feeds = feeds;
+            feedUpdate.siteFeedCounts = siteFeedCounts;
+
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(feedUpdate);
         } else {
             Site site = siteRepository.getSite(dto.getUuid());
 
