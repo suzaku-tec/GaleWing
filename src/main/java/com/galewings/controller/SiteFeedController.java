@@ -144,26 +144,31 @@ public class SiteFeedController {
             if (googleAlertService.isGoogleAlert(site)) {
                 googleAlertService.updateFeed(site);
             } else {
-                SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(site.xmlUrl)));
-                feed.getEntries().stream().filter(syndEntry -> {
-                            return !feedRepository.existFeed(syndEntry.getLink());
-                        }).map(syndEntry -> FeedFactory.create(syndEntry, site.uuid))
-                        .filter(f -> gwDateService.isRetainedDateAfter(f.publishedDate))
-                        .forEach(feedRepository::insertEntity);
-
-                feeds = feedRepository.getFeed(site.uuid);
-
-                List<SiteFeedCount> siteFeedCounts = siteRepository.getSiteFeedCount();
-                FeedUpdate feedUpdate = new FeedUpdate();
-                feedUpdate.feeds = feeds;
-                feedUpdate.siteFeedCounts = siteFeedCounts;
-
-                ObjectMapper mapper = new ObjectMapper();
-                return mapper.writeValueAsString(feedUpdate);
+                return updateFeed(site);
             }
         }
 
         return StringUtils.EMPTY;
+    }
+
+    private String updateFeed(Site site) throws FeedException, IOException {
+        List<Feed> feeds;
+        SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(site.xmlUrl)));
+        feed.getEntries().stream().filter(syndEntry -> {
+                    return !feedRepository.existFeed(syndEntry.getLink());
+                }).map(syndEntry -> FeedFactory.create(syndEntry, site.uuid))
+                .filter(f -> gwDateService.isRetainedDateAfter(f.publishedDate))
+                .forEach(feedRepository::insertEntity);
+
+        feeds = feedRepository.getFeed(site.uuid);
+
+        List<SiteFeedCount> siteFeedCounts = siteRepository.getSiteFeedCount();
+        FeedUpdate feedUpdate = new FeedUpdate();
+        feedUpdate.feeds = feeds;
+        feedUpdate.siteFeedCounts = siteFeedCounts;
+
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(feedUpdate);
     }
 
     /**
