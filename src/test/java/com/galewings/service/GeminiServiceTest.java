@@ -98,7 +98,7 @@ class GeminiServiceTest {
 
             GeminiResponseDto result = geminiService.tellMe("text");
             Assertions.fail();
-        } catch (RuntimeException e) {
+        } catch (InterruptedException e) {
             // 正常
         } catch (Exception e) {
             Assertions.fail();
