@@ -26,11 +26,11 @@ public class GeminiService implements TellMeAi<GeminiResponseDto> {
     public GeminiResponseDto tellMe(String text) {
         GeminiRequestDto dto = create(text);
         try {
+            HttpClient client = HttpClient.newHttpClient();
             HttpRequest req = HttpRequest.newBuilder()
                     .uri(URI.create("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + apiKey))
                     .POST(HttpRequest.BodyPublishers.ofString(new ObjectMapper().writeValueAsString(dto)))
                     .build();
-            HttpClient client = HttpClient.newHttpClient();
             var res = client.send(req, HttpResponse.BodyHandlers.ofString());
             String json = res.body();
             ObjectMapper om = new ObjectMapper();
