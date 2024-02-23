@@ -2,10 +2,10 @@ package com.galewings.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.galewings.dto.ai.googleai.request.ContentsDto;
+import com.galewings.dto.ai.googleai.request.GeminiRequestDto;
+import com.galewings.dto.ai.googleai.request.PartsDto;
 import com.galewings.dto.ai.googleai.response.GeminiResponseDto;
-import com.galewings.task.bat.dto.request.ContentsDto;
-import com.galewings.task.bat.dto.request.GeminiRequestDto;
-import com.galewings.task.bat.dto.request.PartsDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
