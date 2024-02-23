@@ -17,13 +17,12 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 @Component
-public class GeminiService implements TellMeAi<GeminiResponseDto> {
+public class GeminiService {
 
     @Value("{google.ai.api-key")
     private String apiKey;
 
-    @Override
-    public GeminiResponseDto tellMe(String text) {
+    public GeminiResponseDto tellMe(String text) throws InterruptedException {
         GeminiRequestDto dto = create(text);
         try {
             HttpClient client = HttpClient.newHttpClient();
@@ -39,8 +38,6 @@ public class GeminiService implements TellMeAi<GeminiResponseDto> {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
