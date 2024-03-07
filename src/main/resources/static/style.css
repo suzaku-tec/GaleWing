@@ -205,3 +205,7 @@ table.grid-table {
 .grid-cell {
     word-break:break-word;
 }
+
+.grid-card-read {
+    background-color: #C0C0C0
+}

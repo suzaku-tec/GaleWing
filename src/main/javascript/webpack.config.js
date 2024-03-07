@@ -22,7 +22,8 @@ const config = {
     stats: './src/main/screen/stats/stats.ts',
     task: './src/main/screen/task/task.ts',
     cardLayout: './src/main/screen/layout/cardLayout.ts',
-    circulation: "./src/main/screen/circulation/index.ts"
+    circulation: "./src/main/screen/circulation/index.ts",
+    newsSummary: "./src/main/screen/news/newsSummary.ts"
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
