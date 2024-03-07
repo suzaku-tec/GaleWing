@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="Description" content="Enter your description here"/>
-  <script src="/js/circulation.js"></script>
-  <link rel="stylesheet" href="../style.css">
-  <title>GalwWing</title>
-
+  <script src="/js/newsSummary.js"></script>
+  <link rel="stylesheet" href="../../style.css">
+  <title>GaleWing</title>
 </head>
 
 <body>
@@ -20,12 +19,14 @@
     <!-- サイトバーメニュー -->
     <nav class="sidebar col-md-3" id="sidemenu">
       <div th:replace="linkMenu"/>
+
     </nav>
     <!-- サイトバーメニュー -->
 
     <!-- 全ページの右のコンテンツ -->
     <div class="col-md-9" id="mainContent">
 
+      <!-- トップバー -->
       <!-- トップバー -->
 
       <!-- 下のコンテンツ -->
@@ -34,10 +35,27 @@
           <!-- アイコン -->
 
           <!-- メインコンテンツ -->
-          <div id="gridLayout" class="contentLayout">
-            <div id="wrapper"></div>
-          </div>
+          <div>
 
+          </div>
+          <div id="cardLayout" class="contentLayout">
+            <ul class="card-list">
+              <li class="card-item rounded border border-secondary border border-3"
+                  th:each="newsSummary: ${newsSummaryList}">
+                <div class="card-item-link">
+                  <div class="card-item-body">
+                    <div class="card-item-title"><a th:href="${newsSummary.feedUuid}">[[${newsSummary.title}]]</a></div>
+                  </div>
+                </div>
+                <div class="p-2">
+                  <button name="summary" th:data-summary="${newsSummary.summary}" data-bs-toggle="modal"
+                          data-bs-target="#exampleModal" class="btn btn-info">要約
+                  </button>
+                  <button name="del" th:data-id="${newsSummary.feedUuid}" class="btn btn-danger">削除</button>
+                </div>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
       <!-- 下のコンテンツ -->
@@ -62,9 +80,6 @@
       <div class="modal-body" id="modal-body">
       </div>
       <div class="modal-footer" id="modal-footer">
-        <!--                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close-->
-        <!--                </button>-->
-        <!--                <button type="button" class="btn btn-primary">Save changes</button>-->
       </div>
     </div>
   </div>
