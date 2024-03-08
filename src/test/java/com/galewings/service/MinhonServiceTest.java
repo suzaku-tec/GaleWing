@@ -11,6 +11,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -49,13 +51,21 @@ class MinhonServiceTest {
     }
 
     @Test
-    void testTranselate() throws IOException {
+    void testTranselate() throws IOException, NoSuchFieldException, IllegalAccessException {
         // 翻訳部分のモック化
         Call call = mock(Call.class);
         when(client.newCall(any())).thenReturn(call);
         Response tranRes = createOkHttpResponce("{resultset: { result: { text: \"hello world\"} } }");
         Response oauthRes = createOkHttpResponce("{access_token: test}");
-        when(call.execute()).thenReturn(oauthRes).thenReturn(tranRes);
+
+        Field accessTokenField = MinhonService.class.getDeclaredField("accessToken");
+        accessTokenField.setAccessible(true);
+        AtomicReference<String> accessToken = (AtomicReference<String>) accessTokenField.get(minhonService);
+        if (!Objects.isNull(accessToken) && !Objects.isNull(accessToken.get())) {
+            when(call.execute()).thenReturn(tranRes);
+        } else {
+            when(call.execute()).thenReturn(oauthRes).thenReturn(tranRes);
+        }
 
         minhonService.oauth();
         String result = minhonService.transelate("text");
@@ -69,7 +79,7 @@ class MinhonServiceTest {
     }
 
     @Test
-    void testTranselate3() throws IOException {
+    void testTranselate3() throws IOException, NoSuchFieldException, IllegalAccessException {
 
         // 翻訳部分のモック化
         Response res = createOkHttp510Responce("hello world");
@@ -77,7 +87,15 @@ class MinhonServiceTest {
         when(client.newCall(any())).thenReturn(call);
         Response tranRes = createOkHttpResponce("{resultset: { result: { text: \"hello world\"} } }");
         Response oauthRes = createOkHttpResponce("{access_token: test}");
-        when(call.execute()).thenReturn(oauthRes).thenReturn(tranRes);
+
+        Field accessTokenField = MinhonService.class.getDeclaredField("accessToken");
+        accessTokenField.setAccessible(true);
+        AtomicReference<String> accessToken = (AtomicReference<String>) accessTokenField.get(minhonService);
+        if (!Objects.isNull(accessToken) && !Objects.isNull(accessToken.get())) {
+            when(call.execute()).thenReturn(tranRes);
+        } else {
+            when(call.execute()).thenReturn(oauthRes).thenReturn(tranRes);
+        }
 
         minhonService.oauth();
         String result = minhonService.transelate("text");
