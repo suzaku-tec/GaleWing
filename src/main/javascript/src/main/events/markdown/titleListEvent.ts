@@ -14,7 +14,7 @@ export default class TitleListEvent implements IElementEvent {
       .map((str) => {
         return '- ' + str;
       })
-      .join('\n');
+      .join('\r\n');
 
     navigator.clipboard.writeText(mdTitleList);
   }
