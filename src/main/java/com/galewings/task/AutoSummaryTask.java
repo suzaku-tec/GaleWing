@@ -1,6 +1,5 @@
 package com.galewings.task;
 
-import com.galewings.exception.GaleWingsSystemException;
 import com.galewings.repository.NewsSummaryRepository;
 import com.galewings.service.GeminiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,8 @@ public class AutoSummaryTask {
                 summary = geminiService.tellMe(text).getCandidates().get(0).getContent().getParts().get(0).getText();
                 Thread.sleep(WAITE_TIME);
             } catch (InterruptedException e) {
-                throw new GaleWingsSystemException(e);
+                summary = "";
+                e.printStackTrace();
             }
             news.setSummary(summary);
             return news;
