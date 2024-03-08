@@ -19,7 +19,7 @@ import java.util.List;
 @Component
 public class GeminiService {
 
-    @Value("{google.ai.api-key")
+    @Value("${google.ai.api-key}")
     private String apiKey;
 
     public GeminiResponseDto tellMe(String text) throws InterruptedException {
@@ -48,6 +48,7 @@ public class GeminiService {
         ContentsDto contentsDto = new ContentsDto();
         PartsDto partsDto = new PartsDto();
         partsDto.setText(text);
+        contentsDto.setParts(List.of(partsDto));
 
         dto.setContents(List.of(contentsDto));
 

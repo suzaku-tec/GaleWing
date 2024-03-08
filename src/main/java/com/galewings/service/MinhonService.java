@@ -1,5 +1,6 @@
 package com.galewings.service;
 
+import com.google.common.base.Strings;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -44,6 +45,9 @@ public class MinhonService {
         String[] pathKeys = path.split("\\.");
         JsonObject obj = jsonElement.getAsJsonObject();
         for (int i = 0; i < pathKeys.length - 1; i++) {
+            if (Objects.isNull(obj)) {
+                return StringUtils.EMPTY;
+            }
             obj = obj.getAsJsonObject(pathKeys[i]);
         }
 
@@ -53,6 +57,10 @@ public class MinhonService {
 
     public String oauth() {
         synchronized (lock) {
+            if (!Strings.isNullOrEmpty(accessToken.get())) {
+                return accessToken.get();
+            }
+
             RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
                     .addFormDataPart("grant_type", "client_credentials")
                     .addFormDataPart("client_id", key)
