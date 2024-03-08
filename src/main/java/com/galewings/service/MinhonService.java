@@ -45,6 +45,9 @@ public class MinhonService {
         String[] pathKeys = path.split("\\.");
         JsonObject obj = jsonElement.getAsJsonObject();
         for (int i = 0; i < pathKeys.length - 1; i++) {
+            if (Objects.isNull(obj)) {
+                return StringUtils.EMPTY;
+            }
             obj = obj.getAsJsonObject(pathKeys[i]);
         }
 
