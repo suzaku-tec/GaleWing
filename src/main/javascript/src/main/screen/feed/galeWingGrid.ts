@@ -8,6 +8,7 @@ import SettingApi from '../../api/settingApi';
 import ElementEvent from '../../events/elementEvent';
 import { RowSelection } from 'gridjs/plugins/selection';
 import CirculationEvent from '../../events/circulationEvent';
+import SummaryEvent from '../../events/summaryEvent';
 
 export default class GaleWingGrid {
   private static singleton: GaleWingGrid;
@@ -129,6 +130,11 @@ export default class GaleWingGrid {
     new ElementEvent(new CirculationEvent(grid, limit)).setup(
       "click",
       document.getElementById("circulation")
+    )
+
+    new ElementEvent(new SummaryEvent(grid, limit)).setup(
+      "click",
+      document.getElementById("summary")
     )
 
     this.setupGridRowClickEvent(grid);
