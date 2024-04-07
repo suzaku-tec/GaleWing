@@ -49,9 +49,8 @@ public class AutoSummaryTask {
 
                 summary = getSummaryText(response);
                 Thread.sleep(WAITE_TIME);
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 summary = "";
-                e.printStackTrace();
             }
             news.setSummary(summary);
             return news;
