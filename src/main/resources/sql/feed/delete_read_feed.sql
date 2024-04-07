@@ -1,6 +1,6 @@
 delete
 from
-	feed f
+	feed as f
 where
 	f.readed
 	and f.publishedDate < /*daysRetained*/'2022-02-26'
