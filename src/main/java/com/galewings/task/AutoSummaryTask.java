@@ -46,7 +46,6 @@ public class AutoSummaryTask {
             String summary = null;
             try {
                 var response = geminiService.tellMe(text);
-                System.out.println(response);
 
                 summary = getSummaryText(response);
                 Thread.sleep(WAITE_TIME);
