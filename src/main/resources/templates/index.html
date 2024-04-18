@@ -19,42 +19,47 @@
 
     <!-- サイトバーメニュー -->
     <nav class="sidebar col-md-3" id="sidemenu">
-      <div th:replace="linkMenu"/>
-      <div class="brand p-2">
-        <p class="h4 mb-0">
-          Site List
-        </p>
-      </div>
-      <ul class="nav flex-column m-o p-3 bg-primary">
-        <li class="nav-item mb-2">
-          <th:block th:if="${#strings.isEmpty(identifier)}">
-            <a href="/" class="list-group-item bg-warning">All</a>
-          </th:block>
-          <th:block th:if="${!#strings.isEmpty(identifier)}">
-            <a href="/" class="list-group-item">All</a>
-          </th:block>
-        </li>
-        <li class="mb-2" id="siteList">
-          <div th:each="site: ${sitelist}">
-            <th:block th:if="${site.uuid == identifier}">
-              <a href="" class="list-group-item bg-warning" th:id="${site.uuid}"
-                 th:href="@{/(uuid=${site.uuid})}"> <img
-                th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16" height="16">
-                [[${site.title}]]：
-                <span th:id="${site.uuid} + '_count'"
-                      class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
-            </th:block>
-            <th:block th:if="${!(site.uuid == identifier)}">
-              <a href="" class="list-group-item" th:id="${site.uuid}"
-                 th:href="@{/(uuid=${site.uuid})}"> <img
-                th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16" height="16">
-                [[${site.title}]]：
-                <span th:id="${site.uuid} + '_count'"
-                      class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
-            </th:block>
-          </div>
-        </li>
-      </ul>
+      <section class="accordion">
+        <div th:replace="linkMenu"/>
+        <input id="block-01" type="checkbox" value="" class="toggle"/>
+        <label class="Label" for="block-01">
+          <p class="h4">
+            Site List
+          </p>
+        </label>
+        <div class="accordionContent">
+          <ul class="nav flex-column m-o p-3 bg-primary">
+            <li class="nav-item mb-2">
+              <th:block th:if="${#strings.isEmpty(identifier)}">
+                <a href="/" class="list-group-item bg-warning">All</a>
+              </th:block>
+              <th:block th:if="${!#strings.isEmpty(identifier)}">
+                <a href="/" class="list-group-item">All</a>
+              </th:block>
+            </li>
+            <li class="mb-2" id="siteList">
+              <div th:each="site: ${sitelist}">
+                <th:block th:if="${site.uuid == identifier}">
+                  <a href="" class="list-group-item bg-warning" th:id="${site.uuid}"
+                     th:href="@{/(uuid=${site.uuid})}"> <img
+                    th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16" height="16">
+                    [[${site.title}]]：
+                    <span th:id="${site.uuid} + '_count'"
+                          class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
+                </th:block>
+                <th:block th:if="${!(site.uuid == identifier)}">
+                  <a href="" class="list-group-item" th:id="${site.uuid}"
+                     th:href="@{/(uuid=${site.uuid})}"> <img
+                    th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16" height="16">
+                    [[${site.title}]]：
+                    <span th:id="${site.uuid} + '_count'"
+                          class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
+                </th:block>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
     </nav>
     <!-- サイトバーメニュー -->
 
