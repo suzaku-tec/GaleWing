@@ -21,7 +21,7 @@
     <nav class="sidebar col-md-3" id="sidemenu">
       <section class="accordion">
         <div th:replace="linkMenu"/>
-        <input id="block-01" type="checkbox" value="" class="toggle"/>
+        <input id="block-01" type="checkbox" value="" class="toggle" th:checked="${!#strings.isEmpty(identifier)}"/>
         <label class="Label" for="block-01">
           <p class="h4">
             Site List
