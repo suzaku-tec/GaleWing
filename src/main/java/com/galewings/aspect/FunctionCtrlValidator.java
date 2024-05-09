@@ -1,6 +1,7 @@
 package com.galewings.aspect;
 
 import com.galewings.annotation.FunctionCtrlAspect;
+import com.galewings.exception.FunctionCtrlException;
 import com.galewings.repository.FunctionCtrlRepository;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
