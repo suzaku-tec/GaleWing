@@ -1,5 +1,6 @@
 package com.galewings.controller;
 
+import com.galewings.annotation.FunctionCtrlAspect;
 import com.galewings.dto.CirculationDto;
 import com.galewings.dto.input.CirculationAdd;
 import com.galewings.repository.CategoryRepository;
@@ -15,6 +16,7 @@ import java.util.UUID;
 
 @RequestMapping("/circulation")
 @Controller
+@FunctionCtrlAspect("circulation")
 public class CirculationController {
 
     enum Status {
