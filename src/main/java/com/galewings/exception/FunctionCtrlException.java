@@ -1,4 +1,4 @@
-package com.galewings.aspect;
+package com.galewings.exception;
 
 public class FunctionCtrlException extends RuntimeException {
 }
