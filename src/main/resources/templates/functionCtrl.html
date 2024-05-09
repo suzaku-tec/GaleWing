@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="Description" content="Enter your description here"/>
 
-  <script src="js/settings.js"></script>
+  <script src="js/functionCtrl.js"></script>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="tree.css">
   <title>GalwWing</title>
@@ -41,26 +41,21 @@
       <!-- 下のコンテンツ -->
       <form class="content p-3">
         <div class="container-fuild pt-3">
-          <div th:each="setting: ${settings}">
-            <div class="mb-5">
-              <h3 th:text="${setting.overview}"></h3>
-              <p th:text="${setting.description}"></p>
-              <table class="table table-hover table-bordered">
-                <tbody>
-                <tr>
-                  <td>[[${setting.id}]]</td>
-                  <td><input type="text" class="form-control" th:id="${setting.id}"
-                             th:value="${setting.setting}"
-                             th:name="'settings[' + ${setting.id} + ']'"/>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <table class="table table-hover table-bordered">
+            <tr th:each="functionCtrl, sts : ${functionCtrlList}">
+              <td th:text="${functionCtrl.id}"></td>
+              <td th:text="${functionCtrl.detail}"></td>
+              <td>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" role="switch" th:value="on"
+                         th:checked="${functionCtrl.flg eq '1'}" th:id="${functionCtrl.id}">
+                </div>
+
+              </td>
+            </tr>
+          </table>
         </div>
 
-        <button id="update" type="button" class="btn btn-primary">update</button>
       </form>
       <!-- 下のコンテンツ -->
 
