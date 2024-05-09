@@ -26,7 +26,8 @@ export default class GaleWingApi {
     circulationStatusList: "/circulation/status/list",
     updateIcon: "/site/updateIcon",
     summaryDelete: "/news/summary/delete",
-    summaryAdd: "/news/summary/add"
+    summaryAdd: "/news/summary/add",
+    functionCtrlUpdate: "/functionCtrl/update"
   };
 
   private static singleton: GaleWingApi;
@@ -180,6 +181,14 @@ export default class GaleWingApi {
   async summaryAdd(uuid: string) {
     let ajaxUrl = this.getBaseUrl() + this.apiUrls.summaryAdd + "?uuid=" + uuid;
     await axios.post(ajaxUrl);
+  }
+
+  async functionCtrlUpdate(id: string, flg: string) {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.functionCtrlUpdate;
+    return await axios.post(ajaxUrl, {
+      id: id,
+      flg: flg
+    });
   }
 
   private getBaseUrl(): string {
