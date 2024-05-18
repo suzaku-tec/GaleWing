@@ -24,7 +24,8 @@ const config = {
     cardLayout: './src/main/screen/layout/cardLayout.ts',
     circulation: "./src/main/screen/circulation/index.ts",
     newsSummary: "./src/main/screen/news/newsSummary.ts",
-    functionCtrl: "./src/main/screen/functionCtrl/index.ts"
+    functionCtrl: "./src/main/screen/functionCtrl/index.ts",
+    viewSetting: "./src/main/screen/viewsSetting/index.ts"
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
