@@ -38,4 +38,7 @@
   <li class="nav-item mb-2">
     <a class="list-group-item" href="/functionCtrl">functionCtrl</a>
   </li>
+  <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('views-setting') eq '1'}">
+    <a class="list-group-item" href="/views/">views-setting</a>
+  </li>
 </ul>
