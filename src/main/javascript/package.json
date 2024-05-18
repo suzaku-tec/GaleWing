@@ -26,7 +26,7 @@
     "axios-oauth-client": "^2.0.4",
     "bootstrap": "^5.3.3",
     "clipboard-copy": "^4.0.1",
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.3.2",
     "dotenv-webpack": "^8.0.1",
     "google-charts-node": "^2.0.0",
     "gridjs": "^6.0.6",
