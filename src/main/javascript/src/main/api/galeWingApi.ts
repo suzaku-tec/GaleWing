@@ -27,7 +27,8 @@ export default class GaleWingApi {
     updateIcon: "/site/updateIcon",
     summaryDelete: "/news/summary/delete",
     summaryAdd: "/news/summary/add",
-    functionCtrlUpdate: "/functionCtrl/update"
+    functionCtrlUpdate: "/functionCtrl/update",
+    viewsSave: '/views/save'
   };
 
   private static singleton: GaleWingApi;
@@ -121,6 +122,11 @@ export default class GaleWingApi {
   updateIcon(uuid: string): Promise<AxiosResponse<any>> {
     let ajaxUrl = this.getBaseUrl() + this.apiUrls.updateIcon;
     return axios.post(ajaxUrl, {uuid: uuid});
+  }
+
+  viewSave(viewId: string, viewName: string, siteIdList: string[]): Promise<AxiosResponse<any>> {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.viewsSave;
+    return axios.post(ajaxUrl, {viewId: viewId, viewName: viewName, siteIdList: siteIdList});
   }
 
   private fixSiteCategory(

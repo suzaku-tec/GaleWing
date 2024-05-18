@@ -1,0 +1,1 @@
+select * from views where id = /*id*/'1';

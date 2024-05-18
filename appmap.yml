@@ -1,0 +1,5 @@
+language: "java"
+name: "GaleWings"
+appmap_dir: "tmp/appmap"
+packages:
+- path: "com.galewings"

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="Description" content="Enter your description here"/>
+  <script th:src="@{/js/viewSetting.js}"></script>
+  <link rel="stylesheet" th:href="@{/style.css}">
+  <title>GalwWing</title>
+
+</head>
+
+<body>
+<!-- 全ページを囲む要素 -->
+<main class="container mw-100" role="main">
+  <div class="row">
+    <input type="hidden" id="identifier" value="" th:value="${identifier}">
+
+    <!-- サイトバーメニュー -->
+    <nav class="sidebar col-md-3" id="sidemenu">
+      <div th:replace="linkMenu"/>
+    </nav>
+    <!-- サイトバーメニュー -->
+
+    <!-- 全ページの右のコンテンツ -->
+    <div class="col-md-9" id="mainContent">
+
+      <!-- トップバー -->
+      <nav class="navbar px-3 bg-light border-bottom shadow-sm">
+        <div class="navbar-brand toggle-menu">
+          <button class="btn btn-light btn-sm" id="sidebarToggler">
+            <i class="fas fa-bars fa-lg"></i>
+          </button>
+        </div>
+        <ul class="navbar-nav">
+          <li class="nav-item ml-3 text-muted">
+            Home
+          </li>
+          <li class="nav-item ml-3 text-muted">
+            Test
+          </li>
+          <li class="nav-item ml-3 text-muted">
+            Login
+          </li>
+        </ul>
+        <ul class="nav nav-tabs">
+          <li class="nav-item" id="gridLayoutItem">
+            <div class="nav-link active" aria-current="page" data-layout="gridLayout">
+              <i class="fas fa-th"></i>
+            </div>
+          </li>
+          <li class="nav-item" id="cardLayoutItem">
+            <div class="nav-link" aria-current="page" data-layout="cardLayout">
+              <i class="fas fa-id-card"></i>
+            </div>
+          </li>
+        </ul>
+      </nav>
+      <!-- トップバー -->
+
+      <!-- 下のコンテンツ -->
+      <div class="content p-3">
+        <div>
+
+          <!-- メインコンテンツ -->
+          <div id="main">
+            <p>
+              <select id="siteSelect" class="form-select" aria-label="Default select example">
+                <option selected value="">Open this select menu</option>
+                <option th:value="${siteInfo.uuid}" th:text="${siteInfo.title}"
+                        th:each="siteInfo: ${siteList}"></option>
+              </select>
+            </p>
+
+            <p>
+              <button id="add" type="button" class="btn btn-primary">add</button>
+              <button id="save" type="button" class="btn btn-primary">Save</button>
+            </p>
+
+            <!-- view情報 -->
+            <p>
+              <label for="viewName" class="form-label">View Name List</label>
+              <input type="hidden" id="viewId">
+              <input class="form-control" list="viewOptions" id="viewName" placeholder="Type to search...">
+              <datalist id="viewOptions">
+                <option value=""></option>
+                <option th:value="${viewInfo.name}" th:each="viewInfo: ${viewList}" th:data-id="${viewInfo.id}"
+                        th:data-sitejson="${viewInfo.siteJson}">
+              </datalist>
+            </p>
+
+            <!-- サイト情報 -->
+            <p>
+            <div id="views-site" class="d-flex align-content-start flex-wrap">
+            </div>
+            </p>
+          </div>
+
+        </div>
+      </div>
+      <!-- 下のコンテンツ -->
+
+    </div>
+    <!-- 全ページの右のコンテンツ -->
+
+  </div>
+</main>
+
+<!-- 全ページを囲む要素 -->
+</body>
+
+</html>
