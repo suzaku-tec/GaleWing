@@ -42,4 +42,4 @@ library.db
 src/main/resources/.env
 .env.test
 
-.env
+/tmp/
