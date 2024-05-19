@@ -1,7 +1,9 @@
 package com.galewings.controller;
 
 import com.galewings.entity.SiteFeedCount;
+import com.galewings.entity.ViewFeedCount;
 import com.galewings.repository.SiteRepository;
+import com.galewings.repository.ViewsRepository;
 import com.rometools.utils.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,9 @@ public class GaleWingsController {
     @Autowired
     private SiteRepository siteRepository;
 
+    @Autowired
+    private ViewsRepository viewsRepository;
+
     /**
      * 初期ページ
      *
@@ -37,6 +42,10 @@ public class GaleWingsController {
         List<SiteFeedCount> resultList = siteRepository.getSiteFeedCount();
         model.addAttribute("sitelist", resultList);
         model.addAttribute("identifier", uuid);
+
+        List<ViewFeedCount> viewFeedCountList = viewsRepository.getViewFeedCount();
+        model.addAttribute("viewlist", viewFeedCountList);
+
         return "index";
     }
 

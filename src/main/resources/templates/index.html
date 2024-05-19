@@ -20,13 +20,45 @@
     <!-- サイトバーメニュー -->
     <nav class="sidebar col-md-3" id="sidemenu">
       <section class="accordion">
+        <!-- サイドメニュー(Site List) -->
         <div th:replace="linkMenu"/>
+
+        <!-- サイドメニュー(View List) -->
+        <input id="view-block" type="checkbox" class="toggle" checked/>
+        <label class="Label" for="view-block">
+          <p class="h4 mb-0">
+            View Link
+          </p>
+        </label>
+        <div class="accordionContent">
+          <ul class="nav flex-column m-o p-3 bg-primary">
+            <li class="nav-item mb-2">
+              <div th:each="view: ${viewlist}">
+                <th:block th:if="${view.id == identifier}">
+                  <a class="list-group-item bg-warning" th:href="@{/(uuid=${view.id})}">
+                    [[${view.title}]]
+                    <span th:id="${view.id} + '_count'" class="badge rounded-pill bg-info text-dark"
+                          th:text="${view.count}"></span></a>
+                </th:block>
+                <th:block th:if="${!(view.id == identifier)}">
+                  <a class="list-group-item" th:href="@{/(uuid=${view.id})}">
+                    [[${view.title}]]
+                    <span th:id="${view.id} + '_count'" class="badge rounded-pill bg-info text-dark"
+                          th:text="${view.count}"></span></a>
+                </th:block>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Site List -->
         <input id="block-01" type="checkbox" value="" class="toggle" th:checked="${!#strings.isEmpty(identifier)}"/>
         <label class="Label" for="block-01">
           <p class="h4">
             Site List
           </p>
         </label>
+
         <div class="accordionContent">
           <ul class="nav flex-column m-o p-3 bg-primary">
             <li class="nav-item mb-2">
