@@ -14,6 +14,7 @@ import com.galewings.factory.FeedFactory;
 import com.galewings.factory.SiteFactory;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.SiteRepository;
+import com.galewings.repository.ViewsRepository;
 import com.galewings.service.GoogleAlertService;
 import com.galewings.service.GwDateService;
 import com.galewings.service.MachineLearningService;
@@ -40,6 +41,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -53,13 +55,13 @@ public class SiteFeedController {
      * SiteRepository
      */
     @Autowired
-    SiteRepository siteRepository;
+    private SiteRepository siteRepository;
 
     /**
      * FeedRepository
      */
     @Autowired
-    FeedRepository feedRepository;
+    private FeedRepository feedRepository;
 
     @Autowired
     private URLService urlService;
@@ -75,6 +77,9 @@ public class SiteFeedController {
 
     @Autowired
     private GoogleAlertService googleAlertService;
+
+    @Autowired
+    private ViewsRepository viewsRepository;
 
     /**
      * 対象サイトのフィードを取得
@@ -92,7 +97,11 @@ public class SiteFeedController {
         if (Strings.isNullOrEmpty(uuid)) {
             feeds = feedRepository.getAllFeed();
         } else {
-            feeds = feedRepository.getFeed(uuid);
+            if (Objects.isNull(viewsRepository.info(uuid))) {
+                feeds = feedRepository.getFeed(uuid);
+            } else {
+                feeds = feedRepository.getViewFeed(uuid);
+            }
         }
 
         ObjectMapper mapper = new ObjectMapper();
