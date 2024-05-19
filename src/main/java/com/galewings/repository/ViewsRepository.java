@@ -3,6 +3,7 @@ package com.galewings.repository;
 import com.galewings.dto.input.ViewSaveDto;
 import com.galewings.entity.Site;
 import com.galewings.entity.View;
+import com.galewings.entity.ViewFeedCount;
 import com.miragesql.miragesql.ClasspathSqlResource;
 import com.miragesql.miragesql.SqlManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,5 +68,10 @@ public class ViewsRepository {
         Map<String, String> param = new HashMap<>();
         param.put("viewsId", viewId);
         return sqlManager.getResultList(Site.class, new ClasspathSqlResource("sql/views/select_site_list.sql"), param);
+    }
+
+    public List<ViewFeedCount> getViewFeedCount() {
+        return sqlManager.getResultList(ViewFeedCount.class
+                , new ClasspathSqlResource("sql/views/select_all_views_count_feed.sql"));
     }
 }
