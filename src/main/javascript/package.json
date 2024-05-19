@@ -34,8 +34,8 @@
     "handlebars": "^4.7.8",
     "marked": "^12.0.0",
     "path-browserify": "^1.0.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
