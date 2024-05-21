@@ -8,8 +8,10 @@ import com.galewings.dto.UpdateFeedDto;
 import com.galewings.entity.Feed;
 import com.galewings.entity.Site;
 import com.galewings.entity.SiteFeedCount;
+import com.galewings.entity.View;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.SiteRepository;
+import com.galewings.repository.ViewsRepository;
 import com.galewings.service.GoogleAlertService;
 import com.galewings.service.URLService;
 import com.galewings.task.AutoUpdateTask;
@@ -44,6 +46,9 @@ class SiteFeedControllerTest {
 
     @Mock
     private GoogleAlertService googleAlertService;
+
+    @Mock
+    private ViewsRepository viewsRepository;
 
     @InjectMocks
     private SiteFeedController siteFeedController;
@@ -129,11 +134,25 @@ class SiteFeedControllerTest {
         when(siteRepository.getSiteFeedCount()).thenReturn(
                 List.of(new SiteFeedCount()));
         when(feedRepository.updateSiteFeedRead(anyString())).thenReturn(0);
+        when(viewsRepository.info(anyString())).thenReturn(null);
 
         String result = siteFeedController.readAllShowFeed(new ReadAllShowFeedDto());
         assertEquals("[{\"uuid\":null,\"title\":null,\"count\":0,\"faviconBase64\":null}]",
                 result);
     }
+
+    @Test
+    void testReadAllShowFeed2() throws JsonProcessingException {
+        when(siteRepository.getSiteFeedCount()).thenReturn(
+                List.of(new SiteFeedCount()));
+        when(feedRepository.updateSiteFeedRead(anyString())).thenReturn(0);
+        when(viewsRepository.info(anyString())).thenReturn(new View());
+
+        String result = siteFeedController.readAllShowFeed(new ReadAllShowFeedDto());
+        assertEquals("[{\"uuid\":null,\"title\":null,\"count\":0,\"faviconBase64\":null}]",
+                result);
+    }
+
 }
 
 //Generated with love by TestMe :) Please report issues and submit feature requests at: http://weirddev.com/forum#!/testme
