@@ -32,8 +32,8 @@
         </label>
         <div class="accordionContent">
           <ul class="nav flex-column m-o p-3 bg-primary">
-            <li class="nav-item mb-2">
-              <div th:each="view: ${viewlist}">
+            <li class="nav-item">
+              <div th:each="view: ${viewlist}" class="mb-1">
                 <th:block th:if="${view.id == identifier}">
                   <a class="list-group-item bg-warning" th:href="@{/(uuid=${view.id})}">
                     [[${view.title}]]
