@@ -240,12 +240,21 @@ public class SiteFeedController {
     public String readAllShowFeed(
             @RequestBody ReadAllShowFeedDto readAllShowFeedDto)
             throws JsonProcessingException {
-        feedRepository.updateSiteFeedRead(readAllShowFeedDto.getIdentifier());
 
-        List<SiteFeedCount> resultList = siteRepository.getSiteFeedCount();
+        if (Objects.isNull(viewsRepository.info(readAllShowFeedDto.getIdentifier()))) {
+            feedRepository.updateSiteFeedRead(readAllShowFeedDto.getIdentifier());
 
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(resultList);
+            List<SiteFeedCount> resultList = siteRepository.getSiteFeedCount();
+
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(resultList);
+        } else {
+            viewsRepository.selectSiteList(readAllShowFeedDto.getIdentifier()).stream()
+                    .forEach(site -> feedRepository.updateSiteFeedRead(site.uuid));
+
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(Collections.EMPTY_LIST);
+        }
 
     }
 
