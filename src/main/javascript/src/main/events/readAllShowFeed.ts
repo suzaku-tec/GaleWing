@@ -20,22 +20,14 @@ export default class ReadAllShowFeed implements IElementEvent {
       .post(uri.origin + '/readAllShowFeed', {
         identifier: identifier,
       })
-      .then((response) => {
-        // this.updateSiteFeedCount(response.data);
-        // this.grid
-        //   .updateConfig({
-        //     data: [],
-        //   })
-        //   .forceRender();
-        return;
-      })
       .catch((error) => {})
       .finally(() => {
         var site = getSite(identifier);
-        console.log(site);
-        if (site.next) {
+        if (site && site.next) {
           var anchor = <HTMLAnchorElement>site.next;
           location.href = anchor.href;
+        } else {
+          location.reload();
         }
       });
   }
