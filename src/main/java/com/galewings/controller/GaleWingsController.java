@@ -25,11 +25,15 @@ public class GaleWingsController {
     /**
      * SiteRepository
      */
-    @Autowired
-    private SiteRepository siteRepository;
+    private final SiteRepository siteRepository;
+
+    private final ViewsRepository viewsRepository;
 
     @Autowired
-    private ViewsRepository viewsRepository;
+    public GaleWingsController(SiteRepository siteRepository, ViewsRepository viewsRepository) {
+        this.siteRepository = siteRepository;
+        this.viewsRepository = viewsRepository;
+    }
 
     /**
      * 初期ページ
