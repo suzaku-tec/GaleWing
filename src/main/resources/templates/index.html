@@ -124,6 +124,9 @@
 
       <!-- 下のコンテンツ -->
       <div class="content p-3">
+        <div th:if="${selectSite != null}">
+          <h1 th:text="${selectSite.title}" class="bg-info text-center"></h1>
+        </div>
         <div>
           <!-- アイコン -->
           <div class="page-title border-bottom pb-2">
