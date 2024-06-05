@@ -85,7 +85,7 @@ class MinhonServiceTest {
         Response res = createOkHttp510Responce("hello world");
         Call call = mock(Call.class);
         when(client.newCall(any())).thenReturn(call);
-        Response tranRes = createOkHttpResponce("{resultset: { result: { text: \"hello world\"} } }");
+        Response tranRes = createOkHttpResponce("{resultset: { code: 0, result: { text: \"hello world\"} } }");
         Response oauthRes = createOkHttpResponce("{access_token: test}");
 
         Field accessTokenField = MinhonService.class.getDeclaredField("accessToken");
