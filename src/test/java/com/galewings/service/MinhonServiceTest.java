@@ -47,7 +47,7 @@ class MinhonServiceTest {
         when(call.execute()).thenReturn(res);
         when(client.newCall(any())).thenReturn(call);
         String result = minhonService.oauth();
-        Assertions.assertEquals("\"test\"", result);
+        Assertions.assertEquals("test", result);
     }
 
     @Test
@@ -55,7 +55,7 @@ class MinhonServiceTest {
         // 翻訳部分のモック化
         Call call = mock(Call.class);
         when(client.newCall(any())).thenReturn(call);
-        Response tranRes = createOkHttpResponce("{resultset: { result: { text: \"hello world\"} } }");
+        Response tranRes = createOkHttpResponce("{resultset: { code: 0, result: { text: \"hello world\"} } }");
         Response oauthRes = createOkHttpResponce("{access_token: test}");
 
         Field accessTokenField = MinhonService.class.getDeclaredField("accessToken");
