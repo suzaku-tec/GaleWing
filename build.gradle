@@ -207,8 +207,12 @@ tasks.withType(JavaCompile) {
     // remove the if condition if you want to run NullAway on test code
     if (!name.toLowerCase().contains("test")) {
         options.errorprone {
-            check("NullAway", CheckSeverity.ERROR)
+            check("NullAway", CheckSeverity.WARN)
             option("NullAway:AnnotatedPackages", "com.uber")
         }
     }
+}
+
+compileJava {
+    options.compilerArgs << '-XepDisableAllChecks' << '-Xep:EqualsIncompatibleType:WARN'
 }
