@@ -8,6 +8,7 @@ plugins {
 
     // we assume you are already using the Java plugin
     id "net.ltgt.errorprone" version "4.0.0"
+    id "net.ltgt.nullaway" version "2.0.0"
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -213,6 +214,18 @@ tasks.withType(JavaCompile) {
     }
 }
 
-compileJava {
-    options.compilerArgs << '-XepDisableAllChecks' << '-Xep:EqualsIncompatibleType:WARN'
+nullaway {
+    annotatedPackages.add("net.ltgt")
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.errorprone {
+        // 全てのチェックを無効化する。開発時は切り替える
+        // githubにコミットした場合のビルドで、チェックエラーになると困るので、nullawayでエラーが出なくなるまでは、これを残す or 切り替える
+        disableAllChecks = true
+    }
+
+    options.errorprone.nullaway {
+        error()
+    }
 }
