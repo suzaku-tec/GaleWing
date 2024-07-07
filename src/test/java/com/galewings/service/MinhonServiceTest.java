@@ -1,6 +1,8 @@
 package com.galewings.service;
 
+import com.galewings.exception.GaleWingsRuntimeException;
 import okhttp3.*;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +49,7 @@ class MinhonServiceTest {
         when(call.execute()).thenReturn(res);
         when(client.newCall(any())).thenReturn(call);
         String result = minhonService.oauth();
-        Assertions.assertEquals("\"test\"", result);
+        Assertions.assertEquals("test", result);
     }
 
     @Test
@@ -55,7 +57,7 @@ class MinhonServiceTest {
         // 翻訳部分のモック化
         Call call = mock(Call.class);
         when(client.newCall(any())).thenReturn(call);
-        Response tranRes = createOkHttpResponce("{resultset: { result: { text: \"hello world\"} } }");
+        Response tranRes = createOkHttpResponce("{resultset: { code: 0, result: { text: \"hello world\"} } }");
         Response oauthRes = createOkHttpResponce("{access_token: test}");
 
         Field accessTokenField = MinhonService.class.getDeclaredField("accessToken");
@@ -85,7 +87,7 @@ class MinhonServiceTest {
         Response res = createOkHttp510Responce("hello world");
         Call call = mock(Call.class);
         when(client.newCall(any())).thenReturn(call);
-        Response tranRes = createOkHttpResponce("{resultset: { result: { text: \"hello world\"} } }");
+        Response tranRes = createOkHttpResponce("{resultset: { code: 0, result: { text: \"hello world\"} } }");
         Response oauthRes = createOkHttpResponce("{access_token: test}");
 
         Field accessTokenField = MinhonService.class.getDeclaredField("accessToken");
@@ -100,6 +102,62 @@ class MinhonServiceTest {
         minhonService.oauth();
         String result = minhonService.transelate("text");
         Assertions.assertEquals("hello world", result);
+    }
+
+    /**
+     * 翻訳：再認証あり
+     *
+     * @throws IOException
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    @Test
+    void testTranselate4() throws IOException, NoSuchFieldException, IllegalAccessException {
+        // 翻訳部分のモック化
+        Call call = mock(Call.class);
+        when(client.newCall(any())).thenReturn(call);
+        Response tranRes = createOkHttpResponce("{resultset: { code: 0, result: { text: \"hello world\"} } }");
+        Response oauthRes = createOkHttpResponce("{access_token: test}");
+
+        Field accessTokenField = MinhonService.class.getDeclaredField("accessToken");
+        accessTokenField.setAccessible(true);
+        AtomicReference<String> accessToken = (AtomicReference<String>) accessTokenField.get(minhonService);
+        accessToken.set(null);
+        if (!Objects.isNull(accessToken) && !Objects.isNull(accessToken.get())) {
+            when(call.execute()).thenReturn(tranRes);
+        } else {
+            when(call.execute()).thenReturn(oauthRes).thenReturn(tranRes);
+        }
+
+        minhonService.oauth();
+        String result = minhonService.transelate("text");
+        Assertions.assertEquals("hello world", result);
+    }
+
+    @Test
+    void testTranselate5() throws IOException, NoSuchFieldException, IllegalAccessException {
+        // 翻訳部分のモック化
+        Call call = mock(Call.class);
+        when(client.newCall(any())).thenReturn(call);
+        Response tranRes = createOkHttpResponce("{resultset: { code: 510, result: { text: \"hello world\"} } }");
+        Response oauthRes = createOkHttpResponce("{access_token: test}");
+
+        Field accessTokenField = MinhonService.class.getDeclaredField("accessToken");
+        accessTokenField.setAccessible(true);
+        AtomicReference<String> accessToken = (AtomicReference<String>) accessTokenField.get(minhonService);
+        if (!Objects.isNull(accessToken) && !Objects.isNull(accessToken.get())) {
+            when(call.execute()).thenReturn(tranRes);
+        } else {
+            when(call.execute()).thenReturn(oauthRes).thenReturn(tranRes);
+        }
+
+        minhonService.oauth();
+        try {
+            minhonService.transelate("text");
+            Assert.fail();
+        } catch (GaleWingsRuntimeException e) {
+            // 想定通り
+        }
     }
 
     private Response createOkHttpResponce(String body) {

@@ -1,5 +1,6 @@
 package com.galewings.controller;
 
+import com.galewings.entity.Site;
 import com.galewings.entity.SiteFeedCount;
 import com.galewings.entity.ViewFeedCount;
 import com.galewings.repository.SiteRepository;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * GaleWingsController
@@ -23,11 +25,15 @@ public class GaleWingsController {
     /**
      * SiteRepository
      */
-    @Autowired
-    private SiteRepository siteRepository;
+    private final SiteRepository siteRepository;
+
+    private final ViewsRepository viewsRepository;
 
     @Autowired
-    private ViewsRepository viewsRepository;
+    public GaleWingsController(SiteRepository siteRepository, ViewsRepository viewsRepository) {
+        this.siteRepository = siteRepository;
+        this.viewsRepository = viewsRepository;
+    }
 
     /**
      * 初期ページ
@@ -45,6 +51,11 @@ public class GaleWingsController {
 
         List<ViewFeedCount> viewFeedCountList = viewsRepository.getViewFeedCount();
         model.addAttribute("viewlist", viewFeedCountList);
+
+        if (!Objects.isNull(uuid)) {
+            Site site = siteRepository.getSite(uuid);
+            model.addAttribute("selectSite", site);
+        }
 
         return "index";
     }
