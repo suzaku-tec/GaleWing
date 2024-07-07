@@ -119,7 +119,7 @@ function createBadge(uuid: string, title: string) {
   spanEl.classList.add("m-2")
 
   const closeBtnEl = document.createElement("button");
-  closeBtnEl.classList.add("btn-close", "ms-2", "bottom-50 end-50");
+  closeBtnEl.classList.add("btn-close", "ms-2", "bottom-50", "end-50");
   closeBtnEl.ariaLabel = "Close";
   closeBtnEl.type = "button";
   closeBtnEl.addEventListener("click", () => {spanEl.remove()})
