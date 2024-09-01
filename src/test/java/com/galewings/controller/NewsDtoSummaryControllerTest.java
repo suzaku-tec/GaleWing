@@ -15,7 +15,7 @@ import java.util.List;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
 
-class NewsSummaryControllerTest {
+class NewsDtoSummaryControllerTest {
     @Mock
     NewsSummaryRepository newsSummaryRepository;
     @InjectMocks
