@@ -8,10 +8,13 @@ import org.apache.http.client.utils.URIBuilder;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,6 +69,18 @@ public class URLService {
         }
 
         return uriBuilder.build();
+    }
+
+    public URI buildQueryStringURI(String baseUrl, Object queryParamDto) throws URISyntaxException, IllegalAccessException {
+        Map<String, String> params = new HashMap<>();
+        for (Field field : queryParamDto.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            Object value = field.get(queryParamDto);
+            if (!Objects.isNull(value)) {
+                params.put(field.getName(), String.valueOf(value));
+            }
+        }
+        return buildQueryStringURI(baseUrl, params);
     }
 
     private String appendPath(String base, String addPath) {
