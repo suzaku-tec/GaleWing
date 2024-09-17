@@ -27,18 +27,6 @@ public class NewsApiService {
         this.restClient = restClient;
     }
 
-    public enum ResponseStatus {
-        ERROR("error"),
-        SUCCESS("ok"),
-        ;
-
-        public final String status;
-
-        ResponseStatus(String status) {
-            this.status = status;
-        }
-    }
-
     public NewsApiResponseDto topHeadlines() throws URISyntaxException, IOException, IllegalAccessException {
 
         OptionalRequestParam optionalRequestParam = new OptionalRequestParam();
