@@ -1,5 +1,6 @@
 package com.galewings.controller;
 
+import com.galewings.ModelMock;
 import com.galewings.dto.newsapi.response.NewsApiResponseDto;
 import com.galewings.service.NewsApiService;
 import org.junit.jupiter.api.Assertions;
@@ -28,9 +29,9 @@ class NewsApiControllerTest {
     @Test
     void testIndex() throws URISyntaxException, IOException, IllegalAccessException {
         when(newsApiService.topHeadlines()).thenReturn(new NewsApiResponseDto());
-
-        String result = newsApiController.index(null);
-        Assertions.assertEquals("replaceMeWithExpectedResult", result);
+        ModelMock modelMock = new ModelMock();
+        String result = newsApiController.index(modelMock);
+        Assertions.assertEquals("newsApi", result);
     }
 }
 
