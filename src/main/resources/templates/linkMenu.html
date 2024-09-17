@@ -44,4 +44,7 @@
   <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('worldNewsApi') eq '1'}">
     <a class="list-group-item" href="/worldNews/">worldNews</a>
   </li>
+  <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('newsApi') eq '1'}">
+    <a class="list-group-item" href="/newsApi/">newsApi</a>
+  </li>
 </ul>
