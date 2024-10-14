@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="Description" content="Enter your description here"/>
+  <script th:src="@{/js/viewSetting.js}"></script>
+  <link rel="stylesheet" th:href="@{/style.css}">
+  <title>GalwWing</title>
+
+</head>
+
+<body>
+<!-- 全ページを囲む要素 -->
+<main class="container mw-100" role="main">
+  <div class="row">
+    <input type="hidden" id="identifier" value="" th:value="${identifier}">
+
+    <!-- サイトバーメニュー -->
+    <nav class="sidebar col-md-3" id="sidemenu">
+      <div th:replace="linkMenu"/>
+    </nav>
+    <!-- サイトバーメニュー -->
+
+    <!-- 全ページの右のコンテンツ -->
+    <div class="col-md-9" id="mainContent">
+
+      <!-- トップバー -->
+      <nav class="navbar px-3 bg-light border-bottom shadow-sm">
+        <div class="navbar-brand toggle-menu">
+          <button class="btn btn-light btn-sm" id="sidebarToggler">
+            <i class="fas fa-bars fa-lg"></i>
+          </button>
+        </div>
+        <ul class="navbar-nav">
+          <li class="nav-item ml-3 text-muted">
+            Home
+          </li>
+          <li class="nav-item ml-3 text-muted">
+            Test
+          </li>
+          <li class="nav-item ml-3 text-muted">
+            Login
+          </li>
+        </ul>
+        <ul class="nav nav-tabs">
+          <li class="nav-item" id="gridLayoutItem">
+            <div class="nav-link active" aria-current="page" data-layout="gridLayout">
+              <i class="fas fa-th"></i>
+            </div>
+          </li>
+          <li class="nav-item" id="cardLayoutItem">
+            <div class="nav-link" aria-current="page" data-layout="cardLayout">
+              <i class="fas fa-id-card"></i>
+            </div>
+          </li>
+        </ul>
+      </nav>
+      <!-- トップバー -->
+
+      <!-- 下のコンテンツ -->
+      <div class="content p-3">
+        <div>
+
+          <!-- メインコンテンツ -->
+          <div id="main">
+            <ul class="card-list">
+              <th:block th:each="news : ${newsApiResponseDto.articles}">
+                <li class="card-item">
+                  <a th:href="${news.url}">
+                    <div class="card_img-area">
+                      <img th:src="${news.urlToImage}" alt=""
+                           style="display: block; width: 100%; height: auto;">
+                    </div>
+                    <div class="text-area">
+                      <h3 class="card_title" th:text="${news.title}">タイトル</h3>
+                    </div>
+                  </a>
+                </li>
+              </th:block>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+      <!-- 下のコンテンツ -->
+
+    </div>
+    <!-- 全ページの右のコンテンツ -->
+
+  </div>
+</main>
+
+<!-- 全ページを囲む要素 -->
+</body>
+
+</html>

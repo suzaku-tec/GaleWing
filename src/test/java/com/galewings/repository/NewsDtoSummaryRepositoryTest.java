@@ -14,7 +14,7 @@ import java.util.List;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
-class NewsSummaryRepositoryTest {
+class NewsDtoSummaryRepositoryTest {
     @Mock
     SqlManager sqlManager;
     @InjectMocks
