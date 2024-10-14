@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -27,7 +26,7 @@ public class NewsApiService {
         this.restClient = restClient;
     }
 
-    public NewsApiResponseDto topHeadlines() throws URISyntaxException, IOException, IllegalAccessException {
+    public NewsApiResponseDto topHeadlines() throws IOException {
 
         OptionalRequestParam optionalRequestParam = new OptionalRequestParam();
         optionalRequestParam.country = "us";
