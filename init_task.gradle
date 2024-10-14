@@ -1,0 +1,4 @@
+task initEnv(type: JavaExec) {
+    mainClass = 'com.galewings.task.gradle.InitEnv'
+    classpath = sourceSets.main.runtimeClasspath
+}
