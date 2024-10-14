@@ -91,7 +91,7 @@ class NewsApiServiceTest {
         param.category = "test";
 
         try {
-            NewsApiResponseDto result = newsApiService.topHeadlines(param);
+            newsApiService.topHeadlines(param);
             fail("Should throw GaleWingsSystemException");
         } catch (GaleWingsSystemException e) {
             Assertions.assertEquals("newsapi.api-key not found. add .env file", e.getMessage());
