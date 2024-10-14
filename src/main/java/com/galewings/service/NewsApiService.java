@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -27,7 +26,7 @@ public class NewsApiService {
         this.restClient = restClient;
     }
 
-    public NewsApiResponseDto topHeadlines() throws URISyntaxException, IOException, IllegalAccessException {
+    public NewsApiResponseDto topHeadlines() throws IOException {
 
         OptionalRequestParam optionalRequestParam = new OptionalRequestParam();
         optionalRequestParam.country = "us";
@@ -35,9 +34,9 @@ public class NewsApiService {
         return topHeadlines(optionalRequestParam);
     }
 
-    public NewsApiResponseDto topHeadlines(OptionalRequestParam optionalRequestParam) throws URISyntaxException, IllegalAccessException, IOException {
+    public NewsApiResponseDto topHeadlines(OptionalRequestParam optionalRequestParam) throws IOException {
         if (Objects.isNull(apiKey)) {
-            throw new GaleWingsSystemException("wordNews.api-key not found. add .env file");
+            throw new GaleWingsSystemException("newsapi.api-key not found. add .env file");
         }
 
         Map<String, String> param = optionalRequestParam.queryParamMap();
