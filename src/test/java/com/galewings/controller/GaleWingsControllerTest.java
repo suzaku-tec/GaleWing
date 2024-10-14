@@ -2,7 +2,9 @@ package com.galewings.controller;
 
 import com.galewings.ModelMock;
 import com.galewings.entity.SiteFeedCount;
+import com.galewings.entity.ViewFeedCount;
 import com.galewings.repository.SiteRepository;
+import com.galewings.repository.ViewsRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +19,10 @@ import static org.mockito.Mockito.when;
 class GaleWingsControllerTest {
     @Mock
     SiteRepository siteRepository;
+
+    @Mock
+    private ViewsRepository viewsRepository;
+
     @InjectMocks
     GaleWingsController galeWingsController;
 
@@ -28,6 +34,7 @@ class GaleWingsControllerTest {
     @Test
     void testIndex() {
         when(siteRepository.getSiteFeedCount()).thenReturn(List.of(new SiteFeedCount()));
+        when(viewsRepository.getViewFeedCount()).thenReturn(List.of(new ViewFeedCount()));
 
         ModelMock modelMock = new ModelMock();
         String result = galeWingsController.index(modelMock, "uuid");
