@@ -32,8 +32,8 @@
         </label>
         <div class="accordionContent">
           <ul class="nav flex-column m-o p-3 bg-primary">
-            <li class="nav-item mb-2">
-              <div th:each="view: ${viewlist}">
+            <li class="nav-item">
+              <div th:each="view: ${viewlist}" class="mb-1">
                 <th:block th:if="${view.id == identifier}">
                   <a class="list-group-item bg-warning" th:href="@{/(uuid=${view.id})}">
                     [[${view.title}]]
@@ -124,6 +124,9 @@
 
       <!-- 下のコンテンツ -->
       <div class="content p-3">
+        <div th:if="${selectSite != null}">
+          <h1 th:text="${selectSite.title}" class="bg-info text-center"></h1>
+        </div>
         <div>
           <!-- アイコン -->
           <div class="page-title border-bottom pb-2">

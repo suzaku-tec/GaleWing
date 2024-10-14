@@ -1,5 +1,6 @@
 package com.galewings.service;
 
+import com.galewings.exception.GaleWingsRuntimeException;
 import com.google.common.base.Strings;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -73,7 +74,7 @@ public class MinhonService {
             try {
                 Response response = okHttpClient.newCall(request).execute();
                 String token = JsonParser.parseString(Objects.requireNonNull(response.body()).string()).getAsJsonObject().get(
-                        "access_token").toString();
+                        "access_token").getAsString();
                 accessToken.set(token);
             } catch (IOException e) {
                 // 何もしない
@@ -103,21 +104,31 @@ public class MinhonService {
         }
 
         JsonElement jsonObject = JsonParser.parseString(Objects.requireNonNull(response.body()).string()).getAsJsonObject();
+
+        int code = Integer.parseInt(getValueForPath(jsonObject, "resultset.code"));
+        if (510 <= code && code <= 533) {
+            throw new GaleWingsRuntimeException("Minhon transelate error. " + jsonObject);
+        }
+
         return getValueForPath(jsonObject, "resultset.result.text");
     }
 
     private Response generalNTJaEn(String text) throws IOException {
         RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                .addFormDataPart("key", key)
-                .addFormDataPart("name", name)
-                .addFormDataPart("text", text)
                 .addFormDataPart("type", "json")
-                .addFormDataPart("api_name", "mt")
-                .addFormDataPart("api_param", ENGINE_EN_JA)
-                .addFormDataPart("access_token", accessToken.get())
                 .build();
+        String url = "https://mt-auto-minhon-mlt.ucri.jgn-x.jp/api/";
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
+        urlBuilder.addQueryParameter("key", key)
+                .addQueryParameter("name", name)
+                .addQueryParameter("text", text)
+                .addQueryParameter("type", "json")
+                .addQueryParameter("api_name", "mt")
+                .addQueryParameter("api_param", ENGINE_EN_JA)
+                .addQueryParameter("access_token", accessToken.get());
+
         Request request = new Request.Builder()
-                .url("https://mt-auto-minhon-mlt.ucri.jgn-x.jp/api/")
+                .url(urlBuilder.build())
                 .method("POST", body)
                 .build();
         return okHttpClient.newCall(request).execute();
