@@ -37,7 +37,7 @@ public class NewsApiService {
 
     public NewsApiResponseDto topHeadlines(OptionalRequestParam optionalRequestParam) throws URISyntaxException, IllegalAccessException, IOException {
         if (Objects.isNull(apiKey)) {
-            throw new GaleWingsSystemException("wordNews.api-key not found. add .env file");
+            throw new GaleWingsSystemException("newsapi.api-key not found. add .env file");
         }
 
         Map<String, String> param = optionalRequestParam.queryParamMap();
