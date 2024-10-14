@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -23,8 +22,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 class NewsApiServiceTest {
-    @Mock
-    RestClient restClient;
+
     @InjectMocks
     NewsApiService newsApiService;
 
@@ -43,7 +41,7 @@ class NewsApiServiceTest {
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess().body("{\"status\":\"ok\",\"totalResults\":4145,\"articles\":[{\"source\":{\"id\":null,\"name\":\"ETFDailyNews\"},\"author\":\"MarketBeatNews\",\"title\":\"test\",\"description\":\"test description\",\"url\":\"https://localhost\",\"urlToImage\": null,\"publishedAt\":\"2024-09-17T08:44:33Z\",\"content\":\"test\"}]}"));
 
-        var restClient = restClientBuilder.build();
+        RestClient restClient = restClientBuilder.build();
         newsApiService = new NewsApiService(restClient);
         ReflectionTestUtils.setField(newsApiService, "apiKey", apiKey);
         NewsApiResponseDto result = newsApiService.topHeadlines();
@@ -53,7 +51,7 @@ class NewsApiServiceTest {
     }
 
     @Test
-    void testTopHeadlines2() throws URISyntaxException, IOException, IllegalAccessException {
+    void testTopHeadlines2() throws IOException {
         String apiKey = "test";
 
         var restClientBuilder = RestClient.builder();
@@ -62,7 +60,7 @@ class NewsApiServiceTest {
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess().body("{\"status\":\"ok\",\"totalResults\":4145,\"articles\":[{\"source\":{\"id\":null,\"name\":\"ETFDailyNews\"},\"author\":\"MarketBeatNews\",\"title\":\"test\",\"description\":\"test description\",\"url\":\"https://localhost\",\"urlToImage\": null,\"publishedAt\":\"2024-09-17T08:44:33Z\",\"content\":\"test\"}]}"));
 
-        var restClient = restClientBuilder.build();
+        RestClient restClient = restClientBuilder.build();
         newsApiService = new NewsApiService(restClient);
         ReflectionTestUtils.setField(newsApiService, "apiKey", apiKey);
         OptionalRequestParam param = new OptionalRequestParam();
@@ -76,7 +74,7 @@ class NewsApiServiceTest {
     }
 
     @Test
-    void testNoApikey() throws URISyntaxException, IOException, IllegalAccessException {
+    void testNoApikey() throws IOException {
         String apiKey = null;
 
         var restClientBuilder = RestClient.builder();
@@ -85,7 +83,7 @@ class NewsApiServiceTest {
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess().body("{\"status\":\"ok\",\"totalResults\":4145,\"articles\":[{\"source\":{\"id\":null,\"name\":\"ETFDailyNews\"},\"author\":\"MarketBeatNews\",\"title\":\"test\",\"description\":\"test description\",\"url\":\"https://localhost\",\"urlToImage\": null,\"publishedAt\":\"2024-09-17T08:44:33Z\",\"content\":\"test\"}]}"));
 
-        var restClient = restClientBuilder.build();
+        RestClient restClient = restClientBuilder.build();
         newsApiService = new NewsApiService(restClient);
         ReflectionTestUtils.setField(newsApiService, "apiKey", apiKey);
         OptionalRequestParam param = new OptionalRequestParam();
