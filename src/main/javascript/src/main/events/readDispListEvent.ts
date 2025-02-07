@@ -20,6 +20,9 @@ export default class ReadDispListEvent implements IElementEvent {
       });
 
       GaleWingApi.getInstance().readDispList(urls);
+      let targetBadge = <HTMLSpanElement> document.querySelector('a.bg-warning span.badge');
+      const cnt = targetBadge?.innerText;
+      if(Number(cnt)) targetBadge.innerText = String(Number(cnt) - urls.length);
 
       GaleWingGrid.getInstance().setStopRowClickFlg(false);
   }
