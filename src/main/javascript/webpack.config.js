@@ -25,7 +25,8 @@ const config = {
     circulation: "./src/main/screen/circulation/index.ts",
     newsSummary: "./src/main/screen/news/newsSummary.ts",
     functionCtrl: "./src/main/screen/functionCtrl/index.ts",
-    viewSetting: "./src/main/screen/viewsSetting/index.ts"
+    viewSetting: "./src/main/screen/viewsSetting/index.ts",
+    shortcutter: "./src/main/screen/shortcutter.ts"
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
