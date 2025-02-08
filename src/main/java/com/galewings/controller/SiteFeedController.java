@@ -6,6 +6,7 @@ import com.galewings.dto.AddFeedDto;
 import com.galewings.dto.ReadAllShowFeedDto;
 import com.galewings.dto.ReadDto;
 import com.galewings.dto.UpdateFeedDto;
+import com.galewings.dto.input.ReadListFeedDto;
 import com.galewings.dto.output.FeedUpdate;
 import com.galewings.entity.Feed;
 import com.galewings.entity.Site;
@@ -19,6 +20,7 @@ import com.galewings.service.GoogleAlertService;
 import com.galewings.service.GwDateService;
 import com.galewings.service.MachineLearningService;
 import com.galewings.service.URLService;
+import com.galewings.service.async.QueueUrlReadAsyncService;
 import com.galewings.task.AutoUpdateTask;
 import com.google.common.base.Strings;
 import com.rometools.rome.feed.synd.SyndFeed;
@@ -80,6 +82,9 @@ public class SiteFeedController {
 
     @Autowired
     private ViewsRepository viewsRepository;
+
+    @Autowired
+    private QueueUrlReadAsyncService queueUrlReadAsyncService;
 
     /**
      * 対象サイトのフィードを取得
@@ -256,6 +261,17 @@ public class SiteFeedController {
             return mapper.writeValueAsString(Collections.EMPTY_LIST);
         }
 
+    }
+
+    @PostMapping(value = "/readListFeed", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void readListFeed(@RequestBody ReadListFeedDto readListFeedDto) {
+        readListFeedDto.urls.forEach(url -> {
+            feedRepository.insertReadListQueue(url);
+        });
+
+        // 非同期でURL既読処理を流す
+        queueUrlReadAsyncService.asyncMethod();
     }
 
     /**
