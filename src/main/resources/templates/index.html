@@ -71,7 +71,7 @@
             </li>
             <li class="mb-2" id="siteList">
               <div th:each="site: ${sitelist}">
-                <th:block th:if="${site.uuid == identifier}">
+                <th:block th:if="${site.uuid == identifier && site.count > 0}">
                   <a href="" class="list-group-item bg-warning" th:id="${site.uuid}"
                      th:href="@{/(uuid=${site.uuid})}"> <img
                     th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16" height="16">
@@ -79,7 +79,7 @@
                     <span th:id="${site.uuid} + '_count'"
                           class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
                 </th:block>
-                <th:block th:if="${!(site.uuid == identifier)}">
+                <th:block th:if="${!(site.uuid == identifier) && site.count > 0}">
                   <a href="" class="list-group-item" th:id="${site.uuid}"
                      th:href="@{/(uuid=${site.uuid})}"> <img
                     th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16" height="16">
@@ -193,7 +193,7 @@
               </div>
             </div>
             <ul class="dropdown-menu" aria-labelledby="mdBtn">
-              <li><a class="dropdown-item" href="#" id="mdTitleList">title list</a></li>
+              <li><a class="dropdown-item" href="#" id="mdTitleList" data-shortcut-key="ctrl+alt+t">title list</a></li>
               <li><a class="dropdown-item" href="#" id="mdListTable">list table</a></li>
             </ul>
             <div id="wrapper"></div>
@@ -278,4 +278,5 @@
 <div id="playWav"></div>
 </body>
 
+<script src="/js/shortcutter.js"></script>
 </html>
