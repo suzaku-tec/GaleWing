@@ -1,21 +1,19 @@
 package com.galewings.repository;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 import com.galewings.entity.Feed;
 import com.galewings.entity.Site;
 import com.miragesql.miragesql.SqlManager;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.GregorianCalendar;
-import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.util.*;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 class FeedRepositoryTest {
 
@@ -81,7 +79,7 @@ class FeedRepositoryTest {
   void testSelectPublicDateFrom() {
     when(sqlManager.getResultList(any(), any(), any())).thenReturn(Collections.emptyList());
     List<Feed> result = feedRepository.selectPublicDateFrom(
-        new GregorianCalendar(2023, Calendar.FEBRUARY, 26, 2, 31).getTime());
+            new GregorianCalendar(2023, Calendar.FEBRUARY, 26, 2, 31).getTime());
     Assertions.assertEquals(Collections.emptyList(), result);
   }
 
@@ -96,6 +94,24 @@ class FeedRepositoryTest {
   void testDeleteReadFeed() {
     when(sqlManager.executeUpdate(any(), any())).thenReturn(0);
     feedRepository.deleteReadFeed("1");
+  }
+
+  @Test
+  void testInsertReadListQueue() {
+    when(sqlManager.executeUpdate(any(), any())).thenReturn(0);
+    feedRepository.insertReadListQueue("link");
+  }
+
+  @Test
+  void testSelectReadListQueue() {
+    when(sqlManager.getResultList(any(), any())).thenReturn(new ArrayList<>());
+    feedRepository.selectReadListQueue();
+  }
+
+  @Test
+  void testDeleteReadListQueue() {
+    when(sqlManager.executeUpdate(any(), any())).thenReturn(0);
+    feedRepository.deleteReadListQueue("test");
   }
 }
 
