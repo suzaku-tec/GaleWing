@@ -176,4 +176,22 @@ public class FeedRepository {
         return sqlManager.getResultList(Feed.class,
                 new ClasspathSqlResource("sql/feed/select_view_feed_for_uuid.sql"), params);
     }
+
+    public void insertReadListQueue(String url) {
+        Map<String, String> params = new HashMap<>();
+        params.put("url", url);
+        sqlManager.executeUpdate(new ClasspathSqlResource("sql/feed/insert_read_list_queue.sql"), params);
+    }
+
+    public List<String> selectReadListQueue() {
+        return sqlManager.getResultList(
+                String.class,
+                new ClasspathSqlResource("sql/feed/select_read_list_queue.sql"));
+    }
+
+    public int deleteReadListQueue(String url) {
+        Map<String, String> params = new HashMap<>();
+        params.put("url", url);
+        return sqlManager.executeUpdate(new ClasspathSqlResource("sql/feed/delete_read_list_queue.sql"), params);
+    }
 }
