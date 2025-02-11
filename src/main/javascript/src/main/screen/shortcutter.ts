@@ -16,15 +16,15 @@ export class Shortcutter {
 
         const keys = shortcut.dataset.shortcutKey?.split('+');
 
-        if(event.ctrlKey && !keys?.includes('ctrl')) {
+        if(!event.ctrlKey && keys?.includes('ctrl')) {
           return false;
         }
 
-        if(event.shiftKey && !keys?.includes('shift')) {
+        if(!event.shiftKey && keys?.includes('shift')) {
           return false;
         }
 
-        if(event.altKey && !keys?.includes('alt')) {
+        if(!event.altKey && keys?.includes('alt')) {
           return false;
         }
 
