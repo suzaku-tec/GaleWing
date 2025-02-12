@@ -37,32 +37,32 @@ public class ViewsRepository {
     return sqlManager.insertEntity(view);
   }
 
-  public void insertView(ViewSaveDto viewSaveDto) {
+  public int insertView(ViewSaveDto viewSaveDto) {
     Map<String, String> param = new HashMap<>();
     param.put("id", viewSaveDto.viewId);
     param.put("viewName", viewSaveDto.viewName);
-    sqlManager.executeUpdate(new ClasspathSqlResource("sql/views/insert_views.sql"), param);
+    return sqlManager.executeUpdate(new ClasspathSqlResource("sql/views/insert_views.sql"), param);
   }
 
-  public void insertViewSite(ViewSaveDto viewSaveDto, String siteUuid) {
+  public int insertViewSite(ViewSaveDto viewSaveDto, String siteUuid) {
     Map<String, String> param = new HashMap<>();
     param.put("viewsId", viewSaveDto.viewId);
     param.put("siteUuid", siteUuid);
-    sqlManager.executeUpdate(new ClasspathSqlResource("sql/views/insert_views_site.sql"), param);
+    return sqlManager.executeUpdate(new ClasspathSqlResource("sql/views/insert_views_site.sql"), param);
   }
 
-  public void updateView(ViewSaveDto viewSaveDto) {
+  public int updateView(ViewSaveDto viewSaveDto) {
     Map<String, String> param = new HashMap<>();
     param.put("id", UUID.randomUUID().toString());
     param.put("viewName", viewSaveDto.viewName);
-    sqlManager.executeUpdate(new ClasspathSqlResource("sql/views/update_views.sql"), param);
+    return sqlManager.executeUpdate(new ClasspathSqlResource("sql/views/update_views.sql"), param);
   }
 
-  public void updateViewSite(ViewSaveDto viewSaveDto, String siteUuid) {
+  public int updateViewSite(ViewSaveDto viewSaveDto, String siteUuid) {
     Map<String, String> param = new HashMap<>();
     param.put("viewsId", viewSaveDto.viewId);
     param.put("siteUuid", siteUuid);
-    sqlManager.executeUpdate(new ClasspathSqlResource("sql/views/update_views_site.sql"), param);
+    return sqlManager.executeUpdate(new ClasspathSqlResource("sql/views/update_views_site.sql"), param);
   }
 
   public List<Site> selectSiteList(String viewId) {
@@ -83,9 +83,9 @@ public class ViewsRepository {
             , new ClasspathSqlResource("sql/views/select_view_site_list.sql"), param);
   }
 
-  public void deleteViewSite(String viewId) {
+  public int deleteViewSite(String viewId) {
     Map<String, String> param = new HashMap<>();
     param.put("viewId", viewId);
-    sqlManager.executeUpdate(new ClasspathSqlResource("sql/views/delete_view_site.sql"), param);
+    return sqlManager.executeUpdate(new ClasspathSqlResource("sql/views/delete_view_site.sql"), param);
   }
 }

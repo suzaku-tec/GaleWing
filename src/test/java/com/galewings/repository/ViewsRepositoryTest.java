@@ -61,28 +61,32 @@ class ViewsRepositoryTest {
   void testInsertView() {
     when(sqlManager.executeUpdate(any(SqlResource.class), any())).thenReturn(0);
 
-    viewsRepository.insertView(new ViewSaveDto());
+    int result = viewsRepository.insertView(new ViewSaveDto());
+    Assertions.assertEquals(0, result);
   }
 
   @Test
   void testInsertViewSite() {
     when(sqlManager.executeUpdate(any(SqlResource.class), any())).thenReturn(0);
 
-    viewsRepository.insertViewSite(new ViewSaveDto(), "siteUuid");
+    int result = viewsRepository.insertViewSite(new ViewSaveDto(), "siteUuid");
+    Assertions.assertEquals(0, result);
   }
 
   @Test
   void testUpdateView() {
     when(sqlManager.executeUpdate(any(SqlResource.class), any(Object.class))).thenReturn(0);
 
-    viewsRepository.updateView(new ViewSaveDto());
+    int result = viewsRepository.updateView(new ViewSaveDto());
+    Assertions.assertEquals(0, result);
   }
 
   @Test
   void testUpdateViewSite() {
     when(sqlManager.executeUpdate(any(SqlResource.class), any(Object.class))).thenReturn(0);
 
-    viewsRepository.updateViewSite(new ViewSaveDto(), "siteUuid");
+    int result = viewsRepository.updateViewSite(new ViewSaveDto(), "siteUuid");
+    Assertions.assertEquals(0, result);
   }
 
   @Test
@@ -111,7 +115,8 @@ class ViewsRepositoryTest {
   @Test
   void testDeleteViewSite() {
     when(sqlManager.executeUpdate(any(SqlResource.class), any(Object.class))).thenReturn(0);
-    viewsRepository.deleteViewSite("viewId");
+    int result = viewsRepository.deleteViewSite("viewId");
+    Assertions.assertEquals(0, result);
   }
 }
 

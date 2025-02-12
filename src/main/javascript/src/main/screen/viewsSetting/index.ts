@@ -165,24 +165,28 @@ function convertTableToJson(headerConfig : HeaderConfig[], table: HTMLTableEleme
   let json = [];
 
   for(var rowIndex = 0; rowIndex < table.rows.length; rowIndex++) {
-    var row = table.rows[rowIndex];
+    const row = table.rows[rowIndex];
     let rowData:any = {};
 
     for(var cellIndex = 0; cellIndex < headerConfig.length; cellIndex++) {
-      var cell = row.cells[cellIndex];
+      const cell = row.cells[cellIndex];
       const id = headerConfig[cellIndex].id;
 
-      if(headerConfig[cellIndex].type === "checkbox") {
-        rowData[id] = (<HTMLInputElement>cell?.firstChild)?.checked;
-      } else {
-        rowData[id] = cell.innerText;
-      }
+      rowData[id] = getCellValue(headerConfig[cellIndex], cell);
     }
 
     json.push(rowData);
   }
 
   return json;
+}
+
+function getCellValue(config: HeaderConfig, cell: HTMLTableCellElement) {
+  if(config.type === "checkbox") {
+    return (<HTMLInputElement>cell?.firstChild)?.checked;
+  } else {
+    return cell.innerText;
+  }
 }
 
 interface HeaderConfig {
