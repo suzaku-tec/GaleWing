@@ -64,8 +64,8 @@ class ViewsControllerTest {
 
   @Test
   void testSave_insert() {
-    doNothing().when(viewsRepository).insertView(any());
-    doNothing().when(viewsRepository).insertViewSite(any(), anyString());
+    when(viewsRepository.insertView(any())).thenReturn(0);
+    when(viewsRepository.insertViewSite(any(), anyString())).thenReturn(0);
 
     ViewSaveDto dto = new ViewSaveDto();
     dto.siteIdList = List.of("");
