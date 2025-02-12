@@ -76,8 +76,8 @@ class ViewsControllerTest {
 
   @Test
   void testSave_update() {
-    doNothing().when(viewsRepository).deleteViewSite(any());
-    doNothing().when(viewsRepository).insertViewSite(any(), anyString());
+    when(viewsRepository.deleteViewSite(anyString())).thenReturn(0);
+    when(viewsRepository.insertViewSite(any(), anyString())).thenReturn(0);
 
     ViewSaveDto dto = new ViewSaveDto();
     dto.viewId = "#";
