@@ -29,7 +29,8 @@ export default class GaleWingApi {
     summaryAdd: "/news/summary/add",
     functionCtrlUpdate: "/functionCtrl/update",
     viewsSave: '/views/save',
-    readDispList: "/readListFeed"
+    readDispList: "/readListFeed",
+    viewSiteList: "/views/siteList"
   };
 
   private static singleton: GaleWingApi;
@@ -202,6 +203,13 @@ export default class GaleWingApi {
     let ajaxUrl = this.getBaseUrl() + this.apiUrls.readDispList;
     return await axios.post(ajaxUrl, {
       urls: urls
+    });
+  }
+
+  async getViewSiteList(viewId: string) {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.viewSiteList;
+    return await axios.post(ajaxUrl, {
+      viewId
     });
   }
 

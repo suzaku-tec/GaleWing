@@ -20,72 +20,72 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 class ViewsControllerTest {
-    @Mock
-    ViewsRepository viewsRepository;
-    @Mock
-    SiteRepository siteRepository;
-    @InjectMocks
-    ViewsController viewsController;
+  @Mock
+  ViewsRepository viewsRepository;
+  @Mock
+  SiteRepository siteRepository;
+  @InjectMocks
+  ViewsController viewsController;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+  @BeforeEach
+  void setUp() {
+    MockitoAnnotations.openMocks(this);
+  }
 
-    @Test
-    void testIndex() throws JsonProcessingException {
-        when(viewsRepository.idList()).thenReturn(List.of(new View()));
-        when(viewsRepository.selectSiteList(anyString())).thenReturn(List.of(new Site()));
-        when(siteRepository.getAllSite()).thenReturn(List.of(new Site()));
+  @Test
+  void testIndex() throws JsonProcessingException {
+    when(viewsRepository.idList()).thenReturn(List.of(new View()));
+    when(viewsRepository.selectSiteList(anyString())).thenReturn(List.of(new Site()));
+    when(siteRepository.getAllSite()).thenReturn(List.of(new Site()));
 
-        Model model = new ModelMock();
+    Model model = new ModelMock();
 
-        String result = viewsController.index(model);
-        Assertions.assertEquals("views", result);
-    }
+    String result = viewsController.index(model);
+    Assertions.assertEquals("views", result);
+  }
 
-    @Test
-    void testList() {
-        List<View> viewList = List.of(new View());
-        when(viewsRepository.idList()).thenReturn(viewList);
+  @Test
+  void testList() {
+    List<View> viewList = List.of(new View());
+    when(viewsRepository.idList()).thenReturn(viewList);
 
-        List<View> result = viewsController.list();
-        Assertions.assertEquals(viewList, result);
-    }
+    List<View> result = viewsController.list();
+    Assertions.assertEquals(viewList, result);
+  }
 
-    @Test
-    void testInfo() {
-        View view = new View();
-        when(viewsRepository.info(anyString())).thenReturn(view);
+  @Test
+  void testInfo() {
+    View view = new View();
+    when(viewsRepository.info(anyString())).thenReturn(view);
 
-        View result = viewsController.info("id");
-        Assertions.assertEquals(view, result);
-    }
+    View result = viewsController.info("id");
+    Assertions.assertEquals(view, result);
+  }
 
-    @Test
-    void testSave_insert() {
-        doNothing().when(viewsRepository).insertView(any());
-        doNothing().when(viewsRepository).insertViewSite(any(), anyString());
+  @Test
+  void testSave_insert() {
+    when(viewsRepository.insertView(any())).thenReturn(0);
+    when(viewsRepository.insertViewSite(any(), anyString())).thenReturn(0);
 
-        ViewSaveDto dto = new ViewSaveDto();
-        dto.siteIdList = List.of("");
-        viewsController.save(dto);
-        verify(viewsRepository).insertView(any(ViewSaveDto.class));
-        verify(viewsRepository).insertViewSite(any(ViewSaveDto.class), anyString());
-    }
+    ViewSaveDto dto = new ViewSaveDto();
+    dto.siteIdList = List.of("");
+    viewsController.save(dto);
+    verify(viewsRepository).insertView(any(ViewSaveDto.class));
+    verify(viewsRepository).insertViewSite(any(ViewSaveDto.class), anyString());
+  }
 
-    @Test
-    void testSave_update() {
-        doNothing().when(viewsRepository).updateView(any());
-        doNothing().when(viewsRepository).updateViewSite(any(), anyString());
+  @Test
+  void testSave_update() {
+    when(viewsRepository.deleteViewSite(anyString())).thenReturn(0);
+    when(viewsRepository.insertViewSite(any(), anyString())).thenReturn(0);
 
-        ViewSaveDto dto = new ViewSaveDto();
-        dto.viewId = "#";
-        dto.siteIdList = List.of("");
-        viewsController.save(dto);
-        verify(viewsRepository).updateView(any(ViewSaveDto.class));
-        verify(viewsRepository).updateViewSite(any(ViewSaveDto.class), anyString());
-    }
+    ViewSaveDto dto = new ViewSaveDto();
+    dto.viewId = "#";
+    dto.siteIdList = List.of("");
+    viewsController.save(dto);
+    verify(viewsRepository).deleteViewSite(anyString());
+    verify(viewsRepository).insertViewSite(any(ViewSaveDto.class), anyString());
+  }
 
 }
 
