@@ -10,17 +10,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class DelReadFeedTask {
 
-  @Autowired
   SiteRepository siteRepository;
 
-  @Autowired
   FeedRepository feedRepository;
+
+  @Autowired
+  public DelReadFeedTask(SiteRepository siteRepository, FeedRepository feedRepository) {
+    this.siteRepository = siteRepository;
+    this.feedRepository = feedRepository;
+  }
 
   @Value("${days.retained}")
   private String daysRetained;
 
   @Scheduled(cron = "${readFeed.delete.scheduler.cron}")
-  public void deleteReadFeed() {
-    feedRepository.deleteReadFeed(daysRetained);
+  public int deleteReadFeed() {
+    return feedRepository.deleteReadFeed(daysRetained);
   }
 }
