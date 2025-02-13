@@ -28,7 +28,7 @@ class QueueUrlReadAsyncServiceTest {
 
   @Test
   void testAsyncMethod() throws ExecutionException, InterruptedException {
-    when(feedRepository.updateReadFeed(anyString())).thenReturn(0);
+    when(feedRepository.updateReadFeedNoOpen(anyString())).thenReturn(0);
     when(feedRepository.selectReadListQueue()).thenReturn(List.of("selectReadListQueueResponse"));
     when(feedRepository.deleteReadListQueue(anyString())).thenReturn(0);
 
