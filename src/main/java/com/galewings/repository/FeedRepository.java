@@ -173,7 +173,7 @@ public class FeedRepository {
   }
 
   @Transactional
-  public void deleteReadFeed(String daysRetained) {
+  public int deleteReadFeed(String daysRetained) {
 
     LocalDate now = LocalDate.now();
     now = now.minusDays(Strings.isNullOrEmpty(daysRetained) ? 0 : Integer.parseInt(daysRetained));
@@ -181,7 +181,7 @@ public class FeedRepository {
 
     Map<String, String> params = new HashMap<>();
     params.put("daysRetained", now.format(formatter));
-    sqlManager.executeUpdate(
+    return sqlManager.executeUpdate(
             new ClasspathSqlResource("sql/feed/delete_read_feed.sql"), params
     );
   }
@@ -193,10 +193,10 @@ public class FeedRepository {
             new ClasspathSqlResource("sql/feed/select_view_feed_for_uuid.sql"), params);
   }
 
-  public void insertReadListQueue(String url) {
+  public int insertReadListQueue(String url) {
     Map<String, String> params = new HashMap<>();
     params.put("url", url);
-    sqlManager.executeUpdate(new ClasspathSqlResource("sql/feed/insert_read_list_queue.sql"), params);
+    return sqlManager.executeUpdate(new ClasspathSqlResource("sql/feed/insert_read_list_queue.sql"), params);
   }
 
   public List<String> selectReadListQueue() {

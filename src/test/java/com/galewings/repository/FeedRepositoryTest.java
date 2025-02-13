@@ -93,25 +93,29 @@ class FeedRepositoryTest {
   @Test
   void testDeleteReadFeed() {
     when(sqlManager.executeUpdate(any(), any())).thenReturn(0);
-    feedRepository.deleteReadFeed("1");
+    int result = feedRepository.deleteReadFeed("1");
+    Assertions.assertEquals(0, result);
   }
 
   @Test
   void testInsertReadListQueue() {
     when(sqlManager.executeUpdate(any(), any())).thenReturn(0);
-    feedRepository.insertReadListQueue("link");
+    int result = feedRepository.insertReadListQueue("link");
+    Assertions.assertEquals(0, result);
   }
 
   @Test
   void testSelectReadListQueue() {
     when(sqlManager.getResultList(any(), any())).thenReturn(new ArrayList<>());
-    feedRepository.selectReadListQueue();
+    List<String> result = feedRepository.selectReadListQueue();
+    Assertions.assertEquals(0, result.size());
   }
 
   @Test
   void testDeleteReadListQueue() {
     when(sqlManager.executeUpdate(any(), any())).thenReturn(0);
-    feedRepository.deleteReadListQueue("test");
+    int result = feedRepository.deleteReadListQueue("test");
+    Assertions.assertEquals(0, result);
   }
 
   @Test
