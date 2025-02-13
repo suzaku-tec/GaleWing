@@ -1,22 +1,24 @@
 package com.galewings.controller;
 
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.when;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.galewings.TestEntityObject;
 import com.galewings.dto.input.StackAddDto;
 import com.galewings.entity.Stack;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.StackRepository;
-import java.text.ParseException;
-import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.text.ParseException;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.when;
 
 class StackControllerTest {
 
@@ -42,18 +44,18 @@ class StackControllerTest {
   void testGetStackList() throws JsonProcessingException, ParseException {
     Stack testStack = TestEntityObject.stack();
 
-    when(stackRepository.getStackList()).thenReturn(Arrays.asList(testStack));
+    when(stackRepository.getStackList()).thenReturn(List.of(testStack));
 
     String result = stackController.getStackList();
     Assertions.assertEquals(
-        "[{\"title\":\"test-title\",\"uuid\":\"test-uuid\",\"link\":\"test-link\",\"uri\":\"test-uri\",\"author\":\"test-author\",\"comments\":\"test-comments\",\"publishedDate\":\"test-publishedDate\",\"stackDate\":\"1987/09/14 00:00:00\"}]",
-        result);
+            "[{\"title\":\"test-title\",\"uuid\":\"test-uuid\",\"link\":\"test-link\",\"uri\":\"test-uri\",\"author\":\"test-author\",\"comments\":\"test-comments\",\"publishedDate\":\"test-publishedDate\",\"stackDate\":\"1987/09/14 00:00:00\"}]",
+            result);
   }
 
   @Test
   void testAddStack() {
     when(stackRepository.addStack(anyString(), anyString())).thenReturn(0);
-    when(feedRepository.updateReadFeed(anyString())).thenReturn(0);
+    when(feedRepository.updateReadFeedNoOpen(anyString())).thenReturn(0);
 
     String result = stackController.addStack(new StackAddDto());
     Assertions.assertEquals("true", result);
