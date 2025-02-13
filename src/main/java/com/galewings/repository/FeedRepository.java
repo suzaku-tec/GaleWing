@@ -5,7 +5,6 @@ import com.galewings.entity.Site;
 import com.google.common.base.Strings;
 import com.miragesql.miragesql.ClasspathSqlResource;
 import com.miragesql.miragesql.SqlManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +26,12 @@ public class FeedRepository {
   /**
    * SqlManager
    */
-  @Autowired
-  SqlManager sqlManager;
+  private final SqlManager sqlManager;
+
+  public FeedRepository(SqlManager sqlManager) {
+    this.sqlManager = sqlManager;
+  }
+
 
   /**
    * フィードの存在確認
