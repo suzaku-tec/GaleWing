@@ -6,7 +6,6 @@ import com.galewings.repository.FeedRepository;
 import com.galewings.service.GwJaroDistanceService;
 import com.galewings.service.HotwordService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,18 +14,22 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-@Controller()
+@RestController()
 @RequestMapping("/analysis")
 public class AnalysisController {
 
-  @Autowired
-  private HotwordService hotwordService;
+  private final HotwordService hotwordService;
+
+  private final GwJaroDistanceService jaroDistanceService;
+
+  private final FeedRepository feedRepository;
 
   @Autowired
-  private GwJaroDistanceService jaroDistanceService;
-
-  @Autowired
-  private FeedRepository feedRepository;
+  public AnalysisController(HotwordService hotwordService, GwJaroDistanceService jaroDistanceService, FeedRepository feedRepository) {
+    this.hotwordService = hotwordService;
+    this.jaroDistanceService = jaroDistanceService;
+    this.feedRepository = feedRepository;
+  }
 
   @GetMapping("/")
   public String index(@RequestParam(value = "targetLink", required = true) String targetLink,
@@ -37,14 +40,12 @@ public class AnalysisController {
   }
 
   @GetMapping("/jaroWinklerDistance")
-  @ResponseBody
   public List<Feed> jaroWinklerDistance(
           @RequestParam(value = "targetTitle", required = true) String targetTitle) {
     return jaroDistanceService.resembleTitleForJaroWinkler(targetTitle);
   }
 
   @PostMapping("/feed/allRead")
-  @ResponseBody
   public boolean allRead(@RequestBody AnalysisFeedAllReadDto analysisFeedAllReadDto) {
 
     analysisFeedAllReadDto.links.stream().forEach(link -> {

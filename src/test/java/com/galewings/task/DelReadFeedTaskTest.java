@@ -2,6 +2,7 @@ package com.galewings.task;
 
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.SiteRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -29,6 +30,7 @@ class DelReadFeedTaskTest {
   void testDeleteReadFeed() {
     when(feedRepository.deleteReadFeed(any())).thenReturn(0);
     int result = delReadFeedTask.deleteReadFeed();
+    Assertions.assertEquals(0, result);
   }
 }
 
