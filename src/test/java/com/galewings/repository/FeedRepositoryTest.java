@@ -113,6 +113,14 @@ class FeedRepositoryTest {
     when(sqlManager.executeUpdate(any(), any())).thenReturn(0);
     feedRepository.deleteReadListQueue("test");
   }
+
+  @Test
+  void testUpdateReadFeedNoOpen() {
+    when(sqlManager.executeUpdate(any(), any())).thenReturn(0);
+    int result = feedRepository.updateReadFeedNoOpen("link");
+    Assertions.assertEquals(0, result);
+
+  }
 }
 
 //Generated with love by TestMe :) Please report issues and submit feature requests at: http://weirddev.com/forum#!/testme
