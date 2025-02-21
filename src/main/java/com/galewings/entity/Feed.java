@@ -2,6 +2,7 @@ package com.galewings.entity;
 
 import com.miragesql.miragesql.annotation.Column;
 import com.miragesql.miragesql.annotation.Table;
+
 import java.io.Serializable;
 
 @SuppressWarnings("unused")
@@ -11,16 +12,16 @@ public class Feed implements Serializable {
   @Override
   public String toString() {
     return "Feed{" +
-        "title='" + title + '\'' +
-        ", uuid='" + uuid + '\'' +
-        ", link='" + link + '\'' +
-        ", uri='" + uri + '\'' +
-        ", author='" + author + '\'' +
-        ", comments='" + comments + '\'' +
-        ", publishedDate='" + publishedDate + '\'' +
-        ", opened='" + opened + '\'' +
-        ", readed='" + readed + '\'' +
-        '}';
+            "title='" + title + '\'' +
+            ", uuid='" + uuid + '\'' +
+            ", link='" + link + '\'' +
+            ", uri='" + uri + '\'' +
+            ", author='" + author + '\'' +
+            ", comments='" + comments + '\'' +
+            ", publishedDate='" + publishedDate + '\'' +
+            ", opened='" + opened + '\'' +
+            ", readed='" + readed + '\'' +
+            '}';
   }
 
   @Column(name = "title")
