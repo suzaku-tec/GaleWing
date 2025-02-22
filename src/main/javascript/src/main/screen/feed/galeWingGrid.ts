@@ -6,20 +6,33 @@ import UpdateFeed from '../../events/updateFeed';
 import init from '../cardGridLayout';
 import SettingApi from '../../api/settingApi';
 import ElementEvent from '../../events/elementEvent';
-import { RowSelection } from 'gridjs/plugins/selection';
 import CirculationEvent from '../../events/circulationEvent';
 import SummaryEvent from '../../events/summaryEvent';
+
+enum HeaderIndex {
+  title,
+  link,
+  uri,
+  type,
+  author,
+  comments,
+  publishedDate,
+  uuid,
+  imageUrl,
+  chkSts
+}
 
 export default class GaleWingGrid {
   private static singleton: GaleWingGrid;
 
-  private constructor() {}
+  private constructor() { }
 
   private stopRowClickFlg: boolean = false;
 
   static getInstance() {
     if (!this.singleton) {
       this.singleton = new GaleWingGrid();
+      this.singleton.setupGrid();
     }
 
     return this.singleton;
@@ -62,13 +75,6 @@ export default class GaleWingGrid {
   createGridColumn() {
     return [
       {
-        id: 'chk',
-        name: '',
-        plugin: {
-          component: RowSelection,
-        }
-      },
-      {
         name: 'title',
         hidden: false,
         formatter: (
@@ -81,10 +87,10 @@ export default class GaleWingGrid {
         ) =>
           html(
             this.createTitleLinkText(
-              row.cells[1].data,
-              row.cells[2].data,
-              row.cells[9].data,
-              row.cells[10].data,
+              row.cells[HeaderIndex.title].data,
+              row.cells[HeaderIndex.link].data,
+              row.cells[HeaderIndex.imageUrl].data,
+              row.cells[HeaderIndex.chkSts].data,
             ),
           ),
       },
@@ -109,8 +115,7 @@ export default class GaleWingGrid {
     return (
       "<div style='display: flex;'>" +
       (imageUrl ? `<img src='${imageUrl}' style='object-fit: contain; height: 100px'></img>` : '') +
-      `<a href='${link}' target="_blank" rel="noopener" class="${
-        chkSts ? 'rss-read-link' : 'rss-link'
+      `<a href='${link}' target="_blank" rel="noopener" class="${chkSts ? 'rss-read-link' : 'rss-link'
       }" data-origin-txt="${title}" data-translation-jp-txt="">${title}</a>` +
       '</div>'
     );
@@ -143,15 +148,15 @@ export default class GaleWingGrid {
   setupGridRowClickEvent(grid: Grid) {
     grid.on('rowClick', (event, row) => {
       var tmp = event as any;
-      if(tmp.originalTarget.type == "checkbox") {
+      if (tmp.originalTarget.type == "checkbox") {
         return
       }
 
 
       let link: string | undefined = undefined;
       if ((event.target as any).localName == 'path') {
-        let uuid = row?.cell(8).data?.toLocaleString();
-        link = row?.cell(2).data?.toLocaleString();
+        let uuid = row?.cell(HeaderIndex.uuid).data?.toLocaleString();
+        link = row?.cell(HeaderIndex.link).data?.toLocaleString();
         this.stack(uuid, link);
         return;
       }
@@ -163,7 +168,7 @@ export default class GaleWingGrid {
         return;
       }
 
-      link = row?.cell(2).data?.toLocaleString();
+      link = row?.cell(HeaderIndex.link).data?.toLocaleString();
       if (!this.stopRowClickFlg) {
         if ((event.target as any).localName != 'a') {
           window.open(link);
@@ -192,7 +197,7 @@ export default class GaleWingGrid {
           (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-read-link');
         }
 
-        row.cells[10].data = '1';
+        row.cells[HeaderIndex.chkSts].data = '1';
       })
       .catch((error) => {
         console.log(error);
