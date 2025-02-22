@@ -1,15 +1,16 @@
 package com.galewings.task;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.SiteRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 class DelReadFeedTaskTest {
 
@@ -27,8 +28,9 @@ class DelReadFeedTaskTest {
 
   @Test
   void testDeleteReadFeed() {
-    doNothing().when(feedRepository).deleteReadFeed(any());
-    delReadFeedTask.deleteReadFeed();
+    when(feedRepository.deleteReadFeed(any())).thenReturn(0);
+    int result = delReadFeedTask.deleteReadFeed();
+    Assertions.assertEquals(0, result);
   }
 }
 

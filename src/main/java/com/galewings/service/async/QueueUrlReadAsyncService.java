@@ -11,29 +11,29 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class QueueUrlReadAsyncService {
 
-    private final FeedRepository feedRepository;
+  private final FeedRepository feedRepository;
 
-    @Autowired
-    public QueueUrlReadAsyncService(FeedRepository feedRepository) {
-        this.feedRepository = feedRepository;
-    }
+  @Autowired
+  public QueueUrlReadAsyncService(FeedRepository feedRepository) {
+    this.feedRepository = feedRepository;
+  }
 
-    /**
-     * キューイングされているURLを既読にする
-     *
-     * @return
-     */
-    @Async("taskExecutor")
-    public CompletableFuture<Void> asyncMethod() {
+  /**
+   * キューイングされているURLを既読にする
+   *
+   * @return
+   */
+  @Async("taskExecutor")
+  public CompletableFuture<Void> asyncMethod() {
 
-        List<String> urls = feedRepository.selectReadListQueue();
-        urls.forEach(url -> {
-            int cnt = feedRepository.updateReadFeed(url);
-            if (0 < cnt) {
-                feedRepository.deleteReadListQueue(url);
-            }
-        });
+    List<String> urls = feedRepository.selectReadListQueue();
+    urls.forEach(url -> {
+      int cnt = feedRepository.updateReadFeedNoOpen(url);
+      if (0 < cnt) {
+        feedRepository.deleteReadListQueue(url);
+      }
+    });
 
-        return CompletableFuture.completedFuture(null);
-    }
+    return CompletableFuture.completedFuture(null);
+  }
 }
