@@ -19,8 +19,8 @@ enum HeaderIndex {
   publishedDate,
   uuid,
   imageUrl,
-  chkSts
-}
+  chkSts,
+};
 
 export default class GaleWingGrid {
   private static singleton: GaleWingGrid;
@@ -28,6 +28,10 @@ export default class GaleWingGrid {
   private constructor() { }
 
   private stopRowClickFlg: boolean = false;
+
+  public data: any = [];
+
+  public grid: Grid | null = null;
 
   static getInstance() {
     if (!this.singleton) {
@@ -38,19 +42,21 @@ export default class GaleWingGrid {
     return this.singleton;
   }
 
-  setupGrid() {
+  private setupGrid() {
     let api = GaleWingApi.getInstance();
     api
       .getFeedList(window.location.href)
       .then(async (res) => {
+        this.data = res.data;
+
         let setting = new SettingApi();
         await setting.init();
         setting.outputLog();
         var limit = Number(setting.get('feed_rows'));
 
-        let grid = await this.createGrid(res.data, limit);
+        this.grid = await this.createGrid(res.data, limit);
 
-        this.setupGridEvent(grid, limit);
+        this.setupGridEvent(this.grid, limit);
 
         init(9, 3, res.data);
       })

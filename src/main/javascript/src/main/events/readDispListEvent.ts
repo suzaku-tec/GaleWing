@@ -13,17 +13,20 @@ export default class ReadDispListEvent implements IElementEvent {
       .filter((el) => el !== null)
       .map((el) => <HTMLAnchorElement>el)
       .map((anchorEl) => {
-        // 既読表示に変更
-        anchorEl.classList.remove('rss-link');
-        anchorEl.classList.add('rss-read-link');
+
+        const link = anchorEl.href;
+        GaleWingGrid.getInstance().data.filter((feed: any) => feed.link === link).forEach((feed: any) => {
+          feed.chkSts = true;
+        });
+        GaleWingGrid.getInstance().grid?.forceRender();
         return anchorEl.href;
       });
 
-      GaleWingApi.getInstance().readDispList(urls);
-      let targetBadge = <HTMLSpanElement> document.querySelector('a.bg-warning span.badge');
-      const cnt = targetBadge?.innerText;
-      if(Number(cnt)) targetBadge.innerText = String(Number(cnt) - urls.length);
+    GaleWingApi.getInstance().readDispList(urls);
+    let targetBadge = <HTMLSpanElement>document.querySelector('a.bg-warning span.badge');
+    const cnt = targetBadge?.innerText;
+    if (Number(cnt)) targetBadge.innerText = String(Number(cnt) - urls.length);
 
-      GaleWingGrid.getInstance().setStopRowClickFlg(false);
+    GaleWingGrid.getInstance().setStopRowClickFlg(false);
   }
 }
