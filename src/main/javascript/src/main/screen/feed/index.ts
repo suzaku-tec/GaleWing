@@ -72,7 +72,6 @@ window.onload = async () => {
 
   // grid初期化
   let grid = GaleWingGrid.getInstance();
-  grid.setupGrid();
 
   // init event
   setupEvent();
