@@ -1,22 +1,23 @@
 package com.galewings.controller;
 
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.when;
-
 import com.galewings.ModelMock;
 import com.galewings.dto.input.AnalysisFeedAllReadDto;
 import com.galewings.entity.Feed;
 import com.galewings.repository.FeedRepository;
 import com.galewings.service.GwJaroDistanceService;
 import com.galewings.service.HotwordService;
-import java.io.UnsupportedEncodingException;
-import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.when;
 
 class AnalysisControllerTest {
 
@@ -46,7 +47,7 @@ class AnalysisControllerTest {
   void testJaroWinklerDistance() {
     Feed testData = new Feed();
     when(jaroDistanceService.resembleTitleForJaroWinkler(anyString())).thenReturn(
-        List.of(testData));
+            List.of(testData));
 
     List<Feed> result = analysisController.jaroWinklerDistance("targetTitle");
     Assertions.assertEquals(List.of(testData), result);
@@ -54,13 +55,13 @@ class AnalysisControllerTest {
 
   @Test
   void testAllRead() {
-    when(feedRepository.updateReadFeed(anyString())).thenReturn(0);
+    when(feedRepository.updateReadFeedNoOpen(anyString())).thenReturn(0);
 
     AnalysisFeedAllReadDto testData = new AnalysisFeedAllReadDto();
     testData.links = List.of("");
 
     boolean result = analysisController.allRead(testData);
-    Assertions.assertEquals(true, result);
+    Assertions.assertTrue(result);
   }
 }
 
