@@ -9,7 +9,7 @@ import ElementEvent from '../../events/elementEvent';
 import CirculationEvent from '../../events/circulationEvent';
 import SummaryEvent from '../../events/summaryEvent';
 
-enum headerIndexConfig {
+enum HeaderIndex {
   title,
   link,
   uri,
@@ -93,10 +93,10 @@ export default class GaleWingGrid {
         ) =>
           html(
             this.createTitleLinkText(
-              row.cells[headerIndexConfig.title].data,
-              row.cells[headerIndexConfig.link].data,
-              row.cells[headerIndexConfig.imageUrl].data,
-              row.cells[headerIndexConfig.chkSts].data,
+              row.cells[HeaderIndex.title].data,
+              row.cells[HeaderIndex.link].data,
+              row.cells[HeaderIndex.imageUrl].data,
+              row.cells[HeaderIndex.chkSts].data,
             ),
           ),
       },
@@ -161,8 +161,8 @@ export default class GaleWingGrid {
 
       let link: string | undefined = undefined;
       if ((event.target as any).localName == 'path') {
-        let uuid = row?.cell(headerIndexConfig.uuid).data?.toLocaleString();
-        link = row?.cell(headerIndexConfig.link).data?.toLocaleString();
+        let uuid = row?.cell(HeaderIndex.uuid).data?.toLocaleString();
+        link = row?.cell(HeaderIndex.link).data?.toLocaleString();
         this.stack(uuid, link);
         return;
       }
@@ -174,7 +174,7 @@ export default class GaleWingGrid {
         return;
       }
 
-      link = row?.cell(headerIndexConfig.link).data?.toLocaleString();
+      link = row?.cell(HeaderIndex.link).data?.toLocaleString();
       if (!this.stopRowClickFlg) {
         if ((event.target as any).localName != 'a') {
           window.open(link);
@@ -203,7 +203,7 @@ export default class GaleWingGrid {
           (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-read-link');
         }
 
-        row.cells[10].data = '1';
+        row.cells[HeaderIndex.chkSts].data = '1';
       })
       .catch((error) => {
         console.log(error);

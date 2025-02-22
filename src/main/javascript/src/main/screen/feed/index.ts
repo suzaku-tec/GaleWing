@@ -71,7 +71,7 @@ window.onload = async () => {
   axios.defaults.headers.common = AxiosSetting.header;
 
   // grid初期化
-  GaleWingGrid.getInstance();
+  let grid = GaleWingGrid.getInstance();
 
   // init event
   setupEvent();
