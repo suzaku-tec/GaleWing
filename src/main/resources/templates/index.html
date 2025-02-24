@@ -129,7 +129,7 @@
         </div>
         <div>
           <!-- アイコン -->
-          <div class="page-title border-bottom pb-2">
+          <div class="page-title pb-2">
             <button type="button" id="addSite" class="btn btn-outline-secondary">
                         <span style="font-size: 2em; color: #33cc99;">
                             <i class="fas fa-plus"></i>
@@ -171,25 +171,31 @@
 
           <!-- メインコンテンツ -->
           <div id="gridLayout" class="contentLayout">
-            <button id="translationEnJp" type="button" class="btn btn-outline-dark">翻訳(EN→JP)
-            </button>
-            <button data-bs-toggle="dropdown" type="button" class="btn btn-outline-dark"
-                    aria-expanded="false"
-                    id="mdBtn">
-              MarkDown
-            </button>
-            <div class="parent-box float">
-              <div class="child-box align-left">
+            <div class="float">
+              <div class="align-left">
+                <button id="translationEnJp" type="button" class="btn btn-outline-dark">翻訳(EN→JP)
+                </button>
+                <button data-bs-toggle="dropdown" type="button" class="btn btn-outline-dark"
+                        aria-expanded="false"
+                        id="mdBtn">
+                  MarkDown
+                </button>
               </div>
-              <div class="child-box align-right">
-                <button id="subPrev" type="button" class="btn btn-outline-primary"
-                        data-shortcut-key="ctrl+alt+ArrowLeft">
-                  <i class="fa-solid fa-left-long"></i>
-                </button>
-                <button id="subNext" type="button" class="btn btn-outline-primary"
-                        data-shortcut-key="ctrl+alt+ArrowRight">
-                  <i class="fa-solid fa-right-long"></i>
-                </button>
+              <div class="align-right">
+                <div class="parent-box float">
+                  <div class="child-box align-left">
+                  </div>
+                  <div class="child-box align-right">
+                    <button id="subPrev" type="button" class="btn btn-outline-primary"
+                            data-shortcut-key="ctrl+alt+ArrowLeft">
+                      <i class="fa-solid fa-left-long"></i>
+                    </button>
+                    <button id="subNext" type="button" class="btn btn-outline-primary"
+                            data-shortcut-key="ctrl+alt+ArrowRight">
+                      <i class="fa-solid fa-right-long"></i>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
             <ul class="dropdown-menu" aria-labelledby="mdBtn">
