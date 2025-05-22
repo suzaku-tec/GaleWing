@@ -18,7 +18,10 @@ export default class ReadDispListEvent implements IElementEvent {
         GaleWingGrid.getInstance().data.filter((feed: any) => feed.link === link).forEach((feed: any) => {
           feed.chkSts = true;
         });
-        GaleWingGrid.getInstance().grid?.forceRender();
+        // GaleWingGrid.getInstance().grid?.forceRender();
+
+        anchorEl.classList.remove('rss-link');
+        anchorEl.classList.add('rss-read-link');
         return anchorEl.href;
       });
 

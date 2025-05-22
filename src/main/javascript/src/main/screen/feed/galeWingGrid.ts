@@ -8,6 +8,7 @@ import SettingApi from '../../api/settingApi';
 import ElementEvent from '../../events/elementEvent';
 import CirculationEvent from '../../events/circulationEvent';
 import SummaryEvent from '../../events/summaryEvent';
+import { faL } from '@fortawesome/free-solid-svg-icons';
 
 enum HeaderIndex {
   title,
@@ -73,7 +74,7 @@ export default class GaleWingGrid {
         limit: Number(limit),
       },
       sort: true,
-      search: true,
+      search: false,
       data: data,
     }).render(<HTMLInputElement>document.getElementById('wrapper'));
   }
@@ -120,7 +121,7 @@ export default class GaleWingGrid {
   ) {
     return (
       "<div style='display: flex;'>" +
-      (imageUrl ? `<img src='${imageUrl}' style='object-fit: contain; height: 100px'></img>` : '') +
+      (imageUrl ? `<img src='${imageUrl}' style='object-fit: cover; height: 80px; width: 80px;'></img>` : '') +
       `<a href='${link}' target="_blank" rel="noopener" class="${chkSts ? 'rss-read-link' : 'rss-link'
       }" data-origin-txt="${title}" data-translation-jp-txt="">${title}</a>` +
       '</div>'
