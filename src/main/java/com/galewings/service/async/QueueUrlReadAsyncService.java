@@ -28,10 +28,8 @@ public class QueueUrlReadAsyncService {
 
     List<String> urls = feedRepository.selectReadListQueue();
     urls.forEach(url -> {
-      int cnt = feedRepository.updateReadFeedNoOpen(url);
-      if (0 < cnt) {
-        feedRepository.deleteReadListQueue(url);
-      }
+      feedRepository.updateReadFeedNoOpen(url);
+      feedRepository.deleteReadListQueue(url);
     });
 
     return CompletableFuture.completedFuture(null);
