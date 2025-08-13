@@ -38,5 +38,6 @@ class FeedGroupingTaskTest {
 
         List<Feed> feedList = List.of(feed1, feed2);
         when(feedRepository.getAllFeed()).thenReturn(feedList);
+        feedGroupingTask.run();
     }
 }
