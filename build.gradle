@@ -27,12 +27,16 @@ tasks.withType(JavaCompile).configureEach {
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = JavaVersion.VERSION_21
+targetCompatibility = JavaVersion.VERSION_21
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+javadoc.options.encoding = 'UTF-8'
 
 repositories {
     mavenCentral()
     gradlePluginPortal()
+    maven { url 'https://jitpack.io' }
 }
 
 // tag::jar[]
@@ -152,7 +156,14 @@ dependencies {
     // 細かい設定をするためにHttpClient5も依存に追加
     implementation 'org.apache.httpcomponents.client5:httpclient5'
 
+// https://mvnrepository.com/artifact/org.apache.lucene/lucene-core
+    implementation("org.apache.lucene:lucene-core:10.2.2")
 
+    implementation 'org.deeplearning4j:deeplearning4j-nlp:1.0.0-M1.1'
+    implementation 'org.nd4j:nd4j-native-platform:1.0.0-M1.1'
+
+// https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser
+    implementation("org.apache.lucene:lucene-queryparser:10.2.2")
 }
 
 sonarqube {
