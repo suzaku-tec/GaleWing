@@ -22,11 +22,12 @@ const config = {
     stats: './src/main/screen/stats/stats.ts',
     task: './src/main/screen/task/task.ts',
     cardLayout: './src/main/screen/layout/cardLayout.ts',
-    circulation: "./src/main/screen/circulation/index.ts",
-    newsSummary: "./src/main/screen/news/newsSummary.ts",
-    functionCtrl: "./src/main/screen/functionCtrl/index.ts",
-    viewSetting: "./src/main/screen/viewsSetting/index.ts",
-    shortcutter: "./src/main/screen/shortcutter.ts"
+    circulation: './src/main/screen/circulation/index.ts',
+    newsSummary: './src/main/screen/news/newsSummary.ts',
+    functionCtrl: './src/main/screen/functionCtrl/index.ts',
+    viewSetting: './src/main/screen/viewsSetting/index.ts',
+    shortcutter: './src/main/screen/shortcutter.ts',
+    galeWingModal: './src/main/screen/modal/index.ts',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

@@ -57,6 +57,8 @@ public class GaleWingsController {
             model.addAttribute("selectSite", site);
         }
 
+        model.addAttribute("modalFileList", List.of("addSite", "importOpml", "updateMessage", "relationList"));
+
         return "index";
     }
 
