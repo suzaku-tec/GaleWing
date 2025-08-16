@@ -14,5 +14,5 @@ export interface IElementEvent {
   /**
    * イベント実行
    */
-  execute(): void;
+  execute(param?: any): void;
 }

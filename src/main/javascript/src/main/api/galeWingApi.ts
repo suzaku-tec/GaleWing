@@ -30,12 +30,13 @@ export default class GaleWingApi {
     functionCtrlUpdate: "/functionCtrl/update",
     viewsSave: '/views/save',
     readDispList: "/readListFeed",
-    viewSiteList: "/views/siteList"
+    viewSiteList: "/views/siteList",
+    relationList: '/relation/list',
   };
 
   private static singleton: GaleWingApi;
 
-  private constructor() {}
+  private constructor() { }
 
   getFeedList(url: string): Promise<AxiosResponse<any>> {
     let baseUrl = new URL(window.location.href);
@@ -123,12 +124,12 @@ export default class GaleWingApi {
 
   updateIcon(uuid: string): Promise<AxiosResponse<any>> {
     let ajaxUrl = this.getBaseUrl() + this.apiUrls.updateIcon;
-    return axios.post(ajaxUrl, {uuid: uuid});
+    return axios.post(ajaxUrl, { uuid: uuid });
   }
 
   viewSave(viewId: string, viewName: string, siteIdList: string[]): Promise<AxiosResponse<any>> {
     let ajaxUrl = this.getBaseUrl() + this.apiUrls.viewsSave;
-    return axios.post(ajaxUrl, {viewId: viewId, viewName: viewName, siteIdList: siteIdList});
+    return axios.post(ajaxUrl, { viewId: viewId, viewName: viewName, siteIdList: siteIdList });
   }
 
   private fixSiteCategory(
@@ -213,6 +214,13 @@ export default class GaleWingApi {
     });
   }
 
+  async relationList(uuid: string): Promise<AxiosResponse<any>> {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.relationList;
+    return await axios.post(ajaxUrl, {
+      uuid: uuid
+    });
+  }
+
   private getBaseUrl(): string {
     let baseUrl = new URL(window.location.href);
     this.checkUrl(baseUrl);
@@ -233,4 +241,4 @@ export default class GaleWingApi {
   }
 }
 
-class GaleWingURLError extends Error {}
+class GaleWingURLError extends Error { }

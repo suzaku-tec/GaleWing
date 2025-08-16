@@ -1,280 +1,229 @@
 <!DOCTYPE html>
 <html lang="ja" class="h-100" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="Description" content="Enter your description here"/>
-  <script src="js/main.js"></script>
-  <link rel="stylesheet" href="style.css">
-  <title>GalwWing</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="Description" content="Enter your description here"/>
+    <script src="js/main.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>GalwWing</title>
 
 </head>
 
 <body>
 <!-- 全ページを囲む要素 -->
 <main class="container mw-100" role="main">
-  <div class="row">
-    <input type="hidden" id="identifier" value="" th:value="${identifier}">
+    <div class="row">
+        <input type="hidden" id="identifier" value="" th:value="${identifier}">
 
-    <!-- サイトバーメニュー -->
-    <nav class="sidebar col-md-3" id="sidemenu">
-      <section class="accordion">
-        <!-- サイドメニュー(Site List) -->
-        <div th:replace="linkMenu"/>
+        <!-- サイトバーメニュー -->
+        <nav class="sidebar col-md-3" id="sidemenu">
+            <section class="accordion">
+                <!-- サイドメニュー(Site List) -->
+                <div th:replace="linkMenu"/>
 
-        <!-- サイドメニュー(View List) -->
-        <input id="view-block" type="checkbox" class="toggle" checked/>
-        <label class="Label" for="view-block">
-          <p class="h4 mb-0">
-            View Link
-          </p>
-        </label>
-        <div class="accordionContent">
-          <ul class="nav flex-column m-o p-3 bg-primary">
-            <li class="nav-item">
-              <div th:each="view: ${viewlist}" class="mb-1">
-                <th:block th:if="${view.id == identifier}">
-                  <a class="list-group-item bg-warning" th:href="@{/(uuid=${view.id})}">
-                    [[${view.title}]]
-                    <span th:id="${view.id} + '_count'" class="badge rounded-pill bg-info text-dark"
-                          th:text="${view.count}"></span></a>
-                </th:block>
-                <th:block th:if="${!(view.id == identifier)}">
-                  <a class="list-group-item" th:href="@{/(uuid=${view.id})}">
-                    [[${view.title}]]
-                    <span th:id="${view.id} + '_count'" class="badge rounded-pill bg-info text-dark"
-                          th:text="${view.count}"></span></a>
-                </th:block>
-              </div>
-            </li>
-          </ul>
-        </div>
+                <!-- サイドメニュー(View List) -->
+                <input id="view-block" type="checkbox" class="toggle" checked/>
+                <label class="Label" for="view-block">
+                    <p class="h4 mb-0">
+                        View Link
+                    </p>
+                </label>
+                <div class="accordionContent">
+                    <ul class="nav flex-column m-o p-3 bg-primary">
+                        <li class="nav-item">
+                            <div th:each="view: ${viewlist}" class="mb-1">
+                                <th:block th:if="${view.id == identifier}">
+                                    <a class="list-group-item bg-warning" th:href="@{/(uuid=${view.id})}">
+                                        [[${view.title}]]
+                                        <span th:id="${view.id} + '_count'" class="badge rounded-pill bg-info text-dark"
+                                              th:text="${view.count}"></span></a>
+                                </th:block>
+                                <th:block th:if="${!(view.id == identifier)}">
+                                    <a class="list-group-item" th:href="@{/(uuid=${view.id})}">
+                                        [[${view.title}]]
+                                        <span th:id="${view.id} + '_count'" class="badge rounded-pill bg-info text-dark"
+                                              th:text="${view.count}"></span></a>
+                                </th:block>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
 
-        <!-- Site List -->
-        <input id="block-01" type="checkbox" value="" class="toggle" th:checked="${!#strings.isEmpty(identifier)}"/>
-        <label class="Label" for="block-01">
-          <p class="h4">
-            Site List
-          </p>
-        </label>
+                <!-- Site List -->
+                <input id="block-01" type="checkbox" value="" class="toggle"
+                       th:checked="${!#strings.isEmpty(identifier)}"/>
+                <label class="Label" for="block-01">
+                    <p class="h4">
+                        Site List
+                    </p>
+                </label>
 
-        <div class="accordionContent">
-          <ul class="nav flex-column m-o p-3 bg-primary">
-            <li class="nav-item mb-2">
-              <th:block th:if="${#strings.isEmpty(identifier)}">
-                <a href="/" class="list-group-item bg-warning">All</a>
-              </th:block>
-              <th:block th:if="${!#strings.isEmpty(identifier)}">
-                <a href="/" class="list-group-item">All</a>
-              </th:block>
-            </li>
-            <li class="mb-2" id="siteList">
-              <div th:each="site: ${sitelist}">
-                <th:block th:if="${site.uuid == identifier && site.count > 0}">
-                  <a href="" class="list-group-item bg-warning" th:id="${site.uuid}"
-                     th:href="@{/(uuid=${site.uuid})}"> <img
-                    th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16" height="16">
-                    [[${site.title}]]：
-                    <span th:id="${site.uuid} + '_count'"
-                          class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
-                </th:block>
-                <th:block th:if="${!(site.uuid == identifier) && site.count > 0}">
-                  <a href="" class="list-group-item" th:id="${site.uuid}"
-                     th:href="@{/(uuid=${site.uuid})}"> <img
-                    th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16" height="16">
-                    [[${site.title}]]：
-                    <span th:id="${site.uuid} + '_count'"
-                          class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
-                </th:block>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </section>
-    </nav>
-    <!-- サイトバーメニュー -->
+                <div class="accordionContent">
+                    <ul class="nav flex-column m-o p-3 bg-primary">
+                        <li class="nav-item mb-2">
+                            <th:block th:if="${#strings.isEmpty(identifier)}">
+                                <a href="/" class="list-group-item bg-warning">All</a>
+                            </th:block>
+                            <th:block th:if="${!#strings.isEmpty(identifier)}">
+                                <a href="/" class="list-group-item">All</a>
+                            </th:block>
+                        </li>
+                        <li class="mb-2" id="siteList">
+                            <div th:each="site: ${sitelist}">
+                                <th:block th:if="${site.uuid == identifier && site.count > 0}">
+                                    <a href="" class="list-group-item bg-warning" th:id="${site.uuid}"
+                                       th:href="@{/(uuid=${site.uuid})}"> <img
+                                            th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16"
+                                            height="16">
+                                        [[${site.title}]]：
+                                        <span th:id="${site.uuid} + '_count'"
+                                              class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
+                                </th:block>
+                                <th:block th:if="${!(site.uuid == identifier) && site.count > 0}">
+                                    <a href="" class="list-group-item" th:id="${site.uuid}"
+                                       th:href="@{/(uuid=${site.uuid})}"> <img
+                                            th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16"
+                                            height="16">
+                                        [[${site.title}]]：
+                                        <span th:id="${site.uuid} + '_count'"
+                                              class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
+                                </th:block>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </nav>
+        <!-- サイトバーメニュー -->
 
-    <!-- 全ページの右のコンテンツ -->
-    <div class="col-md-9" id="mainContent">
+        <!-- 全ページの右のコンテンツ -->
+        <div class="col-md-9" id="mainContent">
 
-      <!-- トップバー -->
-      <nav class="navbar px-3 bg-light border-bottom shadow-sm">
-        <div class="navbar-brand toggle-menu">
-          <button class="btn btn-light btn-sm" id="sidebarToggler">
-            <i class="fas fa-bars fa-lg"></i>
-          </button>
-        </div>
-        <ul class="nav nav-tabs">
-          <li class="nav-item" id="gridLayoutItem">
-            <div class="nav-link active" aria-current="page" data-layout="gridLayout">
-              <i class="fas fa-th"></i>
-            </div>
-          </li>
-          <li class="nav-item" id="cardLayoutItem">
-            <a href="/card/">
-              <div class="nav-link" aria-current="page" data-layout="cardLayout">
-                <i class="fas fa-id-card"></i>
-              </div>
-            </a>
-          </li>
-        </ul>
-      </nav>
-      <!-- トップバー -->
+            <!-- トップバー -->
+            <nav class="navbar px-3 bg-light border-bottom shadow-sm">
+                <div class="navbar-brand toggle-menu">
+                    <button class="btn btn-light btn-sm" id="sidebarToggler">
+                        <i class="fas fa-bars fa-lg"></i>
+                    </button>
+                </div>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item" id="gridLayoutItem">
+                        <div class="nav-link active" aria-current="page" data-layout="gridLayout">
+                            <i class="fas fa-th"></i>
+                        </div>
+                    </li>
+                    <li class="nav-item" id="cardLayoutItem">
+                        <a href="/card/">
+                            <div class="nav-link" aria-current="page" data-layout="cardLayout">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- トップバー -->
 
-      <!-- 下のコンテンツ -->
-      <div class="content p-3">
-        <div th:if="${selectSite != null}">
-          <h1 th:text="${selectSite.title}" class="bg-info text-center"></h1>
-        </div>
-        <div>
-          <!-- アイコン -->
-          <div class="page-title pb-2">
-            <button type="button" id="addSite" class="btn btn-outline-secondary">
+            <!-- 下のコンテンツ -->
+            <div class="content p-3">
+                <div th:if="${selectSite != null}">
+                    <h1 th:text="${selectSite.title}" class="bg-info text-center"></h1>
+                </div>
+                <div>
+                    <!-- アイコン -->
+                    <div class="page-title pb-2">
+                        <button type="button" id="addSite" class="btn btn-outline-secondary">
                         <span style="font-size: 2em; color: #33cc99;">
                             <i class="fas fa-plus"></i>
                         </span>
-            </button>
-            <button type="button" id="updateFeed" class="btn btn-outline-secondary">
+                        </button>
+                        <button type="button" id="updateFeed" class="btn btn-outline-secondary">
                         <span style="font-size: 2em; color: #F79800;">
                             <i class="fas fa-sync-alt"></i>
                         </span>
-            </button>
-            <button type="button" class="btn btn-outline-secondary" id="readAllShowFeed" data-shortcut-key="ctrl+alt+r">
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" id="readAllShowFeed"
+                                data-shortcut-key="ctrl+alt+r">
                         <span style="font-size: 2em; color: #33cc99;">
                            <i class="fas fa-check"></i>
                         </span>
-            </button>
-            <button type="button" class="btn btn-outline-secondary" id="playTitle">
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" id="playTitle">
                         <span style="font-size: 2em; color: #33cc99;">
                            <i class="fas fa-play-circle"></i>
                         </span>
-            </button>
-            <button class="btn btn-outline-secondary" data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                    id="toolDropdownMenuButton">
+                        </button>
+                        <button class="btn btn-outline-secondary" data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                id="toolDropdownMenuButton">
             <span style="font-size: 2em;">
               <i class="fas fa-wrench" id="tool"></i>
             </span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="toolDropdownMenuButton">
-              <li><a class="dropdown-item" href="#" id="importOpml">import</a></li>
-              <li><a class="dropdown-item" href="#" id="exportOpml">export</a></li>
-            </ul>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="toolDropdownMenuButton">
+                            <li><a class="dropdown-item" href="#" id="importOpml">import</a></li>
+                            <li><a class="dropdown-item" href="#" id="exportOpml">export</a></li>
+                        </ul>
 
-            <button id="checkList" class="btn btn-outline-secondary" type="button" data-shortcut-key="ctrl+alt+c">
+                        <button id="checkList" class="btn btn-outline-secondary" type="button"
+                                data-shortcut-key="ctrl+alt+c">
                             <span style="font-size: 2em; color: #33cc99;">
                                 <i class="fa-solid fa-list-check"></i>
                             </span>
-            </button>
-          </div>
+                        </button>
+                    </div>
 
-          <!-- メインコンテンツ -->
-          <div id="gridLayout" class="contentLayout">
-            <div class="float" style="padding-bottom: 1em;">
-              <div class="align-left">
-                <button id="translationEnJp" type="button" class="btn btn-outline-dark">翻訳(EN→JP)
-                </button>
-                <button id="mdTitleList" data-shortcut-key="ctrl+alt+t" class="btn btn-outline-dark">Markdown</button>
-              </div>
-              <div class="align-right">
-                <div class="parent-box float">
-                  <div class="child-box align-left">
-                  </div>
-                  <div class="child-box align-right">
-                    <button id="subPrev" type="button" class="btn btn-outline-primary"
-                            data-shortcut-key="ctrl+alt+ArrowLeft">
-                      <i class="fa-solid fa-left-long"></i>
-                    </button>
-                    <button id="subNext" type="button" class="btn btn-outline-primary"
-                            data-shortcut-key="ctrl+alt+ArrowRight">
-                      <i class="fa-solid fa-right-long"></i>
-                    </button>
-                  </div>
+                    <!-- メインコンテンツ -->
+                    <div id="gridLayout" class="contentLayout">
+                        <div class="float" style="padding-bottom: 1em;">
+                            <div class="align-left">
+                                <button id="translationEnJp" type="button" class="btn btn-outline-dark">翻訳(EN→JP)
+                                </button>
+                                <button id="mdTitleList" data-shortcut-key="ctrl+alt+t" class="btn btn-outline-dark">
+                                    Markdown
+                                </button>
+                            </div>
+                            <div class="align-right">
+                                <div class="parent-box float">
+                                    <div class="child-box align-left">
+                                    </div>
+                                    <div class="child-box align-right">
+                                        <button id="subPrev" type="button" class="btn btn-outline-primary"
+                                                data-shortcut-key="ctrl+alt+ArrowLeft">
+                                            <i class="fa-solid fa-left-long"></i>
+                                        </button>
+                                        <button id="subNext" type="button" class="btn btn-outline-primary"
+                                                data-shortcut-key="ctrl+alt+ArrowRight">
+                                            <i class="fa-solid fa-right-long"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="wrapper"></div>
+                    </div>
+                    <div id="cardLayout" class="contentLayout hiddenContent">
+                        <div id="cardWrapper"></div>
+                        <div id="app"></div>
+                    </div>
                 </div>
-              </div>
             </div>
-            <div id="wrapper"></div>
-          </div>
-          <div id="cardLayout" class="contentLayout hiddenContent">
-            <div id="cardWrapper"></div>
-            <div id="app"></div>
-          </div>
+            <!-- 下のコンテンツ -->
+
         </div>
-      </div>
-      <!-- 下のコンテンツ -->
+        <!-- 全ページの右のコンテンツ -->
 
     </div>
-    <!-- 全ページの右のコンテンツ -->
-
-  </div>
 </main>
 <!-- 全ページを囲む要素 -->
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog" id="modal-dialog">
-    <div class="modal-content" id="modal-content">
-      <div class="modal-header" id="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="btn-close" id="modal-header-btn-close" data-bs-dismiss="modal"
-                aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="modal-body">
-      </div>
-      <div class="modal-footer" id="modal-footer">
-        <!--                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close-->
-        <!--                </button>-->
-        <!--                <button type="button" class="btn btn-primary">Save changes</button>-->
-      </div>
-    </div>
-  </div>
-</div>
-<div style="display: none;">
-  <div id="modalAddSiteBody">
-    <p>フィードのURL もしくは、WebサイトのURL</p>
-    <div>
-      <input class="form-control addSiteUrl" placeholder="example.com">
-    </div>
-    <div>
-      <input type="checkbox" id="isUseTitle" checked><label
-      for="isUseTitle">フィードのタイトルを表示名に利用する</label>
-    </div>
-  </div>
-  <div id="modalAddSiteFooter">
-    <button type="button" class="btn btn-primary modal-submit">complete!</button>
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
-  </div>
-  <div id="modalImportOpmlBody">
-    <div>
-      <label for="importOpmlFile" class="form-label">Upload Opml file</label>
-      <input class="form-control" type="file" id="importOpmlFile">
-    </div>
-  </div>
-  <div id="modalImportOpmlFooter">
-    <button type="button" class="btn btn-primary modal-submit">import</button>
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
-  </div>
-  <div id="updateMessageModal">
-    <center>
-      <div class="spinner-grow" role="status">
-      </div>
-      <span>Updating...</span>
-    </center>
-  </div>
-  <div class="confirmModal">
-    <div class="confirmFooter">
-      <button type="button" class="btn btn-primary confirmOk">ok</button>
-      <button type="button" class="btn btn-secondary confirmCancel" data-dismiss="modal">cancel
-      </button>
-    </div>
-  </div>
-</div>
 
 <a id="downloadLink" style="display: none;"></a>
 <div id="playWav"></div>
 </body>
+
+<!-- Modal -->
+<div th:replace="modal/modalDialog"/>
 
 <script src="/js/shortcutter.js"></script>
 </html>

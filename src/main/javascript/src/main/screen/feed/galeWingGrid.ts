@@ -1,5 +1,5 @@
 import GaleWingApi from '../../api/galeWingApi';
-import { Grid, Row, html } from 'gridjs';
+import { Grid, Row, html, h } from 'gridjs';
 import { JSX, VNode } from 'preact';
 import ReadAllShowFeed from '../../events/readAllShowFeed';
 import UpdateFeed from '../../events/updateFeed';
@@ -9,6 +9,9 @@ import ElementEvent from '../../events/elementEvent';
 import CirculationEvent from '../../events/circulationEvent';
 import SummaryEvent from '../../events/summaryEvent';
 import { faL } from '@fortawesome/free-solid-svg-icons';
+import { HtmlHTMLAttributes } from 'react';
+import { showModal } from '../modal';
+import relationListEvent from '../../events/modal/relationListEvent';
 
 enum HeaderIndex {
   title,
@@ -110,6 +113,15 @@ export default class GaleWingGrid {
       { name: 'uuid', hidden: true },
       { name: 'imageUrl', hidden: true },
       { name: 'chkSts', hidden: true },
+      {
+        name: 'relation', hidden: false, formatter: (cell: any, row: Row) => {
+          return h('button', {
+            onClick: () => {
+              new relationListEvent().execute(row.cells[HeaderIndex.uuid].data!.toString());
+            }
+          }, 'rel');
+        }
+      }
     ];
   }
 
@@ -153,62 +165,32 @@ export default class GaleWingGrid {
   }
 
   setupGridRowClickEvent(grid: Grid) {
-    grid.on('rowClick', (event, row) => {
-      var tmp = event as any;
-      if (tmp.originalTarget.type == "checkbox") {
-        return
-      }
 
+    grid.on('cellClick', (event, ...columns) => {
+      let col = columns[0];
+      let colConfig = columns[1];
+      let row = columns[2];
 
-      let link: string | undefined = undefined;
-      if ((event.target as any).localName == 'path') {
-        let uuid = row?.cell(HeaderIndex.uuid).data?.toLocaleString();
-        link = row?.cell(HeaderIndex.link).data?.toLocaleString();
-        this.stack(uuid, link);
-        return;
-      }
+      if (colConfig.name === 'title') {
+        let link = row.cells[HeaderIndex.link].data!.toLocaleString();
 
-      if (
-        (event.target as any).name === 'analysis' ||
-        ((event.target as Element).parentElement as HTMLInputElement).name === 'analysis'
-      ) {
-        return;
-      }
-
-      link = row?.cell(HeaderIndex.link).data?.toLocaleString();
-      if (!this.stopRowClickFlg) {
-        if ((event.target as any).localName != 'a') {
-          window.open(link);
+        // リンク押下の場合はリンクの遷移を実施。それ以外は個別にリンクを表示
+        if ((event.target as any).localName !== 'a') {
+          window.open(link, '_blank');
         }
-      }
 
-      if (!link) {
-        return;
-      }
+        let api = GaleWingApi.getInstance();
+        api
+          .read(link)
+          .then(() => {
+            (event.target as HTMLElement).classList = 'rss-read-link';
 
-      this.changeRowRead(link, event, row);
+            row.cells[HeaderIndex.chkSts].data = '1';
+          }).catch((error) => {
+            console.error(error);
+          });
+      }
     });
-  }
-
-  changeRowRead(link: string, event: JSX.TargetedMouseEvent<HTMLTableRowElement>, row: Row) {
-    let api = GaleWingApi.getInstance();
-    api
-      .read(link)
-      .then(() => {
-        // 既読表示に変更
-        if ((event.target as any).localName == 'a') {
-          (event.target as HTMLElement).classList.remove('rss-link');
-          (event.target as HTMLElement).classList.add('rss-read-link');
-        } else {
-          let innerHTML = (event.target as HTMLElement).innerHTML;
-          (event.target as any).innerHTML = innerHTML.replace(/rss-link/g, 'rss-read-link');
-        }
-
-        row.cells[HeaderIndex.chkSts].data = '1';
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   }
 
   stack(uuid: string | null | undefined, link: string | undefined) {
