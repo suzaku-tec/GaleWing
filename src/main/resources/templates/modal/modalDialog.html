@@ -1,0 +1,24 @@
+<html lang="ja" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<!-- Modal -->
+<script src="js/galeWingModal.js"></script>
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" id="modal-dialog">
+        <div class="modal-content" id="modal-content">
+            <div class="modal-header" id="modal-header">
+                <h5 class="modal-title" id="modalTitle">Modal title</h5>
+                <button type="button" class="btn-close" id="modal-header-btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-body">
+            </div>
+            <div class="modal-footer" id="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+<div style="display: none;">
+    <th:block th:each="modalFile : ${modalFileList}">
+        <div th:replace='${"modal/template/" + modalFile}'/>
+    </th:block>
+</div>
