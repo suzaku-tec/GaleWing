@@ -1,31 +1,27 @@
 import axios from 'axios';
-import GaleWingModal from '../../screen/galeWingModal';
 import { IElementEvent } from '../elementEvent';
+import { showModal } from '../../screen/modal';
+import { Modal } from 'bootstrap';
 
 export default class ImportOpml implements IElementEvent {
-  private modal: GaleWingModal;
 
-  constructor() {}
+  constructor() { }
 
   execute() {
-    this.modal = new GaleWingModal();
-    this.modal.setBodyClone('modalImportOpmlBody');
-    this.modal.setFooterClone('modalImportOpmlFooter');
-    this.modal.setModalSubmit(this.importOpml);
+    showModal('importOpml', 'Import OPML', [(modal: Modal, modalBody: HTMLElement) => this.importOpml()]);
 
-    this.modal.show();
   }
 
-  importOpml(event: Event): void {
-    var uri = new URL(window.location.href);
-    var ajaxUrl = uri.origin + '/opml/import';
+  importOpml(): void {
+    let uri = new URL(window.location.href);
+    let ajaxUrl = uri.origin + '/opml/import';
 
-    var params = new FormData();
-    var inputEl = document.getElementById('importOpmlFile') as HTMLInputElement;
-    params.append('file', inputEl.files[0]);
+    let params = new FormData();
+    let inputEl = document.getElementById('importOpmlFile') as HTMLInputElement;
+    params.append('file', inputEl.files![0]);
     axios
       .post(ajaxUrl, params)
-      .then((response) => {})
-      .catch((error) => {});
+      .then((response) => { })
+      .catch((error) => { });
   }
 }
