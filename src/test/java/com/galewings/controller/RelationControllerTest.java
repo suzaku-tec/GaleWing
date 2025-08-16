@@ -3,9 +3,11 @@ package com.galewings.controller;
 import com.galewings.dto.input.RelationListDto;
 import com.galewings.dto.relation.FeedRelation;
 import com.galewings.service.RelationService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
@@ -20,6 +22,11 @@ class RelationControllerTest {
 
     @InjectMocks
     private RelationController relationController;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     void list() {
