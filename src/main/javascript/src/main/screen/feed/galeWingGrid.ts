@@ -116,6 +116,7 @@ export default class GaleWingGrid {
       {
         name: 'relation', hidden: false, formatter: (cell: any, row: Row) => {
           return h('button', {
+            className: 'btn btn-light btn-outline-secondary',
             onClick: () => {
               new relationListEvent().execute(row.cells[HeaderIndex.uuid].data!.toString());
             }
