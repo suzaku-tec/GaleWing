@@ -10,13 +10,13 @@ let modal: Modal;
  */
 export function showModal(type: string, title: string, submitFuncs: ((modal: Modal, modalBody: HTMLElement) => void)[]): void {
 
-  let { modalBody, modalFooter } = initModal(type, title);
+  let { typeModalBody, typeModalFooter } = initModal(type, title);
 
   modal = new Modal(document.getElementById('modal')!);
 
   submitFuncs.forEach((func, index) => {
-    modalFooter.getElementsByClassName('modal-submit')[index].addEventListener('click', () => {
-      func(modal, modalBody);
+    typeModalFooter.getElementsByClassName('modal-submit')[index].addEventListener('click', () => {
+      func(modal, typeModalBody);
     });
   });
 
@@ -37,14 +37,16 @@ export function showExecModal(type: string, title: string, exec: () => void): vo
 }
 
 export function showExecFuncModal(type: string, title: string, exec: (modalBody: HTMLElement) => void, submitFuncs: ((modal: Modal, modalBody: HTMLElement) => void)[]): void {
-  let { modalBody, modalFooter } = initModal(type, title);
-  exec(modalBody);
+  let { typeModalBody, typeModalFooter } = initModal(type, title);
+  exec(typeModalBody);
   modal = new Modal(document.getElementById('modal')!);
   modal.show();
   submitFuncs.forEach((func, index) => {
-    modalFooter.getElementsByClassName('modal-submit')[index].addEventListener('click', () => {
-      func(modal, modalBody);
-    });
+    if (typeModalFooter.getElementsByClassName('modal-submit').item(index)) {
+      typeModalFooter.getElementsByClassName('modal-submit').item(index)?.addEventListener('click', () => {
+        func(modal, typeModalBody);
+      });
+    }
   });
   document
     .getElementById('modal')!
@@ -57,7 +59,7 @@ export function closeModal(): void {
   }
 }
 
-function initModal(type: string, title: string): { modalBody: HTMLElement; modalFooter: HTMLElement } {
+function initModal(type: string, title: string): { typeModalBody: HTMLElement; typeModalFooter: HTMLElement } {
   let modalBody = document.getElementById('modal-body')!;
   while (modalBody.firstChild) {
     modalBody.removeChild(modalBody.firstChild);
@@ -74,10 +76,13 @@ function initModal(type: string, title: string): { modalBody: HTMLElement; modal
   let modalTitle = document.getElementById('modalTitle')!;
   modalTitle.textContent = title;
 
-  modalBody.appendChild(typeModalBody.cloneNode(true));
-  modalFooter.appendChild(typeModalFooter.cloneNode(true));
+  let cloneTypeModalBody = typeModalBody.cloneNode(true) as HTMLElement;
+  let cloneTypeModalFooter = typeModalFooter.cloneNode(true) as HTMLElement;
 
-  return { modalBody, modalFooter };
+  modalBody.appendChild(cloneTypeModalBody);
+  modalFooter.appendChild(cloneTypeModalFooter);
+
+  return { typeModalBody: cloneTypeModalBody, typeModalFooter: cloneTypeModalFooter };
 }
 
 function disposeModal(modal: Modal): EventListenerOrEventListenerObject {
