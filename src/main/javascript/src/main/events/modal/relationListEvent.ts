@@ -10,17 +10,25 @@ export default class relationListEvent implements IElementEvent {
 
     api.relationList(uuid)
       .then((res) => {
-        showExecFuncModal('relationList', 'Relation List', (modalBody: HTMLElement) => {
-          res.data.forEach((link: { title: string, link: string }) => {
+        let urls: { title: string, link: string }[] = res.data;
+        showExecFuncModal('relationList', 'Relation List', (typeModalBody: HTMLElement) => {
+          console.log('urls', urls);
+          console.log('typeModalBody', typeModalBody);
+          urls.forEach((item: { title: string, link: string }) => {
             let linkElement = document.createElement('a');
-            linkElement.href = link.link;
-            linkElement.textContent = link.title;
+            linkElement.href = item.link;
+            linkElement.textContent = item.title;
             linkElement.style.border = '5px';
-            modalBody.appendChild(linkElement);
-            modalBody.appendChild(document.createElement('br'));
+            typeModalBody.appendChild(linkElement);
+            typeModalBody.appendChild(document.createElement('br'));
           });
         }, [(modal: Modal, modalBody: HTMLElement) => {
-          let urls = res.data.forEach((link: { title: string, link: string }) => link.link);
+          let urlElements = modalBody.getElementsByTagName('a');
+
+          let urls = Array.from(urlElements).map((element: HTMLAnchorElement) => {
+            return element.href;
+          });
+
           api.readDispList(urls).then(() => {
             closeModal();
           })

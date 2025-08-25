@@ -17,12 +17,18 @@ public class FeedGroupingRepository {
         this.sqlManager = sqlManager;
     }
 
-    public void insert(String feedUuid1, String feedUuid2) {
+    public void insert(String feedUuid1, String feedUuid2, float score) {
         Map<String, String> param = Map.of(
                 "feedUuid1", feedUuid1,
-                "feedUuid2", feedUuid2
+                "feedUuid2", feedUuid2,
+                "score", String.valueOf(score)
         );
         sqlManager.executeUpdate(new ClasspathSqlResource("sql/feedGrouping/insert.sql"),
                 param);
     }
+
+    public void allDelete() {
+        sqlManager.executeUpdate(new ClasspathSqlResource("sql/feedGrouping/all_delete.sql"));
+    }
+    
 }
