@@ -4,10 +4,10 @@ import com.galewings.entity.Feed;
 import com.galewings.repository.FeedGroupingRepository;
 import com.galewings.repository.FeedRepository;
 import jakarta.transaction.Transactional;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.ja.JapaneseAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.List;
 
 @Component
@@ -49,7 +50,7 @@ public class FeedGroupingTask implements Runnable {
         Directory dir = new ByteBuffersDirectory();
         try {
             // 標準分析器（英語圏などの簡易分析）
-            StandardAnalyzer analyzer = new StandardAnalyzer();
+            Analyzer analyzer = new JapaneseAnalyzer();
 
             // インデックスライターコンフィグ設定
             IndexWriterConfig config = new IndexWriterConfig(analyzer);
@@ -58,7 +59,6 @@ public class FeedGroupingTask implements Runnable {
                 for (int i = 0; i < titles.length; i++) {
                     Document doc = new Document();
                     doc.add(new TextField("title", titles[i], Field.Store.YES));
-                    doc.add(new StringField("docId", "doc" + i, Field.Store.YES));
                     writer.addDocument(doc);
                 }
             } catch (IOException e) {
@@ -76,23 +76,35 @@ public class FeedGroupingTask implements Runnable {
             mlt.setMinTermFreq(1);
             mlt.setMinDocFreq(1);
 
+            feedGroupingRepository.allDelete();
+
             for (int i = 0; i < allFeed.size(); i++) {
                 Feed baseFeed = allFeed.get(i);
 
                 // 類似度の高い上位3件抽出
-                Query query = mlt.like(i);
+                StringReader sr = new StringReader(baseFeed.getTitle());
+                Query query = mlt.like("title", sr);
                 TopDocs topDocs = searcher.search(query, 3);
 
-                for (ScoreDoc sd : topDocs.scoreDocs) {
-                    Document d = searcher.storedFields().document(sd.doc);
+                for (int j = 0; j < topDocs.scoreDocs.length; j++) {
+                    ScoreDoc sd = topDocs.scoreDocs[j];
+                    Document d = searcher.doc(sd.doc);
+
+                    if (3 < j) {
+                        break;
+                    }
 
                     // 自分自身は除外
-                    if (sd.doc != i) {
-                        Feed f = allFeed.get(sd.doc);
-                        feedGroupingRepository.insert(baseFeed.uuid, f.uuid);
+                    if (!d.get("title").equals(baseFeed.getTitle()) && sd.score > 15f) {
+                        allFeed.stream().filter(feed -> feed.title.equals(d.get("title")))
+                                .findFirst()
+                                .ifPresent(f -> {
+                                    feedGroupingRepository.insert(baseFeed.uuid, f.uuid, sd.score);
+                                });
                     }
                 }
 
+                sr.close();
             }
 
             reader.close();
