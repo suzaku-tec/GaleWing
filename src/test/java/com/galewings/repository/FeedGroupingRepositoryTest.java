@@ -25,6 +25,12 @@ public class FeedGroupingRepositoryTest {
     @Test
     void testInsert() {
         when(sqlManager.executeUpdate(any(), any())).thenReturn(0);
-        feedGroupingRepository.insert("", "");
+        feedGroupingRepository.insert("", "", 0f);
+    }
+
+    @Test
+    void testAllDelete() {
+        when(sqlManager.executeUpdate(any())).thenReturn(0);
+        feedGroupingRepository.allDelete();
     }
 }
