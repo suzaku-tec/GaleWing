@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '3.3.3'
+    id 'org.springframework.boot' version '3.5.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id "com.github.node-gradle.node" version "3.1.0"
@@ -15,10 +15,11 @@ apply plugin: 'io.spring.dependency-management'
 
 allprojects {
     ext {
-        springVersion = "3.3.3"
+        springVersion = "3.5.4"
         nullAwayVersion = "0.11.0"
         errorProneVersion = "2.28.0"
         lucene_version = "8.11.4"
+        springdocOpenApiVersion = "2.8.11"
     }
 }
 
@@ -92,7 +93,7 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-    testImplementation 'ch.qos.logback:logback-classic:1.5.6'
+    testImplementation 'ch.qos.logback:logback-classic:1.5.13'
 
     implementation 'com.codeborne:selenide:7.3.1'
 
@@ -103,13 +104,14 @@ dependencies {
     implementation group: 'org.apache.lucene', name: 'lucene-analyzers-kuromoji', version: lucene_version
 
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.18.0'
 
     // https://mvnrepository.com/artifact/org.apache.lucene/lucene-spellchecker
     implementation group: 'org.apache.lucene', name: 'lucene-spellchecker', version: '3.6.2'
 
-    // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
-    implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
+    // https://localhost:8080/swagger-ui/index.html
+    // https://localhost:8080/v3/api-docs
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: springdocOpenApiVersion
 
 // https://mvnrepository.com/artifact/io.github.cdimascio/dotenv-java
 
@@ -120,7 +122,7 @@ dependencies {
 
     implementation group: 'oauth.signpost', name: 'signpost-commonshttp4', version: '1.1'
 
-    implementation group: 'commons-io', name: 'commons-io', version: '1.2'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.14.0'
 
 // https://mvnrepository.com/artifact/io.github.cdimascio/dotenv-java
     implementation group: 'io.github.cdimascio', name: 'dotenv-java', version: '2.3.2'
@@ -162,7 +164,7 @@ dependencies {
 // https://mvnrepository.com/artifact/org.apache.lucene/lucene-core
     implementation("org.apache.lucene:lucene-core:${lucene_version}")
 
-    implementation 'org.nd4j:nd4j-native-platform:1.0.0-M1.1'
+//    implementation 'org.nd4j:nd4j-native-platform:1.0.0-M1.1'
 
 // https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser
     implementation("org.apache.lucene:lucene-queryparser:${lucene_version}")
