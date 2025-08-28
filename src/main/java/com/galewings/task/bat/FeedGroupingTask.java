@@ -1,6 +1,7 @@
 package com.galewings.task.bat;
 
 import com.galewings.entity.Feed;
+import com.galewings.exception.GaleWingsRuntimeException;
 import com.galewings.repository.FeedGroupingRepository;
 import com.galewings.repository.FeedRepository;
 import jakarta.transaction.Transactional;
@@ -35,6 +36,8 @@ public class FeedGroupingTask implements Runnable {
 
     private final FeedGroupingRepository feedGroupingRepository;
 
+    private static final String ANALYZED_COL_NAME = "title";
+
     @Autowired
     public FeedGroupingTask(FeedRepository feedRepository, FeedGroupingRepository feedGroupingRepository) {
         this.feedRepository = feedRepository;
@@ -47,23 +50,13 @@ public class FeedGroupingTask implements Runnable {
         String[] titles = allFeed.stream().map(Feed::getTitle).toArray(String[]::new);
 
         // メモリ上のインデックスディレクトリを作成（ByteBuffersDirectory）
-        Directory dir = new ByteBuffersDirectory();
-        try {
+        try (Directory dir = new ByteBuffersDirectory()) {
             // 標準分析器（英語圏などの簡易分析）
             Analyzer analyzer = new JapaneseAnalyzer();
 
             // インデックスライターコンフィグ設定
             IndexWriterConfig config = new IndexWriterConfig(analyzer);
-            try (IndexWriter writer = new IndexWriter(dir, config)) {
-                // インデックス登録
-                for (int i = 0; i < titles.length; i++) {
-                    Document doc = new Document();
-                    doc.add(new TextField("title", titles[i], Field.Store.YES));
-                    writer.addDocument(doc);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            addIndex(dir, config, titles);
 
             // インデックスリーダーとサーチャー作成
             IndexReader reader = DirectoryReader.open(dir);
@@ -71,7 +64,7 @@ public class FeedGroupingTask implements Runnable {
 
             // MoreLikeThisによる類似文書検索の準備
             MoreLikeThis mlt = new MoreLikeThis(reader);
-            mlt.setFieldNames(new String[]{"title"});
+            mlt.setFieldNames(new String[]{ANALYZED_COL_NAME});
             mlt.setAnalyzer(analyzer);
             mlt.setMinTermFreq(1);
             mlt.setMinDocFreq(1);
@@ -83,7 +76,7 @@ public class FeedGroupingTask implements Runnable {
 
                 // 類似度の高い上位3件抽出
                 StringReader sr = new StringReader(baseFeed.getTitle());
-                Query query = mlt.like("title", sr);
+                Query query = mlt.like(ANALYZED_COL_NAME, sr);
                 TopDocs topDocs = searcher.search(query, 3);
 
                 for (int j = 0; j < topDocs.scoreDocs.length; j++) {
@@ -95,12 +88,10 @@ public class FeedGroupingTask implements Runnable {
                     }
 
                     // 自分自身は除外
-                    if (!d.get("title").equals(baseFeed.getTitle()) && sd.score > 15f) {
-                        allFeed.stream().filter(feed -> feed.title.equals(d.get("title")))
+                    if (!d.get(ANALYZED_COL_NAME).equals(baseFeed.getTitle()) && sd.score > 15f) {
+                        allFeed.stream().filter(feed -> feed.title.equals(d.get(ANALYZED_COL_NAME)))
                                 .findFirst()
-                                .ifPresent(f -> {
-                                    feedGroupingRepository.insert(baseFeed.uuid, f.uuid, sd.score);
-                                });
+                                .ifPresent(f -> feedGroupingRepository.insert(baseFeed.uuid, f.uuid, sd.score));
                     }
                 }
 
@@ -108,17 +99,28 @@ public class FeedGroupingTask implements Runnable {
             }
 
             reader.close();
-            dir.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                if (dir != null) {
-                    dir.close();
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            throw new GaleWingsRuntimeException(e);
+        }
+    }
+
+    /**
+     * インデックス登録
+     *
+     * @param dir    インデックスディレクトリ
+     * @param config インデックスライターコンフィグ
+     * @param titles 登録するタイトル一覧
+     */
+    private void addIndex(Directory dir, IndexWriterConfig config, String[] titles) {
+        try (IndexWriter writer = new IndexWriter(dir, config)) {
+            // インデックス登録
+            for (String title : titles) {
+                Document doc = new Document();
+                doc.add(new TextField(ANALYZED_COL_NAME, title, Field.Store.YES));
+                writer.addDocument(doc);
             }
+        } catch (IOException e) {
+            throw new GaleWingsRuntimeException(e);
         }
     }
 
