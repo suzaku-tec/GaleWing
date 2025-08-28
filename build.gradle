@@ -228,7 +228,7 @@ jacocoTestReport {
 
 import net.ltgt.gradle.errorprone.CheckSeverity
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     // remove the if condition if you want to run NullAway on test code
     if (!name.toLowerCase().contains("test")) {
         options.errorprone {
