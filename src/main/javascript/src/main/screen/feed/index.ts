@@ -62,6 +62,7 @@ import ReadDispListEvent from '../../events/readDispListEvent';
 import GaleWingGrid from './galeWingGrid';
 import TitleListEvent from '../../events/markdown/titleListEvent';
 import AxiosSetting from '../../setting/AxiosSetting';
+import AllTitleGetEvent from '../../events/markdown/allTitleGetEvent';
 
 window.onload = async () => {
   // サイドバー初期化
@@ -104,6 +105,8 @@ function setupEvent() {
   document.getElementById('subNext')?.addEventListener('click', () => {
     (<HTMLElement>document.querySelector('button[title="Next"]')).click();
   });
+
+  new ElementEvent(new AllTitleGetEvent()).setup('click', document.getElementById('mdAllTitleList'));
 }
 
 function setupPlayer() {
