@@ -11,6 +11,7 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -75,13 +76,13 @@ public class AutoUpdateTask {
                 .filter(siteFeed -> siteFeed.getOptionalSyndFeed().isPresent())
                 .sequential()
                 .forEach(siteFeed -> {
-                    siteFeed.getOptionalSyndFeed().get().getEntries().stream().map(syndEntry -> {
-                                return FeedFactory.create(syndEntry, siteFeed.getSite().uuid);
-                            }).filter(feed -> StringUtils.isNotBlank(feed.publishedDate))
+                    siteFeed.getOptionalSyndFeed().get().getEntries()
+                            .stream()
+                            .map(syndEntry -> FeedFactory.create(syndEntry, siteFeed.getSite().uuid))
+                            .filter(feed -> !Strings.CS.startsWith(feed.title, "PR："))
+                            .filter(feed -> StringUtils.isNotBlank(feed.publishedDate))
                             .filter(feed -> gwDateService.isRetainedDateAfter(feed.publishedDate))
-                            .filter(feed -> {
-                                return !feedRepository.existFeed(feed.link);
-                            })
+                            .filter(feed -> !feedRepository.existFeed(feed.link))
                             .forEach(feedRepository::insertEntity);
 
                     siteRepository.updateFeedLastUpdateDate(siteFeed.getSite().uuid, gwDateService.now());
