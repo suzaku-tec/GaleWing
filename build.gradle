@@ -1,3 +1,5 @@
+import net.ltgt.gradle.errorprone.CheckSeverity
+
 plugins {
     id 'org.springframework.boot' version '3.5.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -168,6 +170,12 @@ dependencies {
 
 // https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser
     implementation("org.apache.lucene:lucene-queryparser:${lucene_version}")
+
+    // https://mvnrepository.com/artifact/com.github.pemistahl/lingua
+    implementation("com.github.pemistahl:lingua:1.2.2")
+
+//    // https://mvnrepository.com/artifact/com.microsoft.onnxruntime/onnxruntime
+//    implementation("com.microsoft.onnxruntime:onnxruntime:1.17.3")
 }
 
 sonarqube {
@@ -203,6 +211,49 @@ tasks.register('npmRun', NpmTask) {
     }
 }
 
+
+//// build.gradle の一部 (プラグインを使用しない方法の例)
+//tasks.register("downloadModel") {
+//    def modelUrl = 'https://huggingface.co/intfloat/multilingual-e5-large/resolve/main/onnx/model.onnx'
+//    def modelDir = files(layout.buildDirectory.dir("resources/main/models")).singleFile
+//    def modelFile = new File(modelDir, "model.onnx")
+//
+//    description = "Downloads the ONNX model from Hugging Face Hub."
+//    group = "build"
+//
+//    // 1. 出力ファイルを設定（インクリメンタルビルドを有効にする）
+//    // ファイルが存在する場合、タスクがスキップされます
+//    outputs.file(modelFile)
+//
+//    // 2. タスクアクションの定義
+//    doLast {
+//        // ダウンロード先ディレクトリが存在しない場合は作成
+//        if (!modelDir.exists()) {
+//            modelDir.mkdirs()
+//        }
+//
+//        println("⬇️ Downloading ONNX model from $modelUrl to $modelFile")
+//
+//        try {
+//            // Java標準のURLとInputStreamを使ってファイルをダウンロード
+//            new URL(modelUrl).withInputStream { inputStream ->
+//                // Groovyの withOutputStream とストリームコピー演算子 << を使用
+//                modelFile.withOutputStream { outputStream ->
+//                    outputStream << inputStream
+//                }
+//            }
+//            println "✅ Download completed: ${modelFile.getAbsolutePath()}"
+//        } catch (Exception e) {
+//            // ダウンロード失敗時はエラーログを出力し、Gradleビルドを停止
+//            logger.error("Failed to download ONNX model.", e)
+//            throw new GradleException("Model download failed.", e)
+//        }
+//    }
+//}
+//
+//// resourceプロセスが実行される前に、モデルがダウンロードされていることを確認
+//processResources.dependsOn downloadModel
+
 apply plugin: 'com.github.node-gradle.node'
 
 apply from: 'init_task.gradle'
@@ -225,8 +276,6 @@ jacocoTestReport {
         html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
 }
-
-import net.ltgt.gradle.errorprone.CheckSeverity
 
 tasks.withType(JavaCompile).configureEach {
     // remove the if condition if you want to run NullAway on test code
