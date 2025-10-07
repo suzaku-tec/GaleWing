@@ -171,8 +171,8 @@ dependencies {
 // https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser
     implementation("org.apache.lucene:lucene-queryparser:${lucene_version}")
 
-//    // https://mvnrepository.com/artifact/com.github.pemistahl/lingua
-//    implementation("com.github.pemistahl:lingua:1.2.2")
+    // https://mvnrepository.com/artifact/com.github.pemistahl/lingua
+    implementation("com.github.pemistahl:lingua:1.2.2")
 
 //    // https://mvnrepository.com/artifact/com.microsoft.onnxruntime/onnxruntime
 //    implementation("com.microsoft.onnxruntime:onnxruntime:1.17.3")
