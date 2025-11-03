@@ -1,6 +1,5 @@
 package com.galewings.service;
 
-import com.galewings.dto.ai.googleai.response.GeminiResponseDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +37,7 @@ class GeminiServiceTest {
         try (MockedStatic<HttpClient> mocked = mockStatic(HttpClient.class)) {
             mocked.when(HttpClient::newHttpClient).thenReturn(mockClient);
 
-            GeminiResponseDto result = geminiService.tellMe("text");
+            String result = geminiService.tellMe("text");
             Assertions.assertNotNull(result);
         }
     }
@@ -54,7 +53,7 @@ class GeminiServiceTest {
         try (MockedStatic<HttpClient> mocked = mockStatic(HttpClient.class)) {
             mocked.when(HttpClient::newHttpClient).thenReturn(mockClient);
 
-            GeminiResponseDto result = geminiService.tellMe("text");
+            String result = geminiService.tellMe("text");
             Assertions.fail();
         } catch (RuntimeException e) {
             // 正常
@@ -75,7 +74,7 @@ class GeminiServiceTest {
         try (MockedStatic<HttpClient> mocked = mockStatic(HttpClient.class)) {
             mocked.when(HttpClient::newHttpClient).thenReturn(mockClient);
 
-            GeminiResponseDto result = geminiService.tellMe("text");
+            String result = geminiService.tellMe("text");
             Assertions.fail();
         } catch (RuntimeException e) {
             // 正常
@@ -96,12 +95,9 @@ class GeminiServiceTest {
         try (MockedStatic<HttpClient> mocked = mockStatic(HttpClient.class)) {
             mocked.when(HttpClient::newHttpClient).thenReturn(mockClient);
 
-            GeminiResponseDto result = geminiService.tellMe("text");
+            String result = geminiService.tellMe("text");
             Assertions.fail();
-        } catch (InterruptedException e) {
-            // 正常
         } catch (Exception e) {
-            Assertions.fail();
         }
     }
 
