@@ -20,7 +20,7 @@ export default class ReadAllShowFeed implements IElementEvent {
       .post(uri.origin + '/readAllShowFeed', {
         identifier: identifier,
       })
-      .catch((error) => {})
+      .catch((error) => { })
       .finally(() => {
         var site = getSite(identifier);
         if (site && site.next) {

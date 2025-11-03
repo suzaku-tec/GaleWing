@@ -102,28 +102,6 @@
         <div class="col-md-9" id="mainContent">
 
             <!-- トップバー -->
-            <nav class="navbar px-3 bg-light border-bottom shadow-sm">
-                <div class="navbar-brand toggle-menu">
-                    <button class="btn btn-light btn-sm" id="sidebarToggler">
-                        <i class="fas fa-bars fa-lg"></i>
-                    </button>
-                </div>
-                <ul class="nav nav-tabs">
-                    <li class="nav-item" id="gridLayoutItem">
-                        <div class="nav-link active" aria-current="page" data-layout="gridLayout">
-                            <i class="fas fa-th"></i>
-                        </div>
-                    </li>
-                    <li class="nav-item" id="cardLayoutItem">
-                        <a href="/card/">
-                            <div class="nav-link" aria-current="page" data-layout="cardLayout">
-                                <i class="fas fa-id-card"></i>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            <!-- トップバー -->
 
             <!-- 下のコンテンツ -->
             <div class="content p-3">
@@ -133,6 +111,11 @@
                 <div>
                     <!-- アイコン -->
                     <div class="page-title pb-2">
+                        <button class="btn btn-outline-secondary" id="sidebarToggler">
+                        <span style="font-size: 2em;">
+                            <i class="fas fa-bars "></i>
+                        </span>
+                        </button>
                         <button type="button" id="addSite" class="btn btn-outline-secondary">
                         <span style="font-size: 2em; color: #33cc99;">
                             <i class="fas fa-plus"></i>
@@ -205,10 +188,6 @@
                             </div>
                         </div>
                         <div id="wrapper"></div>
-                    </div>
-                    <div id="cardLayout" class="contentLayout hiddenContent">
-                        <div id="cardWrapper"></div>
-                        <div id="app"></div>
                     </div>
                 </div>
             </div>

@@ -43,3 +43,6 @@ src/main/resources/.env
 .env.test
 
 /tmp/
+
+output/*
+!output/
