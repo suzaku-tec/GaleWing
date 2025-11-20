@@ -46,3 +46,6 @@ src/main/resources/.env
 
 output/*
 !output/
+
+logs/alog.log
+logs/blog.log
