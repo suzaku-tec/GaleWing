@@ -11,7 +11,7 @@
     <!-- ファイルA出力用設定 -->
     <appender name="FILE_A" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 出力先ファイルパス -->
-        <file>${LOG_FILE_PATH:-./logs/alog.log}</file>
+        <file>${ALOG_LOG_FILE_PATH:-./logs/alog.log}</file>
 
         <!-- ログのローテーション設定 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
@@ -35,7 +35,7 @@
 
     <!-- ファイルB出力用設定 -->
     <appender name="FILE_B" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/var/log/galewing/blog.log</file>
+        <file>${BLOG_LOG_FILE_PATH:-./logs/blog.log}</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>/var/log/galewing/blog.log.%d{yyyy-MM-dd}</fileNamePattern>
