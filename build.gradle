@@ -115,8 +115,6 @@ dependencies {
     // https://localhost:8080/v3/api-docs
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: springdocOpenApiVersion
 
-// https://mvnrepository.com/artifact/io.github.cdimascio/dotenv-java
-
     implementation group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.4.11'
 
     // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
@@ -176,6 +174,9 @@ dependencies {
 
 //    // https://mvnrepository.com/artifact/com.microsoft.onnxruntime/onnxruntime
 //    implementation("com.microsoft.onnxruntime:onnxruntime:1.17.3")
+
+    // https://mvnrepository.com/artifact/com.google.genai/google-genai
+    implementation("com.google.genai:google-genai:1.27.0")
 }
 
 sonarqube {
@@ -192,7 +193,8 @@ sonarqube {
                 "src/main/java/com/galewings/service/MachineLearningService.java, " +
                 "src/main/java/com/galewings/service/PodcastService.java, " +
                 "src/main/java/com/galewings/task/**, " +
-                "src/main/java/com/galewings/config/**"
+                "src/main/java/com/galewings/config/**" +
+                "src/main/java/com/galewings/service/GeminiService.java"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
