@@ -31,5 +31,6 @@ export default class ReadDispListEvent implements IElementEvent {
     if (Number(cnt)) targetBadge.innerText = String(Number(cnt) - urls.length);
 
     GaleWingGrid.getInstance().setStopRowClickFlg(false);
+
   }
 }
