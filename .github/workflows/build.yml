@@ -13,6 +13,9 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Prepare log directory
+        run: |
+          mkdir -p /var/log/galewing
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
