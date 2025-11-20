@@ -14,4 +14,4 @@ where
 		and vs.views_id = /*id*/'1')
 	and not exists(select * from read_list_queue rlq where rlq.url = f.uri )
 order by
-	publishedDate DESC
+	publishedDate ASC
