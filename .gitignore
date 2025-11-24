@@ -49,3 +49,6 @@ output/*
 
 logs/alog.log
 logs/blog.log
+/customRss.db
+/library.db
+src/main/resources/txt/customRssHtml/*
