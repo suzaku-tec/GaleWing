@@ -11,6 +11,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
@@ -31,6 +33,8 @@ public class CustomRssService {
 
     private static final String LF = "\n";
 
+    private static final Logger logger = LoggerFactory.getLogger(CustomRssService.class);
+
     @Autowired
     public CustomRssService(CustomRssSiteRepository customRssSiteRepository, CustomRssRssRepository customRssRssRepository) {
         this.customRssSiteRepository = customRssSiteRepository;
@@ -44,7 +48,7 @@ public class CustomRssService {
 
         List<Site> sites = customRssSiteRepository.selectAll();
 
-        sites.stream().map(site -> Result.runCatching(() -> diffLinkList(site)).onFailure(e -> e.printStackTrace()))
+        sites.stream().map(site -> Result.runCatching(() -> diffLinkList(site)).onFailure(e -> logger.error("error diffLinkList", e)))
                 .filter(Result::isSuccess)
                 .map(Result::getOrNull)
                 .flatMap(Collection::stream)
