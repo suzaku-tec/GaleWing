@@ -11,6 +11,7 @@ plugins {
     // we assume you are already using the Java plugin
     id "net.ltgt.errorprone" version "4.0.0"
     id "net.ltgt.nullaway" version "2.0.0"
+    id 'groovy'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -51,6 +52,11 @@ jar {
     archiveVersion = '0.1.0'
 }
 // end::jar[]
+
+configurations {
+    groovyLib
+    groovySqlLib
+}
 
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter-thymeleaf:$springVersion"
@@ -177,6 +183,14 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.google.genai/google-genai
     implementation("com.google.genai:google-genai:1.27.0")
+
+    // https://mvnrepository.com/artifact/io.github.java-diff-utils/java-diff-utils
+    implementation 'io.github.java-diff-utils:java-diff-utils:4.16'
+
+    implementation 'org.apache.commons:commons-text:1.14.0'
+
+    // https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
+    implementation 'org.eclipse.jgit:org.eclipse.jgit:7.4.0.202509020913-r'
 }
 
 sonarqube {
@@ -193,14 +207,29 @@ sonarqube {
                 "src/main/java/com/galewings/service/MachineLearningService.java, " +
                 "src/main/java/com/galewings/service/PodcastService.java, " +
                 "src/main/java/com/galewings/task/**, " +
-                "src/main/java/com/galewings/config/**" +
-                "src/main/java/com/galewings/service/GeminiService.java"
+                "src/main/java/com/galewings/config/**, " +
+                "src/main/java/com/galewings/service/GeminiService.java, " +
+                "src/main/java/gradle/task/**, " +
+                "src/main/java/com/galewings/service/CustomRssService.java"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
 
 test {
     useJUnitPlatform()
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+    }
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    'gradle/task/**/*.class'
+            ])
+        })
+    }
 }
 
 tasks.register('npmRun', NpmTask) {
@@ -303,4 +332,14 @@ tasks.withType(JavaCompile).configureEach {
     options.errorprone.nullaway {
         error()
     }
+}
+
+tasks.register('createCustomRssSqliteDb', JavaExec) {
+    mainClass.set('gradle.task.InitCustomRssSqliteDb')
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+tasks.register('testJavaSample', JavaExec) {
+    mainClass.set('gradle.task.JsoupTest')
+    classpath = sourceSets.main.runtimeClasspath
 }
