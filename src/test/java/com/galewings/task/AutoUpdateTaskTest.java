@@ -14,8 +14,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class AutoUpdateTaskTest {
 
@@ -46,6 +45,8 @@ class AutoUpdateTaskTest {
         when(feedRepository.existFeed(anyString())).thenReturn(true);
 
         autoUpdateTask.allUpdate();
+
+        verify(siteRepository, times(1)).getAllSite();
     }
 }
 
