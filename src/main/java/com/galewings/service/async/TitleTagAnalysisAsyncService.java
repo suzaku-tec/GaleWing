@@ -19,14 +19,11 @@ public class TitleTagAnalysisAsyncService {
 
     private final OllamaService ollamaService;
 
-    private final ObjectMapper objectMapper;
-
     private final FeedTagRepository feedTagRepository;
 
     @Autowired
-    public TitleTagAnalysisAsyncService(OllamaService ollamaService, ObjectMapper objectMapper, FeedTagRepository feedTagRepository) {
+    public TitleTagAnalysisAsyncService(OllamaService ollamaService, FeedTagRepository feedTagRepository) {
         this.ollamaService = ollamaService;
-        this.objectMapper = objectMapper;
         this.feedTagRepository = feedTagRepository;
     }
 
@@ -41,6 +38,7 @@ public class TitleTagAnalysisAsyncService {
         // 2. 末尾の ```
         tagInfoJsonStr = tagInfoJsonStr.replaceAll("\\s*```\\s*$", "").trim();
 
+        ObjectMapper objectMapper = new ObjectMapper();
         SiteTagInfo info = objectMapper.readValue(tagInfoJsonStr, SiteTagInfo.class);
         feedTagRepository.insertSiteTagInfo(info, feed.link);
 
