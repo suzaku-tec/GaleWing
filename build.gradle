@@ -191,6 +191,9 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
     implementation 'org.eclipse.jgit:org.eclipse.jgit:7.4.0.202509020913-r'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-webflux
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:3.5.4'
 }
 
 sonarqube {
@@ -210,7 +213,8 @@ sonarqube {
                 "src/main/java/com/galewings/config/**, " +
                 "src/main/java/com/galewings/service/GeminiService.java, " +
                 "src/main/java/gradle/task/**, " +
-                "src/main/java/com/galewings/service/CustomRssService.java"
+                "src/main/java/com/galewings/service/CustomRssService.java, " +
+                "src/main/java/com/galewings/util/OllamaClient.java"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
