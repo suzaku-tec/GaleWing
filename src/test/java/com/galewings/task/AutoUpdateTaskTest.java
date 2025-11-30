@@ -46,7 +46,7 @@ class AutoUpdateTaskTest {
 
         autoUpdateTask.allUpdate();
 
-        verify(siteRepository, times(1)).getAllSite();
+        verify(siteRepository, times(2)).getAllSite();
     }
 }
 
