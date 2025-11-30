@@ -21,6 +21,7 @@ import com.galewings.service.GwDateService;
 import com.galewings.service.MachineLearningService;
 import com.galewings.service.URLService;
 import com.galewings.service.async.QueueUrlReadAsyncService;
+import com.galewings.service.async.TitleTagAnalysisAsyncService;
 import com.galewings.task.AutoUpdateTask;
 import com.google.common.base.Strings;
 import com.rometools.rome.feed.synd.SyndFeed;
@@ -85,6 +86,9 @@ public class SiteFeedController {
 
     @Autowired
     private QueueUrlReadAsyncService queueUrlReadAsyncService;
+
+    @Autowired
+    private TitleTagAnalysisAsyncService titleTagAnalysAsyncService;
 
     /**
      * 対象サイトのフィードを取得
@@ -178,7 +182,14 @@ public class SiteFeedController {
                     return !feedRepository.existFeed(syndEntry.getLink());
                 }).map(syndEntry -> FeedFactory.create(syndEntry, site.uuid))
                 .filter(f -> gwDateService.isRetainedDateAfter(f.publishedDate))
-                .forEach(feedRepository::insertEntity);
+                .forEach(f -> {
+                    try {
+                        titleTagAnalysAsyncService.asyncMethod(site, f);
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+                    feedRepository.insertEntity(f);
+                });
 
         feeds = feedRepository.getFeed(site.uuid);
 
