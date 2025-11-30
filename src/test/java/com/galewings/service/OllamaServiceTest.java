@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
 
@@ -24,7 +25,7 @@ class OllamaServiceTest {
 
     @Test
     void testTellMe() {
-        when(ollamaClient.generate(anyString(), anyString())).thenReturn("generateResponse");
+        when(ollamaClient.generate(anyString(), any())).thenReturn("generateResponse");
 
         String result = ollamaService.tellMe("text");
         Assertions.assertEquals("generateResponse", result);
