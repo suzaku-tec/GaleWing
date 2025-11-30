@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OllamaService implements TellMeAi {
+public class OllamaService implements TellMeAi<String> {
 
     private final OllamaClient ollamaClient;
 
