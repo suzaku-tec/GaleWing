@@ -26,7 +26,7 @@ public class AsyncConfiguration {
     public TaskExecutor taskTagAnalysExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(2);
-        executor.setMaxPoolSize(5);
+        executor.setMaxPoolSize(10);
         executor.setQueueCapacity(100);
         executor.setThreadNamePrefix("taskTagAnalys-");
         executor.initialize();
