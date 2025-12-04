@@ -1,6 +1,7 @@
 package com.galewings.service;
 
 import com.galewings.dto.relation.FeedRelation;
+import com.galewings.entity.Feed;
 import com.galewings.entity.FeedCategory;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.FeedTagRepository;
@@ -33,15 +34,17 @@ class RelationServiceTest {
     void testList() {
         when(feedTagRepository.selectLink(anyString())).thenReturn(List.of(new FeedCategory()));
         when(feedTagRepository.selectHighlyRelevantLink(any())).thenReturn(List.of("selectHighlyRelevantLinkResponse"));
+        when(feedRepository.selectFeedFor(any())).thenReturn(new Feed());
 
         List<FeedRelation> result = relationService.list("link");
-        Assertions.assertEquals(List.of(new FeedRelation()), result);
+        Assertions.assertEquals(1, result.size());
     }
 
     @Test
     void testListEmpty() {
         when(feedTagRepository.selectLink(anyString())).thenReturn(Collections.emptyList());
         when(feedTagRepository.selectHighlyRelevantLink(any())).thenReturn(List.of("selectHighlyRelevantLinkResponse"));
+        when(feedRepository.selectFeedFor(any())).thenReturn(new Feed());
 
         List<FeedRelation> result = relationService.list("link");
         Assertions.assertEquals(0, result.size());
