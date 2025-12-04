@@ -214,10 +214,10 @@ export default class GaleWingApi {
     });
   }
 
-  async relationList(uuid: string): Promise<AxiosResponse<any>> {
+  async relationList(link: string): Promise<AxiosResponse<any>> {
     let ajaxUrl = this.getBaseUrl() + this.apiUrls.relationList;
     return await axios.post(ajaxUrl, {
-      uuid: uuid
+      link: link
     });
   }
 
