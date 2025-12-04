@@ -118,7 +118,7 @@ export default class GaleWingGrid {
           return h('button', {
             className: 'btn btn-light btn-outline-secondary',
             onClick: () => {
-              new relationListEvent().execute(row.cells[HeaderIndex.uuid].data!.toString());
+              new relationListEvent().execute(row.cells[HeaderIndex.link].data!.toString());
             }
           }, 'rel');
         }
