@@ -13,6 +13,7 @@ import com.galewings.entity.Site;
 import com.galewings.entity.SiteFeedCount;
 import com.galewings.factory.SiteFactory;
 import com.galewings.repository.FeedRepository;
+import com.galewings.repository.FunctionCtrlRepository;
 import com.galewings.repository.SiteRepository;
 import com.galewings.repository.ViewsRepository;
 import com.galewings.service.*;
@@ -89,6 +90,9 @@ public class SiteFeedController {
     @Autowired
     private FeedFactoryService feedFactoryService;
 
+    @Autowired
+    private FunctionCtrlRepository functionCtrlRepository;
+
     /**
      * 対象サイトのフィードを取得
      *
@@ -98,7 +102,7 @@ public class SiteFeedController {
      */
     @GetMapping("/feedlist")
     @ResponseBody
-    public String getFeedList(@RequestParam(value = "uuid", required = false) String uuid)
+    public List<Feed> getFeedList(@RequestParam(value = "uuid", required = false) String uuid)
             throws JsonProcessingException {
 
         List<Feed> feeds;
@@ -112,8 +116,11 @@ public class SiteFeedController {
             }
         }
 
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(feeds);
+        if (functionCtrlRepository.get("feed-img").flg.equals("1")) {
+            feeds.forEach(feed -> feed.imageUrl = null);
+        }
+
+        return feeds;
     }
 
     /**
