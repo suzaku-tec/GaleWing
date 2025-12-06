@@ -11,15 +11,11 @@ import com.galewings.dto.output.FeedUpdate;
 import com.galewings.entity.Feed;
 import com.galewings.entity.Site;
 import com.galewings.entity.SiteFeedCount;
-import com.galewings.factory.FeedFactory;
 import com.galewings.factory.SiteFactory;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.SiteRepository;
 import com.galewings.repository.ViewsRepository;
-import com.galewings.service.GoogleAlertService;
-import com.galewings.service.GwDateService;
-import com.galewings.service.MachineLearningService;
-import com.galewings.service.URLService;
+import com.galewings.service.*;
 import com.galewings.service.async.QueueUrlReadAsyncService;
 import com.galewings.service.async.TitleTagAnalysisAsyncService;
 import com.galewings.task.AutoUpdateTask;
@@ -89,6 +85,9 @@ public class SiteFeedController {
 
     @Autowired
     private TitleTagAnalysisAsyncService titleTagAnalysAsyncService;
+
+    @Autowired
+    private FeedFactoryService feedFactoryService;
 
     /**
      * 対象サイトのフィードを取得
@@ -180,7 +179,7 @@ public class SiteFeedController {
         SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(site.xmlUrl)));
         feed.getEntries().stream().filter(syndEntry -> {
                     return !feedRepository.existFeed(syndEntry.getLink());
-                }).map(syndEntry -> FeedFactory.create(syndEntry, site.uuid))
+                }).map(syndEntry -> feedFactoryService.create(syndEntry, site.uuid))
                 .filter(f -> gwDateService.isRetainedDateAfter(f.publishedDate))
                 .forEach(f -> {
                     try {
@@ -240,7 +239,7 @@ public class SiteFeedController {
 
                         // フィード追加
                         syndFeed.getEntries().stream()
-                                .map(syndEntry -> FeedFactory.create(syndEntry, site.uuid))
+                                .map(syndEntry -> feedFactoryService.create(syndEntry, site.uuid))
                                 .forEach(feedRepository::insertEntity);
                     });
                 } catch (Exception e) {
