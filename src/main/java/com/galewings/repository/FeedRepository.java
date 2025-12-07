@@ -29,8 +29,11 @@ public class FeedRepository {
      */
     private final SqlManager sqlManager;
 
-    public FeedRepository(SqlManager sqlManager) {
+    private final FunctionCtrlRepository functionCtrlRepository;
+
+    public FeedRepository(SqlManager sqlManager, FunctionCtrlRepository functionCtrlRepository) {
         this.sqlManager = sqlManager;
+        this.functionCtrlRepository = functionCtrlRepository;
     }
 
 
@@ -55,8 +58,12 @@ public class FeedRepository {
      */
     @Transactional
     public List<Feed> getAllFeed() {
+        String imgFlg = functionCtrlRepository.get("feed-img").flg;
+
+        Map<String, String> params = new HashMap<>();
+        params.put("imgFlg", imgFlg);
         return sqlManager.getResultList(Feed.class,
-                new ClasspathSqlResource("sql/feed/select_all_feed.sql"));
+                new ClasspathSqlResource("sql/feed/select_all_feed.sql"), params);
     }
 
     /**
@@ -96,8 +103,11 @@ public class FeedRepository {
      */
     @Transactional
     public List<Feed> getFeed(String uuid) {
+        String imgFlg = functionCtrlRepository.get("feed-img").flg;
+
         Map<String, String> params = new HashMap<>();
         params.put("uuid", uuid);
+        params.put("imgFlg", imgFlg);
         return sqlManager.getResultList(Feed.class,
                 new ClasspathSqlResource("sql/feed/select_feed_for_uuid.sql"), params);
     }
@@ -191,8 +201,11 @@ public class FeedRepository {
     }
 
     public List<Feed> getViewFeed(String id) {
+        String imgFlg = functionCtrlRepository.get("feed-img").flg;
+
         Map<String, String> params = new HashMap<>();
         params.put("id", id);
+        params.put("imgFlg", imgFlg);
         return sqlManager.getResultList(Feed.class,
                 new ClasspathSqlResource("sql/feed/select_view_feed_for_uuid.sql"), params);
     }
