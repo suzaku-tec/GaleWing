@@ -10,7 +10,7 @@ SELECT
     , "comments"                                -- comments
     , "publishedDate"                           -- publishedDate
     , "readed"                                  -- readed
-    , "imageUrl"                                -- imageUrl
+    , /*IF imgFlg == "0"*/ '' /*END*/ /*IF imgFlg != "0"*/imageUrl/*END*/ -- imageUrl
 FROM
     "feed" f
 WHERE
