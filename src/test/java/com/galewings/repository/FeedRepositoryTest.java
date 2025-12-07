@@ -2,6 +2,7 @@ package com.galewings.repository;
 
 import com.galewings.entity.Feed;
 import com.galewings.entity.Site;
+import com.galewings.util.FunctionCtrlRepositoryUtil;
 import com.miragesql.miragesql.SqlManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +24,9 @@ class FeedRepositoryTest {
     @InjectMocks
     FeedRepository feedRepository;
 
+    @Mock
+    FunctionCtrlRepository functionCtrlRepository;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -38,6 +42,7 @@ class FeedRepositoryTest {
     @Test
     void testGetAllFeed() {
         when(sqlManager.getResultList(any(), any())).thenReturn(Collections.emptyList());
+        when(functionCtrlRepository.get(any())).thenReturn(FunctionCtrlRepositoryUtil.createFunctionCtrlMock("id", "1"));
         List<Feed> result = feedRepository.getAllFeed();
         Assertions.assertEquals(Collections.emptyList(), result);
     }
@@ -59,6 +64,8 @@ class FeedRepositoryTest {
     @Test
     void testGetFeed() {
         when(sqlManager.getResultList(any(), any(), any())).thenReturn(Collections.emptyList());
+        when(functionCtrlRepository.get(any())).thenReturn(FunctionCtrlRepositoryUtil.createFunctionCtrlMock("id", "1"));
+
         List<Feed> result = feedRepository.getFeed("uuid");
         Assertions.assertEquals(Collections.emptyList(), result);
     }
@@ -129,6 +136,8 @@ class FeedRepositoryTest {
     @Test
     void testViewFeed() {
         when(sqlManager.getResultList(any(), any())).thenReturn(new ArrayList<>());
+        when(functionCtrlRepository.get(any())).thenReturn(FunctionCtrlRepositoryUtil.createFunctionCtrlMock("id", "1"));
+
         List<Feed> result = feedRepository.getViewFeed("1");
         Assertions.assertEquals(0, result.size());
     }
