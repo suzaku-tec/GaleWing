@@ -6,6 +6,7 @@ import com.miragesql.miragesql.ClasspathSqlResource;
 import com.miragesql.miragesql.SqlManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ public class FeedTagRepository {
     }
 
 
+    @Transactional
     public List<FeedCategory> selectLink(String link) {
         Map<String, String> param = new HashMap<>();
         param.put("link", link);
