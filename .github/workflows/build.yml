@@ -35,7 +35,15 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Create empty .env file
-        run: touch .env
+        run: |
+          echo "google.ai.api-key=test" >> .env
+          echo "minhon.client-id=test" >> .env
+          echo "minhon.client-secret=test" >> .env
+          echo "minhon.name=test" >> .env
+          echo "newsapi.api-key=test" >> .env
+          echo "newsapi.url=test" >> .env
+          echo "wordNews.api-key=test" >> .env
+          echo "GEMINI_API_KEY=test" >> .env
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
