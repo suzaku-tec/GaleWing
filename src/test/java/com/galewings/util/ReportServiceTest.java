@@ -5,9 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.FileNotFoundException;
@@ -20,9 +19,6 @@ import static org.junit.Assert.*;
 @SpringBootTest
 class ReportServiceTest {
 
-    @Mock
-    private Environment environment;
-
     @InjectMocks
     private ReportService reportService;
 
@@ -31,6 +27,7 @@ class ReportServiceTest {
 
     @BeforeEach
     void setup() {
+        MockitoAnnotations.openMocks(this);
         ReflectionTestUtils.setField(reportService, "outputDir", tempDir.toAbsolutePath().toString(), String.class);
     }
 
