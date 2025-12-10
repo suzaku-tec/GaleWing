@@ -1,15 +1,13 @@
 package com.galewings.util;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,23 +19,17 @@ import static org.junit.Assert.*;
 @SpringBootTest
 class ReportServiceTest {
 
-    @Mock
-    private Environment environment;
-
-    @Autowired
+    @InjectMocks
     private ReportService reportService;
 
     @TempDir
     static Path tempDir;
 
-    @Value("${report.output.dir}")
-    private String outputDir;
-
-    @DynamicPropertySource
-    static void registerProps(DynamicPropertyRegistry registry) {
-        registry.add("report.output.dir", () -> tempDir.toAbsolutePath().toString());
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.openMocks(this);
+        ReflectionTestUtils.setField(reportService, "outputDir", tempDir.toAbsolutePath().toString(), String.class);
     }
-
 
     @Test
     void createsFileWithCorrectContent() throws IOException {
