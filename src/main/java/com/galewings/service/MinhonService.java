@@ -9,7 +9,6 @@ import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,7 +17,6 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
-@Component
 public class MinhonService {
 
     private static final String BASE_URL = "https://mt-auto-minhon-mlt.ucri.jgn-x.jp/";
