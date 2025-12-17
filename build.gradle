@@ -347,3 +347,50 @@ tasks.register('testJavaSample', JavaExec) {
     mainClass.set('gradle.task.JsoupTest')
     classpath = sourceSets.main.runtimeClasspath
 }
+
+tasks.named('bootRun') {
+    dependsOn 'ensureOllamaRunning'
+}
+
+tasks.register('ensureOllamaRunning') {
+    doLast {
+        def containerName = "ollama"
+        def imageName = "ollama/ollama"
+
+        // 1. 起動中か確認
+        def checkRunning = [
+                "docker", "ps",
+                "--filter", "name=${containerName}",
+                "--format", "{{.Names}}"
+        ].execute()
+        checkRunning.waitFor()
+
+        if (checkRunning.text.trim() == containerName) {
+            println "Ollama container is already running."
+            return
+        }
+
+        // 2. 停止中コンテナが存在するか
+        def checkExists = [
+                "docker", "ps", "-a",
+                "--filter", "name=${containerName}",
+                "--format", "{{.Names}}"
+        ].execute()
+        checkExists.waitFor()
+
+        if (checkExists.text.trim() == containerName) {
+            println "Starting existing Ollama container..."
+            ["docker", "start", containerName].execute().waitFor()
+        } else {
+            println "Creating and starting new Ollama container..."
+            [
+                    "docker", "run", "-d",
+                    "--name", containerName,
+                    "-p", "11434:11434",
+                    imageName
+            ].execute().waitFor()
+        }
+
+        println "Ollama container is running."
+    }
+}
