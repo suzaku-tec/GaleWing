@@ -1,12 +1,14 @@
 package com.galewings.task;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.galewings.dto.GaleWingSiteFeed;
 import com.galewings.entity.Site;
-import com.galewings.factory.FeedFactory;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.SiteRepository;
+import com.galewings.service.FeedFactoryService;
 import com.galewings.service.GoogleAlertService;
 import com.galewings.service.GwDateService;
+import com.galewings.service.async.TitleTagAnalysisAsyncService;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
@@ -39,6 +41,12 @@ public class AutoUpdateTask {
 
     @Autowired
     private GoogleAlertService googleAlertService;
+
+    @Autowired
+    private TitleTagAnalysisAsyncService titleTagAnalysisAsyncService;
+
+    @Autowired
+    private FeedFactoryService feedFactoryService;
 
     @Scheduled(cron = "${update.scheduler.cron}")
     public void allUpdate() {
@@ -78,12 +86,19 @@ public class AutoUpdateTask {
                 .forEach(siteFeed -> {
                     siteFeed.getOptionalSyndFeed().get().getEntries()
                             .stream()
-                            .map(syndEntry -> FeedFactory.create(syndEntry, siteFeed.getSite().uuid))
+                            .map(syndEntry -> feedFactoryService.create(syndEntry, siteFeed.getSite().uuid))
                             .filter(feed -> !Strings.CS.startsWith(feed.title, "PR："))
                             .filter(feed -> StringUtils.isNotBlank(feed.publishedDate))
                             .filter(feed -> gwDateService.isRetainedDateAfter(feed.publishedDate))
                             .filter(feed -> !feedRepository.existFeed(feed.link))
-                            .forEach(feedRepository::insertEntity);
+                            .forEach(feed -> {
+                                try {
+                                    titleTagAnalysisAsyncService.asyncMethod(siteFeed.getSite(), feed);
+                                } catch (JsonProcessingException e) {
+                                    e.printStackTrace();
+                                }
+                                feedRepository.insertEntity(feed);
+                            });
 
                     siteRepository.updateFeedLastUpdateDate(siteFeed.getSite().uuid, gwDateService.now());
                 });

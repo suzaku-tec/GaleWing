@@ -24,6 +24,6 @@ public class RelationController {
     @PostMapping("/list")
     @ResponseBody
     public List<FeedRelation> list(@RequestBody RelationListDto relationListDto) {
-        return relationService.list(relationListDto.uuid);
+        return relationService.list(relationListDto.link);
     }
 }
