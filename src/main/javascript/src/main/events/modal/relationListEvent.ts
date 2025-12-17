@@ -4,11 +4,11 @@ import { IElementEvent } from "../elementEvent";
 import { Modal } from "bootstrap";
 
 export default class relationListEvent implements IElementEvent {
-  execute(uuid: string): void {
+  execute(link: string): void {
 
     let api = GaleWingApi.getInstance();
 
-    api.relationList(uuid)
+    api.relationList(link)
       .then((res) => {
         let urls: { title: string, link: string }[] = res.data;
         showExecFuncModal('relationList', 'Relation List', (typeModalBody: HTMLElement) => {

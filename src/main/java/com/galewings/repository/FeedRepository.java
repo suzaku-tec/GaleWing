@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,194 +24,217 @@ import java.util.Map;
 @Transactional
 public class FeedRepository {
 
-  /**
-   * SqlManager
-   */
-  private final SqlManager sqlManager;
+    /**
+     * SqlManager
+     */
+    private final SqlManager sqlManager;
 
-  public FeedRepository(SqlManager sqlManager) {
-    this.sqlManager = sqlManager;
-  }
+    private final FunctionCtrlRepository functionCtrlRepository;
+
+    public FeedRepository(SqlManager sqlManager, FunctionCtrlRepository functionCtrlRepository) {
+        this.sqlManager = sqlManager;
+        this.functionCtrlRepository = functionCtrlRepository;
+    }
 
 
-  /**
-   * フィードの存在確認
-   *
-   * @param link リンクURL
-   * @return true:存在 false:未存在
-   */
-  @Transactional
-  public boolean existFeed(String link) {
-    Map<String, String> params = new HashMap<>();
-    params.put("link", link);
-    int count = sqlManager.getCount(new ClasspathSqlResource("sql/select_feed_single.sql"), params);
-    return 0 < count;
-  }
+    /**
+     * フィードの存在確認
+     *
+     * @param link リンクURL
+     * @return true:存在 false:未存在
+     */
+    @Transactional
+    public boolean existFeed(String link) {
+        Map<String, String> params = new HashMap<>();
+        params.put("link", link);
+        int count = sqlManager.getCount(new ClasspathSqlResource("sql/select_feed_single.sql"), params);
+        return 0 < count;
+    }
 
-  /**
-   * 全フィード取得
-   *
-   * @return フィードリスト
-   */
-  @Transactional
-  public List<Feed> getAllFeed() {
-    return sqlManager.getResultList(Feed.class,
-            new ClasspathSqlResource("sql/feed/select_all_feed.sql"));
-  }
+    /**
+     * 全フィード取得
+     *
+     * @return フィードリスト
+     */
+    @Transactional
+    public List<Feed> getAllFeed() {
+        String imgFlg = functionCtrlRepository.get("feed-img").flg;
 
-  /**
-   * サイトの全フィード取得
-   *
-   * @param site サイト情報
-   * @return サイトの全フィード
-   */
-  @Transactional
-  public List<Feed> getSiteFeed(Site site) {
-    Map<String, String> params = new HashMap<>();
-    params.put("uuid", site.uuid);
-    return sqlManager.getResultList(Feed.class,
-            new ClasspathSqlResource("sql/feed/select_site_feed.sql"), params);
-  }
+        Map<String, String> params = new HashMap<>();
+        params.put("imgFlg", imgFlg);
+        return sqlManager.getResultList(Feed.class,
+                new ClasspathSqlResource("sql/feed/select_all_feed.sql"), params);
+    }
 
-  /**
-   * サイトフィード既読処理
-   *
-   * @param identifier サイト識別情報
-   * @return 件数
-   */
-  @Transactional
-  public int updateSiteFeedRead(String identifier) {
-    Map<String, String> params = new HashMap<>();
-    params.put("identifier", identifier);
+    /**
+     * サイトの全フィード取得
+     *
+     * @param site サイト情報
+     * @return サイトの全フィード
+     */
+    @Transactional
+    public List<Feed> getSiteFeed(Site site) {
+        Map<String, String> params = new HashMap<>();
+        params.put("uuid", site.uuid);
+        return sqlManager.getResultList(Feed.class,
+                new ClasspathSqlResource("sql/feed/select_site_feed.sql"), params);
+    }
 
-    return sqlManager.executeUpdate(new ClasspathSqlResource("sql/feed/update_site_feed_read.sql"),
-            params);
-  }
+    /**
+     * サイトフィード既読処理
+     *
+     * @param identifier サイト識別情報
+     * @return 件数
+     */
+    @Transactional
+    public int updateSiteFeedRead(String identifier) {
+        Map<String, String> params = new HashMap<>();
+        params.put("identifier", identifier);
 
-  /**
-   * フィード取得
-   *
-   * @param uuid UUID
-   * @return フィードリスト
-   */
-  @Transactional
-  public List<Feed> getFeed(String uuid) {
-    Map<String, String> params = new HashMap<>();
-    params.put("uuid", uuid);
-    return sqlManager.getResultList(Feed.class,
-            new ClasspathSqlResource("sql/feed/select_feed_for_uuid.sql"), params);
-  }
+        return sqlManager.executeUpdate(new ClasspathSqlResource("sql/feed/update_site_feed_read.sql"),
+                params);
+    }
 
-  /**
-   * 既読
-   *
-   * @param link リンク
-   * @return 更新件数
-   */
-  @Transactional
-  public int updateReadFeed(String link) {
-    Map<String, String> params = new HashMap<>();
-    params.put("link", link);
-    return sqlManager.executeUpdate(
-            new ClasspathSqlResource("sql/feed/update_feed_read.sql")
-            , params
-    );
-  }
+    /**
+     * フィード取得
+     *
+     * @param uuid UUID
+     * @return フィードリスト
+     */
+    @Transactional
+    public List<Feed> getFeed(String uuid) {
+        String imgFlg = functionCtrlRepository.get("feed-img").flg;
 
-  /**
-   * 非表示で既読
-   *
-   * @param link リンク
-   * @return 更新件数
-   */
-  @Transactional
-  public int updateReadFeedNoOpen(String link) {
-    Map<String, String> params = new HashMap<>();
-    params.put("link", link);
-    return sqlManager.executeUpdate(
-            new ClasspathSqlResource("sql/feed/update_feed_read_no_open.sql")
-            , params
-    );
-  }
+        Map<String, String> params = new HashMap<>();
+        params.put("uuid", uuid);
+        params.put("imgFlg", imgFlg);
+        return sqlManager.getResultList(Feed.class,
+                new ClasspathSqlResource("sql/feed/select_feed_for_uuid.sql"), params);
+    }
 
-  /**
-   * フィード登録
-   *
-   * @param feed
-   * @return
-   */
-  @Transactional
-  public int insertEntity(Feed feed) {
-    return sqlManager.insertEntity(feed);
-  }
+    /**
+     * 既読
+     *
+     * @param link リンク
+     * @return 更新件数
+     */
+    @Transactional
+    public int updateReadFeed(String link) {
+        Map<String, String> params = new HashMap<>();
+        params.put("link", link);
+        return sqlManager.executeUpdate(
+                new ClasspathSqlResource("sql/feed/update_feed_read.sql")
+                , params
+        );
+    }
 
-  /**
-   * 指定した日付以降のデータを取得する
-   *
-   * @param date 指定日
-   * @return フィードリスト
-   */
-  @Transactional
-  public List<Feed> selectPublicDateFrom(Date date) {
-    SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    Map<String, String> params = new HashMap<>();
-    params.put("fromDate", sdFormat.format(date));
+    /**
+     * 非表示で既読
+     *
+     * @param link リンク
+     * @return 更新件数
+     */
+    @Transactional
+    public int updateReadFeedNoOpen(String link) {
+        Map<String, String> params = new HashMap<>();
+        params.put("link", link);
+        return sqlManager.executeUpdate(
+                new ClasspathSqlResource("sql/feed/update_feed_read_no_open.sql")
+                , params
+        );
+    }
 
-    return sqlManager.getResultList(Feed.class,
-            new ClasspathSqlResource("sql/feed/select_public_from.sql"), params);
-  }
+    /**
+     * フィード登録
+     *
+     * @param feed
+     * @return
+     */
+    @Transactional
+    public int insertEntity(Feed feed) {
+        return sqlManager.insertEntity(feed);
+    }
 
-  /**
-   * フィード単一取得
-   *
-   * @param link 対象リンク
-   * @return フィード
-   */
-  @Transactional
-  public Feed selectFeedFor(String link) {
-    Map<String, String> params = new HashMap<>();
-    params.put("link", link);
-    return sqlManager.getSingleResult(Feed.class,
-            new ClasspathSqlResource("sql/feed/select_for_link.sql"),
-            params);
-  }
+    /**
+     * 指定した日付以降のデータを取得する
+     *
+     * @param date 指定日
+     * @return フィードリスト
+     */
+    @Transactional
+    public List<Feed> selectPublicDateFrom(Date date) {
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Map<String, String> params = new HashMap<>();
+        params.put("fromDate", sdFormat.format(date));
 
-  @Transactional
-  public int deleteReadFeed(String daysRetained) {
+        return sqlManager.getResultList(Feed.class,
+                new ClasspathSqlResource("sql/feed/select_public_from.sql"), params);
+    }
 
-    LocalDate now = LocalDate.now();
-    now = now.minusDays(Strings.isNullOrEmpty(daysRetained) ? 0 : Integer.parseInt(daysRetained));
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    /**
+     * フィード単一取得
+     *
+     * @param link 対象リンク
+     * @return フィード
+     */
+    @Transactional
+    public Feed selectFeedFor(String link) {
+        Map<String, String> params = new HashMap<>();
+        params.put("link", link);
+        return sqlManager.getSingleResult(Feed.class,
+                new ClasspathSqlResource("sql/feed/select_for_link.sql"),
+                params);
+    }
 
-    Map<String, String> params = new HashMap<>();
-    params.put("daysRetained", now.format(formatter));
-    return sqlManager.executeUpdate(
-            new ClasspathSqlResource("sql/feed/delete_read_feed.sql"), params
-    );
-  }
+    @Transactional
+    public int deleteReadFeed(String daysRetained) {
 
-  public List<Feed> getViewFeed(String id) {
-    Map<String, String> params = new HashMap<>();
-    params.put("id", id);
-    return sqlManager.getResultList(Feed.class,
-            new ClasspathSqlResource("sql/feed/select_view_feed_for_uuid.sql"), params);
-  }
+        LocalDate now = LocalDate.now();
+        now = now.minusDays(Strings.isNullOrEmpty(daysRetained) ? 0 : Integer.parseInt(daysRetained));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-  public int insertReadListQueue(String url) {
-    Map<String, String> params = new HashMap<>();
-    params.put("url", url);
-    return sqlManager.executeUpdate(new ClasspathSqlResource("sql/feed/insert_read_list_queue.sql"), params);
-  }
+        Map<String, String> params = new HashMap<>();
+        params.put("daysRetained", now.format(formatter));
+        return sqlManager.executeUpdate(
+                new ClasspathSqlResource("sql/feed/delete_read_feed.sql"), params
+        );
+    }
 
-  public List<String> selectReadListQueue() {
-    return sqlManager.getResultList(
-            String.class,
-            new ClasspathSqlResource("sql/feed/select_read_list_queue.sql"));
-  }
+    public List<Feed> getViewFeed(String id) {
+        String imgFlg = functionCtrlRepository.get("feed-img").flg;
 
-  public int deleteReadListQueue(String url) {
-    Map<String, String> params = new HashMap<>();
-    params.put("url", url);
-    return sqlManager.executeUpdate(new ClasspathSqlResource("sql/feed/delete_read_list_queue.sql"), params);
-  }
+        Map<String, String> params = new HashMap<>();
+        params.put("id", id);
+        params.put("imgFlg", imgFlg);
+        return sqlManager.getResultList(Feed.class,
+                new ClasspathSqlResource("sql/feed/select_view_feed_for_uuid.sql"), params);
+    }
+
+    public int insertReadListQueue(String url) {
+        Map<String, String> params = new HashMap<>();
+        params.put("url", url);
+        return sqlManager.executeUpdate(new ClasspathSqlResource("sql/feed/insert_read_list_queue.sql"), params);
+    }
+
+    public List<String> selectReadListQueue() {
+        return sqlManager.getResultList(
+                String.class,
+                new ClasspathSqlResource("sql/feed/select_read_list_queue.sql"));
+    }
+
+    public int deleteReadListQueue(String url) {
+        Map<String, String> params = new HashMap<>();
+        params.put("url", url);
+        return sqlManager.executeUpdate(new ClasspathSqlResource("sql/feed/delete_read_list_queue.sql"), params);
+    }
+
+    public List<Feed> selectFeedToRange(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        Map<String, String> params = new HashMap<>();
+
+        // ISO 8601形式の日時文字列フォーマット
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        params.put("startDateTime", startDateTime.format(formatter));
+        params.put("endDateTime", endDateTime.format(formatter));
+        return sqlManager.getResultList(Feed.class, new ClasspathSqlResource("sql/feed/select_feed_to_range.sql"), params);
+    }
 }

@@ -1,57 +1,35 @@
 package com.galewings.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.galewings.dto.ai.googleai.request.ContentsDto;
-import com.galewings.dto.ai.googleai.request.GeminiRequestDto;
-import com.galewings.dto.ai.googleai.request.PartsDto;
-import com.galewings.dto.ai.googleai.response.GeminiResponseDto;
-import org.springframework.beans.factory.annotation.Value;
+import com.google.genai.Client;
+import com.google.genai.types.GenerateContentConfig;
+import com.google.genai.types.GenerateContentResponse;
+import com.google.genai.types.GoogleSearch;
+import com.google.genai.types.Tool;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.List;
 
 @Component
 public class GeminiService {
 
-    @Value("${google.ai.api-key}")
-    private String apiKey;
+    public String tellMe(String text) {
+        Dotenv dotenv = Dotenv.load();
+        String apiKey = dotenv.get("GEMINI_API_KEY");
 
-    public GeminiResponseDto tellMe(String text) throws InterruptedException {
-        GeminiRequestDto dto = create(text);
-        try {
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest req = HttpRequest.newBuilder()
-                    .uri(URI.create("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + apiKey))
-                    .POST(HttpRequest.BodyPublishers.ofString(new ObjectMapper().writeValueAsString(dto)))
+        try (Client client = Client.builder().apiKey(apiKey).build()) {
+
+            GenerateContentConfig config = GenerateContentConfig.builder()
+                    .tools(Tool.builder().googleSearch(GoogleSearch.builder().build()))
                     .build();
-            var res = client.send(req, HttpResponse.BodyHandlers.ofString());
-            String json = res.body();
-            ObjectMapper om = new ObjectMapper();
-            GeminiResponseDto responseDto = om.readValue(json, GeminiResponseDto.class);
-            return responseDto;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+
+            GenerateContentResponse response =
+                    client.models.generateContent(
+                            "gemini-2.5-flash",
+                            text,
+                            config);
+
+            return response.text();
         }
 
     }
 
-    private GeminiRequestDto create(String text) {
-        GeminiRequestDto dto = new GeminiRequestDto();
-        ContentsDto contentsDto = new ContentsDto();
-        PartsDto partsDto = new PartsDto();
-        partsDto.setText(text);
-        contentsDto.setParts(List.of(partsDto));
-
-        dto.setContents(List.of(contentsDto));
-
-        return dto;
-    }
 }

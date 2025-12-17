@@ -5,11 +5,9 @@ import com.galewings.dto.AddFeedDto;
 import com.galewings.dto.ReadAllShowFeedDto;
 import com.galewings.dto.ReadDto;
 import com.galewings.dto.UpdateFeedDto;
-import com.galewings.entity.Feed;
-import com.galewings.entity.Site;
-import com.galewings.entity.SiteFeedCount;
-import com.galewings.entity.View;
+import com.galewings.entity.*;
 import com.galewings.repository.FeedRepository;
+import com.galewings.repository.FunctionCtrlRepository;
 import com.galewings.repository.SiteRepository;
 import com.galewings.repository.ViewsRepository;
 import com.galewings.service.GoogleAlertService;
@@ -26,8 +24,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class SiteFeedControllerTest {
@@ -53,6 +50,9 @@ class SiteFeedControllerTest {
     @InjectMocks
     private SiteFeedController siteFeedController;
 
+    @Mock
+    private FunctionCtrlRepository functionCtrlRepository;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -62,11 +62,11 @@ class SiteFeedControllerTest {
     void testGetFeedList() throws JsonProcessingException {
         when(feedRepository.getAllFeed()).thenReturn(List.of(new Feed()));
         when(feedRepository.getFeed(anyString())).thenReturn(List.of(new Feed()));
+        when(functionCtrlRepository.get(any())).thenReturn(createFunctionCtrlMock("feed-img", "1"));
 
-        String result = siteFeedController.getFeedList("uuid");
-        assertEquals(
-                "[{\"title\":null,\"uuid\":null,\"link\":null,\"uri\":null,\"author\":null,\"comments\":null,\"publishedDate\":null,\"opened\":false,\"readed\":false,\"imageUrl\":null,\"contentTerxt\":null}]",
-                result);
+        List<Feed> result = siteFeedController.getFeedList("uuid");
+        assertEquals(1, result.size());
+        assertNull(result.getFirst().imageUrl);
     }
 
     @Test
@@ -151,6 +151,14 @@ class SiteFeedControllerTest {
         String result = siteFeedController.readAllShowFeed(new ReadAllShowFeedDto());
         assertEquals("[{\"uuid\":null,\"title\":null,\"count\":0,\"faviconBase64\":null}]",
                 result);
+    }
+
+    private FunctionCtrl createFunctionCtrlMock(String id, String flg) {
+        FunctionCtrl functionCtrl = new FunctionCtrl();
+        functionCtrl.id = id;
+        functionCtrl.flg = flg;
+
+        return functionCtrl;
     }
 
 }

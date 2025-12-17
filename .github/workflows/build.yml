@@ -13,6 +13,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set ALOG_LOG_FILE_PATH and BLOG_LOG_FILE_PATH
+        run: |
+          echo "LOG_FILE_PATH=${GITHUB_WORKSPACE}/logs/alog.log" >> $GITHUB_ENV
+          echo "BLOG_LOG_FILE_PATH=${GITHUB_WORKSPACE}/logs/blog.log" >> $GITHUB_ENV
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -30,12 +34,28 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
+      - name: Create empty .env file
+        run: |
+          echo "google.ai.api-key=test" >> .env
+          echo "minhon.client-id=test" >> .env
+          echo "minhon.client-secret=test" >> .env
+          echo "minhon.name=test" >> .env
+          echo "newsapi.api-key=test" >> .env
+          echo "newsapi.url=test" >> .env
+          echo "wordNews.api-key=test" >> .env
+          echo "GEMINI_API_KEY=test" >> .env
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew build sonarqube --info --warning-mode all
-
+        run: ./gradlew test --info --stacktrace
+      - name: Upload Test Reports  # 常にアップロード
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: build/reports/tests/test/
+          retention-days: 7
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
