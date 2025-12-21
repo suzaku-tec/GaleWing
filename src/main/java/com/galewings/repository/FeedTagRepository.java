@@ -52,4 +52,8 @@ public class FeedTagRepository {
         return sqlManager.getResultList(String.class,
                 new ClasspathSqlResource("sql/category/select_highly_relevant_link.sql"), param);
     }
+
+    public int deleteLink() {
+        return sqlManager.executeUpdate(new ClasspathSqlResource("sql/category/delete_link_all.sql"));
+    }
 }
