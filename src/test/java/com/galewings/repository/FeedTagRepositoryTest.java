@@ -5,6 +5,7 @@ import com.galewings.dto.tag.TagInfo;
 import com.galewings.entity.FeedCategory;
 import com.miragesql.miragesql.ClasspathSqlResource;
 import com.miragesql.miragesql.SqlManager;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -66,6 +67,15 @@ class FeedTagRepositoryTest {
         verify(sqlManager).getResultList(eq(String.class), any(ClasspathSqlResource.class), any(Map.class));
     }
 
+    @Test
+    void testDeleteLink() {
+        when(sqlManager.executeUpdate(any())).thenReturn(0);
+
+        int actual = feedTagRepository.deleteLink();
+
+        Assertions.assertEquals(0, actual);
+        verify(sqlManager, times(1)).executeUpdate(any());
+    }
 }
 
 //Generated with love by TestMe :) Please raise issues & feature requests at: https://weirddev.com/forum#!/testme
