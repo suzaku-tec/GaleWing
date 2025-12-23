@@ -39,6 +39,8 @@ class FeedTagRepositoryTest {
         SiteTagInfo testData = new SiteTagInfo();
         testData.tags = new TagInfo[]{new TagInfo()};
         feedTagRepository.insertSiteTagInfo(testData, "link");
+
+        verify(sqlManager, times(1)).executeUpdate(any(), any());
     }
 
     @Test
