@@ -15,7 +15,7 @@ public class DelFeedCategory implements Runnable {
         this.feedTagRepository = feedTagRepository;
     }
 
-    @Scheduled(cron = "${update.scheduler.cron}")
+    @Scheduled(cron = "${update.feed.category.cron}")
     @Override
     public void run() {
         feedTagRepository.deleteLink();
