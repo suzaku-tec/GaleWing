@@ -32,6 +32,7 @@ export default class GaleWingApi {
     readDispList: "/readListFeed",
     viewSiteList: "/views/siteList",
     relationList: '/relation/list',
+    instagramContentsList: '/rssBridge/instagram/contentsList',
   };
 
   private static singleton: GaleWingApi;
@@ -218,6 +219,13 @@ export default class GaleWingApi {
     let ajaxUrl = this.getBaseUrl() + this.apiUrls.relationList;
     return await axios.post(ajaxUrl, {
       link: link
+    });
+  }
+
+  async instantiateRssBridge(username: string): Promise<AxiosResponse<any>> {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.instagramContentsList;
+    return await axios.post(ajaxUrl, {
+      username
     });
   }
 
