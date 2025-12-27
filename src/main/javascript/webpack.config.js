@@ -28,6 +28,7 @@ const config = {
     viewSetting: './src/main/screen/viewsSetting/index.ts',
     shortcutter: './src/main/screen/shortcutter.ts',
     galeWingModal: './src/main/screen/modal/index.ts',
+    rssBridge: './src/main/screen/rssBridge/index.ts',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

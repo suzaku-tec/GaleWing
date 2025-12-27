@@ -1,0 +1,12 @@
+version: '3'
+services:
+  rss-bridge:
+    image: rssbridge/rss-bridge:latest
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    # 必要に応じて設定ファイルをマウント
+    # volumes:
+    #   - ./config:/config
+    environment:
+      - TZ=Asia/Tokyo
