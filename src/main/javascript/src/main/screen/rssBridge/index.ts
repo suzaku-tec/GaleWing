@@ -53,13 +53,21 @@ window.onload = function () {
     const connectSelect = document.getElementById('connectSelect') as HTMLSelectElement;
     const connectSelectValue = connectSelect.options[connectSelect.selectedIndex].value;
 
-    if (connectSelectValue === 'instagram') {
-      const keySelect = document.getElementById('keySelect') as HTMLSelectElement;
-      const keySelectValue = keySelect.options[keySelect.selectedIndex].value;
-      const colonIndex: number = keySelectValue.indexOf(":");
-      const key: string = colonIndex !== -1 ? keySelectValue.slice(colonIndex + 1) : "";
+    const keySelect = document.getElementById('keySelect') as HTMLSelectElement;
+    const keySelectValue = keySelect.options[keySelect.selectedIndex].value;
+    const colonIndex: number = keySelectValue.indexOf(":");
+    const key: string = colonIndex !== -1 ? keySelectValue.slice(colonIndex + 1) : "";
 
+    if (connectSelectValue === 'instagram') {
       api.instantiateRssBridge(key).then((res) => {
+        res.data.forEach((item: any) => {
+          const div = document.createElement('div');
+          div.innerHTML = item;
+          contentsListDiv?.appendChild(div);
+        });
+      });
+    } else if (connectSelectValue === 'reddit') {
+      api.redditContentsList(key).then((res) => {
         res.data.forEach((item: any) => {
           const div = document.createElement('div');
           div.innerHTML = item;

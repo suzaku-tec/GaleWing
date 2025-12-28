@@ -236,6 +236,17 @@ jacocoTestReport {
     }
 }
 
+tasks.register('npmRun', NpmTask) {
+    npmCommand = ['run', 'deploy']
+    execOverrides {
+        // The it variable contains the `ExecSpec`
+        it.ignoreExitValue = true
+        // We can also omit it since "it" is implicit
+        workingDir = file('src/main/javascript')
+    }
+}
+processResources.dependsOn npmRun
+
 tasks.register('npmRunDevBuild', NpmTask) {
     npmCommand = ['run', 'dev-build']
     execOverrides {
