@@ -21,8 +21,8 @@ import GaleWingApi from '../../api/galeWingApi';
 window.onload = function () {
 
   const connectSelect = document.getElementById('connectSelect') as HTMLSelectElement;
-  const connectSelectValue = connectSelect.options[connectSelect.selectedIndex].value;
   connectSelect.addEventListener('change', () => {
+    const connectSelectValue = connectSelect.options[connectSelect.selectedIndex].value;
     const keySelect = document.getElementById('keySelect') as HTMLSelectElement;
     Array.from(keySelect.options).forEach((option) => {
       if (option.value.startsWith(connectSelectValue + ":")) {
@@ -34,6 +34,7 @@ window.onload = function () {
   });
 
   const keySelect = document.getElementById('keySelect') as HTMLSelectElement;
+  const connectSelectValue = connectSelect.options[connectSelect.selectedIndex].value;
   Array.from(keySelect.options).forEach((option) => {
     if (option.value.startsWith(connectSelectValue + ":")) {
       option.style.display = '';
@@ -46,6 +47,8 @@ window.onload = function () {
     let api = GaleWingApi.getInstance();
 
     const contentsListDiv = document.getElementById('contentsList');
+
+    removeAllChildren(contentsListDiv!);
 
     const connectSelect = document.getElementById('connectSelect') as HTMLSelectElement;
     const connectSelectValue = connectSelect.options[connectSelect.selectedIndex].value;
@@ -67,5 +70,11 @@ window.onload = function () {
 
   });
 };
+
+function removeAllChildren(parent: HTMLElement): void {
+  while (parent.firstChild) {
+    parent.removeChild(parent.firstChild);
+  }
+}
 
 export default { hideModifier };
