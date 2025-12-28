@@ -5,7 +5,6 @@ import com.galewings.dto.RssBridgeKey;
 import com.galewings.dto.input.ContentsListDto;
 import com.galewings.dto.rssbridge.RssBridgeResponse;
 import com.galewings.service.RssBridgeService;
-import com.galewings.service.RssProxyService;
 import com.galewings.service.rssbridge.BlueskyBridgeService;
 import com.galewings.service.rssbridge.InstagramBridgeService;
 import com.galewings.service.rssbridge.RedditBridgeService;
@@ -27,16 +26,14 @@ public class RssBridgeController {
 
     private final RssBridgeService rssBridgeService;
     private final InstagramBridgeService instagramBridgeService;
-    private final RssProxyService rssProxyService;
     private final RedditBridgeService redditBridgeService;
     private final BlueskyBridgeService blueskyBridgeService;
 
 
     @Autowired
-    public RssBridgeController(RssBridgeService rssBridgeService, InstagramBridgeService instagramBridgeService, RssProxyService rssProxyService, RedditBridgeService redditBridgeService, BlueskyBridgeService blueskyBridgeService) {
+    public RssBridgeController(RssBridgeService rssBridgeService, InstagramBridgeService instagramBridgeService, RedditBridgeService redditBridgeService, BlueskyBridgeService blueskyBridgeService) {
         this.rssBridgeService = rssBridgeService;
         this.instagramBridgeService = instagramBridgeService;
-        this.rssProxyService = rssProxyService;
         this.redditBridgeService = redditBridgeService;
         this.blueskyBridgeService = blueskyBridgeService;
     }
