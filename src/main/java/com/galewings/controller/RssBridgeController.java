@@ -7,6 +7,7 @@ import com.galewings.dto.rssbridge.RssBridgeResponse;
 import com.galewings.service.RssBridgeService;
 import com.galewings.service.RssProxyService;
 import com.galewings.service.rssbridge.InstagramBridgeService;
+import com.galewings.service.rssbridge.RedditBridgeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,12 +27,15 @@ public class RssBridgeController {
     private final RssBridgeService rssBridgeService;
     private final InstagramBridgeService instagramBridgeService;
     private final RssProxyService rssProxyService;
+    private final RedditBridgeService redditBridgeService;
+
 
     @Autowired
-    public RssBridgeController(RssBridgeService rssBridgeService, InstagramBridgeService instagramBridgeService, RssProxyService rssProxyService) {
+    public RssBridgeController(RssBridgeService rssBridgeService, InstagramBridgeService instagramBridgeService, RssProxyService rssProxyService, RedditBridgeService redditBridgeService) {
         this.rssBridgeService = rssBridgeService;
         this.instagramBridgeService = instagramBridgeService;
         this.rssProxyService = rssProxyService;
+        this.redditBridgeService = redditBridgeService;
     }
 
     @RequestMapping("")
@@ -51,4 +55,10 @@ public class RssBridgeController {
         return rssBridgeResponse.items.stream().map(item -> item.content_html).map(rssProxyService::convertUrlToProxy).toList();
     }
 
+    @PostMapping("/reddit/contentsList")
+    @ResponseBody
+    public List<String> redditContentsList(@RequestBody ContentsListDto contentsListDto) throws JsonProcessingException {
+        RssBridgeResponse rssBridgeResponse = redditBridgeService.contentsList(contentsListDto.subReddit);
+        return rssBridgeResponse.items.stream().map(item -> item.content_html).map(rssProxyService::convertUrlToProxy).toList();
+    }
 }

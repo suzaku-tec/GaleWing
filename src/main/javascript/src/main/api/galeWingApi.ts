@@ -33,6 +33,7 @@ export default class GaleWingApi {
     viewSiteList: "/views/siteList",
     relationList: '/relation/list',
     instagramContentsList: '/rssBridge/instagram/contentsList',
+    redditContentsList: '/rssBridge/reddit/contentsList',
   };
 
   private static singleton: GaleWingApi;
@@ -226,6 +227,13 @@ export default class GaleWingApi {
     let ajaxUrl = this.getBaseUrl() + this.apiUrls.instagramContentsList;
     return await axios.post(ajaxUrl, {
       username
+    });
+  }
+
+  async redditContentsList(subReddit: string): Promise<AxiosResponse<any>> {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.redditContentsList;
+    return await axios.post(ajaxUrl, {
+      subReddit
     });
   }
 
