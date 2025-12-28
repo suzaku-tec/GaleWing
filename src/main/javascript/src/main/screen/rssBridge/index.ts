@@ -17,6 +17,8 @@ library.add(faBars, faCheck, faSyncAlt, faPlus, faWrench, faTh, faIdCard);
 dom.watch();
 
 import GaleWingApi from '../../api/galeWingApi';
+import axios from 'axios';
+import { logger } from 'handlebars';
 
 window.onload = function () {
 
@@ -58,31 +60,40 @@ window.onload = function () {
     const colonIndex: number = keySelectValue.indexOf(":");
     const key: string = colonIndex !== -1 ? keySelectValue.slice(colonIndex + 1) : "";
 
-    if (connectSelectValue === 'instagram') {
-      api.instantiateRssBridge(key).then((res) => {
-        res.data.forEach((item: any) => {
-          const div = document.createElement('div');
-          div.innerHTML = item;
-          contentsListDiv?.appendChild(div);
-        });
+    createApiStrategy(api)(connectSelectValue)(key).then((res) => {
+      res.data.forEach((item: any) => {
+        const div = document.createElement('div');
+        div.innerHTML = item;
+        contentsListDiv?.appendChild(div);
       });
-    } else if (connectSelectValue === 'reddit') {
-      api.redditContentsList(key).then((res) => {
-        res.data.forEach((item: any) => {
-          const div = document.createElement('div');
-          div.innerHTML = item;
-          contentsListDiv?.appendChild(div);
-        });
-      });
-    }
+    });
 
   });
 };
+
+type ApiFn = (key: string) => Promise<axios.AxiosResponse<any, any>>;
+
+function createApiStrategy(api: GaleWingApi): (key: string) => ApiFn {
+  const strategies: Record<string, ApiFn> = {
+    instagram: (key: string) => api.instantiateRssBridge(key),
+    reddit: (key: string) => api.redditContentsList(key),
+    bluesky: (key: string) => api.blueskyContentsList(key),
+    // 新規追加はここに記述
+  };
+  return (service: string): ApiFn => {
+    const strategy = strategies[service];
+    if (!strategy) {
+      throw new Error(`Unsupported service: ${service}`);
+    }
+    return strategy;
+  };
+}
 
 function removeAllChildren(parent: HTMLElement): void {
   while (parent.firstChild) {
     parent.removeChild(parent.firstChild);
   }
 }
+
 
 export default { hideModifier };
