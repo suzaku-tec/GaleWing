@@ -6,6 +6,7 @@ import com.galewings.dto.input.ContentsListDto;
 import com.galewings.dto.rssbridge.RssBridgeResponse;
 import com.galewings.service.RssBridgeService;
 import com.galewings.service.RssProxyService;
+import com.galewings.service.rssbridge.BlueskyBridgeService;
 import com.galewings.service.rssbridge.InstagramBridgeService;
 import com.galewings.service.rssbridge.RedditBridgeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +29,16 @@ public class RssBridgeController {
     private final InstagramBridgeService instagramBridgeService;
     private final RssProxyService rssProxyService;
     private final RedditBridgeService redditBridgeService;
+    private final BlueskyBridgeService blueskyBridgeService;
 
 
     @Autowired
-    public RssBridgeController(RssBridgeService rssBridgeService, InstagramBridgeService instagramBridgeService, RssProxyService rssProxyService, RedditBridgeService redditBridgeService) {
+    public RssBridgeController(RssBridgeService rssBridgeService, InstagramBridgeService instagramBridgeService, RssProxyService rssProxyService, RedditBridgeService redditBridgeService, BlueskyBridgeService blueskyBridgeService) {
         this.rssBridgeService = rssBridgeService;
         this.instagramBridgeService = instagramBridgeService;
         this.rssProxyService = rssProxyService;
         this.redditBridgeService = redditBridgeService;
+        this.blueskyBridgeService = blueskyBridgeService;
     }
 
     @RequestMapping("")
@@ -52,13 +55,21 @@ public class RssBridgeController {
     @ResponseBody
     public List<String> instagramContentsList(@RequestBody ContentsListDto contentsListDto) throws JsonProcessingException {
         RssBridgeResponse rssBridgeResponse = instagramBridgeService.contentsList(contentsListDto.username);
-        return rssBridgeResponse.items.stream().map(item -> item.content_html).map(rssProxyService::convertUrlToProxy).toList();
+        return rssBridgeResponse.items.stream().map(item -> item.content_html).toList();
     }
 
     @PostMapping("/reddit/contentsList")
     @ResponseBody
     public List<String> redditContentsList(@RequestBody ContentsListDto contentsListDto) throws JsonProcessingException {
         RssBridgeResponse rssBridgeResponse = redditBridgeService.contentsList(contentsListDto.subReddit);
-        return rssBridgeResponse.items.stream().map(item -> item.content_html).map(rssProxyService::convertUrlToProxy).toList();
+        return rssBridgeResponse.items.stream().map(item -> item.content_html).toList();
     }
+
+    @PostMapping("/bluesky/contentsList")
+    @ResponseBody
+    public List<String> blueskyContentsList(@RequestBody ContentsListDto contentsListDto) throws JsonProcessingException {
+        RssBridgeResponse rssBridgeResponse = blueskyBridgeService.contentsList(contentsListDto.username);
+        return rssBridgeResponse.items.stream().map(item -> item.content_html).toList();
+    }
+
 }
