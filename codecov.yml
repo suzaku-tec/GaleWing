@@ -1,0 +1,4 @@
+ignore:
+  - "**/entities/**"
+  - "**/*Test*.java"
+  - "gradle/task/**/*class"
