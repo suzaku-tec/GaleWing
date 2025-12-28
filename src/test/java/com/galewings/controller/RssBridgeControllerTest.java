@@ -7,8 +7,9 @@ import com.galewings.dto.input.ContentsListDto;
 import com.galewings.dto.rssbridge.ItemsBean;
 import com.galewings.dto.rssbridge.RssBridgeResponse;
 import com.galewings.service.RssBridgeService;
-import com.galewings.service.RssProxyService;
+import com.galewings.service.rssbridge.BlueskyBridgeService;
 import com.galewings.service.rssbridge.InstagramBridgeService;
+import com.galewings.service.rssbridge.RedditBridgeService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,10 @@ class RssBridgeControllerTest {
     @Mock
     InstagramBridgeService instagramBridgeService;
     @Mock
-    RssProxyService rssProxyService;
+    RedditBridgeService redditBridgeService;
+    @Mock
+    BlueskyBridgeService blueskyBridgeService;
+
     @InjectMocks
     RssBridgeController rssBridgeController;
 
@@ -45,7 +49,7 @@ class RssBridgeControllerTest {
         String result = rssBridgeController.index(model);
 
         List<String> connectSelectList = (List<String>) model.getAttribute("connectSelect");
-        List<String> keySelectList = (List<String>) model.getAttribute("keySelect");
+        List<RssBridgeKey> keySelectList = (List<RssBridgeKey>) model.getAttribute("keySelect");
 
         Assertions.assertEquals("rssBridge", result);
         Assertions.assertEquals(1, connectSelectList.size());
@@ -57,12 +61,40 @@ class RssBridgeControllerTest {
         RssBridgeResponse rssBridgeResponse = new RssBridgeResponse();
         ItemsBean itemsBean = new ItemsBean();
         itemsBean.title = "title";
+        itemsBean.content_html = "html";
         rssBridgeResponse.items = List.of(itemsBean);
         when(instagramBridgeService.contentsList(any())).thenReturn(rssBridgeResponse);
 
         List<String> result = rssBridgeController.instagramContentsList(new ContentsListDto());
         Assertions.assertEquals(1, result.size());
+        Assertions.assertEquals("html", result.get(0));
+    }
+
+    @Test
+    void testRedditContentsList() throws JsonProcessingException {
+        RssBridgeResponse rssBridgeResponse = new RssBridgeResponse();
+        ItemsBean itemsBean = new ItemsBean();
+        itemsBean.title = "title";
+        itemsBean.content_html = "html";
+        rssBridgeResponse.items = List.of(itemsBean);
+        when(redditBridgeService.contentsList(any())).thenReturn(rssBridgeResponse);
+
+        List<String> result = rssBridgeController.redditContentsList(new ContentsListDto());
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertEquals("html", result.get(0));
+    }
+
+    @Test
+    void testBlueskyContentsList() throws JsonProcessingException {
+        RssBridgeResponse rssBridgeResponse = new RssBridgeResponse();
+        ItemsBean itemsBean = new ItemsBean();
+        itemsBean.title = "title";
+        itemsBean.content_html = "html";
+        rssBridgeResponse.items = List.of(itemsBean);
+        when(blueskyBridgeService.contentsList(any())).thenReturn(rssBridgeResponse);
+
+        List<String> result = rssBridgeController.blueskyContentsList(new ContentsListDto());
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertEquals("html", result.get(0));
     }
 }
-
-//Generated with love by TestMe :) Please raise issues & feature requests at: https://weirddev.com/forum#!/testme
