@@ -8,8 +8,8 @@ class RssProxyServiceTest {
 
     @Test
     void testConvertUrlToProxy() {
-        String result = rssProxyService.convertUrlToProxy("html");
-        Assertions.assertEquals("replaceMeWithExpectedResult", result);
+        String result = rssProxyService.convertUrlToProxy("https://sample.test.jpp");
+        Assertions.assertEquals("https://localhost:8080/proxy/img?url=https%3A%2F%2Fsample.test.jpp", result);
     }
 }
 
