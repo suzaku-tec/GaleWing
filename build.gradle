@@ -236,8 +236,8 @@ jacocoTestReport {
     }
 }
 
-tasks.register('npmRun', NpmTask) {
-    npmCommand = ['run', 'deploy']
+tasks.register('npmRunDevBuild', NpmTask) {
+    npmCommand = ['run', 'dev-build']
     execOverrides {
         // The it variable contains the `ExecSpec`
         it.ignoreExitValue = true
@@ -246,6 +246,9 @@ tasks.register('npmRun', NpmTask) {
     }
 }
 
+tasks.named('classes') {
+    dependsOn 'npmRunDevBuild'
+}
 
 //// build.gradle の一部 (プラグインを使用しない方法の例)
 //tasks.register("downloadModel") {
@@ -292,8 +295,6 @@ tasks.register('npmRun', NpmTask) {
 apply plugin: 'com.github.node-gradle.node'
 
 apply from: 'init_task.gradle'
-
-processResources.dependsOn npmRun
 
 test {
     finalizedBy jacocoTestReport // report is always generated after tests run
