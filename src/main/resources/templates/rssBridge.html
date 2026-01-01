@@ -35,17 +35,6 @@
                         <i class="fas fa-bars fa-lg"></i>
                     </button>
                 </div>
-                <ul class="navbar-nav">
-                    <li class="nav-item ml-3 text-muted">
-                        Home
-                    </li>
-                    <li class="nav-item ml-3 text-muted">
-                        Test
-                    </li>
-                    <li class="nav-item ml-3 text-muted">
-                        Login
-                    </li>
-                </ul>
                 <ul class="nav nav-tabs">
                     <li class="nav-item" id="gridLayoutItem">
                         <div class="nav-link active" aria-current="page" data-layout="gridLayout">
@@ -66,7 +55,7 @@
                 <div>
                     <!-- メインコンテンツ -->
                     <div id="main">
-                        <div>
+                        <div class="m-2">
                             <select class="form-select" id="connectSelect">
                                 <option selected>Open this select connect menu</option>
                                 <option th:each="connect:${connectSelect}" th:value="${connect}"
@@ -74,7 +63,7 @@
                             </select>
                         </div>
 
-                        <div>
+                        <div class="m-2">
                             <select class="form-select" id="keySelect">
                                 <option selected>Open this select key menu</option>
                                 <option th:each="select:${keySelect}" th:value="${select.connect + ':' + select.key}"
@@ -82,7 +71,9 @@
                             </select>
                         </div>
 
-                        <button type="button" class="btn" id="executeBtn">実行</button>
+                        <div class="m-2">
+                            <button type="button" class="btn btn-primary" id="executeBtn">表示</button>
+                        </div>
                     </div>
 
                     <div id="contentsList" class="parent"></div>
@@ -110,9 +101,6 @@
             <div class="modal-body" id="modal-body">
             </div>
             <div class="modal-footer" id="modal-footer">
-                <!--                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close-->
-                <!--                </button>-->
-                <!--                <button type="button" class="btn btn-primary">Save changes</button>-->
             </div>
         </div>
     </div>
