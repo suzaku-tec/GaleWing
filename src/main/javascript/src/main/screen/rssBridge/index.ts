@@ -27,7 +27,7 @@ window.onload = function () {
     const connectSelectValue = connectSelect.options[connectSelect.selectedIndex].value;
     const keySelect = document.getElementById('keySelect') as HTMLSelectElement;
     Array.from(keySelect.options).forEach((option) => {
-      if (option.value.startsWith(connectSelectValue + ":")) {
+      if (option.value.startsWith(connectSelectValue + ":") || option.value.indexOf(":") === -1) {
         option.style.display = '';
       } else {
         option.style.display = 'none';
@@ -38,7 +38,7 @@ window.onload = function () {
   const keySelect = document.getElementById('keySelect') as HTMLSelectElement;
   const connectSelectValue = connectSelect.options[connectSelect.selectedIndex].value;
   Array.from(keySelect.options).forEach((option) => {
-    if (option.value.startsWith(connectSelectValue + ":")) {
+    if (option.value.startsWith(connectSelectValue + ":") || option.value.indexOf(":") === -1) {
       option.style.display = '';
     } else {
       option.style.display = 'none';
