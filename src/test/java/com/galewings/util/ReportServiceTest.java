@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.FileNotFoundException;
@@ -16,7 +15,6 @@ import java.nio.file.Path;
 
 import static org.junit.Assert.*;
 
-@SpringBootTest
 class ReportServiceTest {
 
     @InjectMocks
