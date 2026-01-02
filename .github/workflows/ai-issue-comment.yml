@@ -2,7 +2,8 @@ name: AI Issue Assistant
 
 on:
   issues:
-    types: [ opened ]
+    types: [ opened, reopened ]
+    workflow_dispatch: # 手動実行を許可（デバッグ用）
 
 permissions:
   issues: write
