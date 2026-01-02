@@ -10,3 +10,19 @@ services:
     #   - ./config:/config
     environment:
       - TZ=Asia/Tokyo
+  postgres:
+    image: postgres:16
+    container_name: pg-rss
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgresuser
+      POSTGRES_PASSWORD: postgrespass
+      TZ: Asia/Tokyo
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  pgdata:

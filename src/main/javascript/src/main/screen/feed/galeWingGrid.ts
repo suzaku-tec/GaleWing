@@ -13,7 +13,7 @@ import { HtmlHTMLAttributes } from 'react';
 import { showModal } from '../modal';
 import relationListEvent from '../../events/modal/relationListEvent';
 
-enum HeaderIndex {
+export enum HeaderIndex {
   title,
   link,
   uri,
@@ -187,7 +187,11 @@ export default class GaleWingGrid {
 
             // リンク押下の場合はリンクの遷移を実施。それ以外は個別にリンクを表示
             let targetElement: HTMLElement | null = event.target as HTMLElement;
-            targetElement.getElementsByTagName('a')[0].classList.contains('rss-read-link');
+            if (targetElement.tagName.toLowerCase() === 'a') {
+              targetElement.classList = 'rss-read-link';
+            } else {
+              targetElement.getElementsByTagName('a')[0].classList = 'rss-read-link';
+            }
 
             row.cells[HeaderIndex.chkSts].data = '1';
           }).catch((error) => {
