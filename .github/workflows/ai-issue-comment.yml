@@ -17,7 +17,7 @@ jobs:
         # 公式のGemini Actionを使用（Google公式ツール）
         uses: google-github-actions/run-gemini-cli@v0
         with:
-          api-key: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           # 実行したい指示（プロンプト）をここに書く
           prompt: |
             以下のGitHub Issueの内容を分析してください。
