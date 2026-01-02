@@ -36,4 +36,30 @@ public class DBConfigTest {
     public void jdbcTemplateTest() {
         Assertions.assertNotNull(dbConfig.jdbcTemplate());
     }
+
+    @Test
+    public void customRssDialectTest() {
+        Assertions.assertNotNull(dbConfig.customRssDialect());
+    }
+
+    @Test
+    public void customRssDataSourceTest() {
+        Assertions.assertNotNull(dbConfig.customRssDataSource());
+    }
+
+    @Test
+    public void customRssConnectionProviderTest() {
+        Assertions.assertNotNull(dbConfig.customRssConnectionProvider());
+    }
+
+    @Test
+    public void customRssTransactionManagerTest() {
+        Assertions.assertNotNull(dbConfig.customRssTransactionManager());
+    }
+
+    @Test
+    public void customRssSqlManagerTest() {
+        Assertions.assertNotNull(dbConfig.customRssSqlManager());
+    }
+
 }

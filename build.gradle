@@ -194,6 +194,12 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-webflux
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.5.8'
+
+    // PostgreSQL用ドライバを追加
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // その他 Spring Data JPA などの既存設定はそのまま
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 }
 
 sonarqube {

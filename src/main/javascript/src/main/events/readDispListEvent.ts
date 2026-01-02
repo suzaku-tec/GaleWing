@@ -1,5 +1,6 @@
+import { TDataArray, TDataArrayRow } from 'gridjs/dist/src/types';
 import GaleWingApi from '../api/galeWingApi';
-import GaleWingGrid from '../screen/feed/galeWingGrid';
+import GaleWingGrid, { HeaderIndex } from '../screen/feed/galeWingGrid';
 import { IElementEvent } from './elementEvent';
 
 export default class ReadDispListEvent implements IElementEvent {
@@ -15,8 +16,9 @@ export default class ReadDispListEvent implements IElementEvent {
       .map((anchorEl) => {
 
         const link = anchorEl.href;
-        GaleWingGrid.getInstance().data.filter((feed: any) => feed.link === link).forEach((feed: any) => {
-          feed.chkSts = true;
+        const data = GaleWingGrid.getInstance().grid?.config.data as TDataArray;
+        data.filter((feed: TDataArrayRow) => feed[HeaderIndex.link] === link).forEach((feed: TDataArrayRow) => {
+          feed[HeaderIndex.chkSts] = '1';
         });
         // GaleWingGrid.getInstance().grid?.forceRender();
 

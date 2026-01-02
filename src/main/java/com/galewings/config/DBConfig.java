@@ -28,10 +28,14 @@ public class DBConfig {
     @Primary
     public DataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName("org.sqlite.JDBC");
-        dataSource.setUrl("jdbc:sqlite:library.db");
-        dataSource.setUsername("");
-        dataSource.setPassword("");
+//        dataSource.setDriverClassName("org.sqlite.JDBC");
+//        dataSource.setUrl("jdbc:sqlite:library.db");
+//        dataSource.setUsername("");
+//        dataSource.setPassword("");
+        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
+        dataSource.setUsername("postgresuser");
+        dataSource.setPassword("postgrespass");
         return dataSource;
     }
 
