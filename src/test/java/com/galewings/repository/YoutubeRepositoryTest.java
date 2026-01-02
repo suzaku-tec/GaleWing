@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.any;
@@ -27,10 +28,10 @@ class YoutubeRepositoryTest {
 
     @Test
     void testSelectChannelList() {
-        when(sqlManager.getResultList(any(), any())).thenReturn(List.of(null));
+        when(sqlManager.getResultList(any(), any())).thenReturn(Collections.emptyList());
 
         List<YoutubeListSelectChannel> result = youtubeRepository.selectChannelList();
-        Assertions.assertEquals(List.of(null), result);
+        Assertions.assertEquals(Collections.emptyList(), result);
     }
 }
 
