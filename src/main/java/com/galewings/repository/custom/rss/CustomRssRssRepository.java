@@ -31,7 +31,7 @@ public class CustomRssRssRepository {
         return sqlManager.deleteEntity(rss);
     }
 
-    public List<Rss> selectAll(Rss rss) {
+    public List<Rss> selectAll() {
         return sqlManager.getResultList(Rss.class, new ClasspathSqlResource("sql/custom/rss/rss/select_all.sql"));
     }
 
