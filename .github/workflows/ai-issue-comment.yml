@@ -16,8 +16,10 @@ jobs:
         id: gemini
         uses: google-github-actions/run-gemini-cli@v0
         with:
-          model: 'models/gemini-1.5-flash'
-          # prompt内で使うための設定
+          # 修正箇所：model ではなく gemini_model
+          gemini_model: 'models/gemini-1.5-flash'
+          # 修正箇所：api-key ではなく gemini_api_key
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
           prompt: |
             あなたは優秀なエンジニアです。以下のGitHub Issueを分析し、
             「概要」「実装のヒント」「考慮すべき点」の3構成で日本語で回答してください。
@@ -25,9 +27,11 @@ jobs:
             Title: ${{ github.event.issue.title }}
             Body: ${{ github.event.issue.body }}
         env:
+          # このActionは環境変数も参照するため、念のため残しておきます
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       - name: Post Comment
+        # 成功時のみコメントを投稿
         if: steps.gemini.outputs.text != ''
         uses: peter-evans/create-or-update-comment@v4
         with:
