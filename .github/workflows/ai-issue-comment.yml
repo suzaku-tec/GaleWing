@@ -28,10 +28,10 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       - name: Post Comment
-        if: success() && steps.gemini.outputs.summary != ''
+        if: success() && steps.gemini.outputs.gemini_response != ''
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
             ### 🤖 AIアシスタントによる分析
-            ${{ steps.gemini.outputs.summary }}
+            ${{ steps.gemini.outputs.gemini_response }}
