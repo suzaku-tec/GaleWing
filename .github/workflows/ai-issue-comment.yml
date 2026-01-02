@@ -14,35 +14,23 @@ jobs:
     steps:
       - name: Gemini AI Analysis
         id: gemini
-        run: |
-          # APIバージョンをv1に変更し、モデル名をgemini-1.5-flashに指定
-          curl -s -X POST "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${{ secrets.GEMINI_API_KEY }}" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "contents": [{
-                "parts": [{"text": "あなたは優秀なエンジニアです。以下のGitHub Issueを分析し、解決のためのヒントを日本語で回答してください。構成は「概要」「実装のヒント」「考慮すべき点」としてください。\n\nTitle: ${{ github.event.issue.title }}\nBody: ${{ github.event.issue.body }}"}]
-              }]
-            }' > response.json
+        uses: google-github-actions/run-gemini-cli@v0
+        with:
+          # モデル名に models/ を付与
+          model: 'models/gemini-1.5-flash'
+          api-key: ${{ secrets.GEMINI_API_KEY }}
+          prompt: |
+            あなたは優秀なエンジニアです。以下のGitHub Issueを分析し、
+            「概要」「実装のヒント」「考慮すべき点」の3構成で日本語で回答してください。
 
-          # ログ出力（Actionsで見れます）
-          cat response.json
-
-          # 解析結果の抽出
-          AI_TEXT=$(jq -r '.candidates[0].content.parts[0].text // empty' response.json)
-          
-          if [ -z "$AI_TEXT" ]; then
-            ERROR_MSG=$(jq -r '.error.message // "Unknown Error"' response.json)
-            echo "AI_COMMENT=⚠️ AI解析に失敗しました。理由: $ERROR_MSG" >> $GITHUB_ENV
-          else
-            echo "AI_COMMENT<<EOF" >> $GITHUB_ENV
-            echo "$AI_TEXT" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
-          fi
+            Title: ${{ github.event.issue.title }}
+            Body: ${{ github.event.issue.body }}
 
       - name: Post Comment
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.issue.number }}
+          # 公式Actionのアウトプットをそのまま使う
           body: |
             ### 🤖 AIアシスタントによる分析
-            ${{ env.AI_COMMENT }}
+            ${{ steps.gemini.outputs.text }}
