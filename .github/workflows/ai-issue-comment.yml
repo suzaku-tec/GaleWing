@@ -15,8 +15,8 @@ jobs:
       - name: Gemini AI Analysis
         id: gemini
         run: |
-          # APIを叩き、レスポンス全体を一度ファイルに保存する
-          curl -s -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${{ secrets.GEMINI_API_KEY }}" \
+          # APIバージョンをv1に変更し、モデル名をgemini-1.5-flashに指定
+          curl -s -X POST "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${{ secrets.GEMINI_API_KEY }}" \
             -H "Content-Type: application/json" \
             -d '{
               "contents": [{
@@ -24,17 +24,16 @@ jobs:
               }]
             }' > response.json
 
-          # ログ出力（デバッグ用：Actionsのログで見れます）
+          # ログ出力（Actionsで見れます）
           cat response.json
 
-          # 解析結果の抽出。失敗した場合はエラーメッセージを代入する
-          AI_TEXT=$(jq -r '.candidates[0].content.parts[0].text' response.json)
+          # 解析結果の抽出
+          AI_TEXT=$(jq -r '.candidates[0].content.parts[0].text // empty' response.json)
           
-          if [ "$AI_TEXT" == "null" ]; then
-            ERROR_MSG=$(jq -r '.error.message' response.json)
+          if [ -z "$AI_TEXT" ]; then
+            ERROR_MSG=$(jq -r '.error.message // "Unknown Error"' response.json)
             echo "AI_COMMENT=⚠️ AI解析に失敗しました。理由: $ERROR_MSG" >> $GITHUB_ENV
           else
-            # 改行などが壊れないようにBase64で一時保存するなどの工夫もできますが、まずはシンプルに
             echo "AI_COMMENT<<EOF" >> $GITHUB_ENV
             echo "$AI_TEXT" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
