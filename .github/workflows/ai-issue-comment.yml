@@ -1,0 +1,32 @@
+name: AI Issue Assistant
+
+on:
+  issues:
+    types: [ opened ]
+
+permissions:
+  issues: write
+
+jobs:
+  analyze-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Gemini AI Analysis
+        uses: google-github-actions/run-gemini-cli@v0 # Google公式のAction
+        with:
+          api-key: ${{ secrets.GEMINI_API_KEY }}
+          model: "gemini-2.0-flash" # 高速で無料枠が広いモデル
+          prompt: |
+            あなたは優秀なエンジニアです。新しく作成された以下のGitHub Issueを分析し、
+            「背景の要約」「実装のヒント」「推奨されるラベル」を日本語で返答してください。
+            
+            Issue Title: ${{ github.event.issue.title }}
+            Issue Body: ${{ github.event.issue.body }}
+
+      - name: Post Comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            ### 🤖 AIアシスタントによる分析
+            ${{ steps.analyze-issue.outputs.response }}
