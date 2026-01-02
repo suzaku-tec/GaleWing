@@ -1,37 +1,30 @@
-name: AI Issue Assistant
-
+name: Issue Analysis with Gemini
 on:
   issues:
     types: [ opened, reopened ]
-  workflow_dispatch:
-
-permissions:
-  issues: write
 
 jobs:
-  analyze-issue:
+  analyze:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
     steps:
-      - name: Call Gemini API directly
-        id: gemini-direct
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: |
-          RESPONSE=$(curl -s -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=$GEMINI_API_KEY" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "contents": [{
-                "parts": [{
-                  "text": "'"${{ github.event.issue.title }}"\n\n${{ github.event.issue.body }}'"
-                }]
-              }],
-              "generationConfig": {
-                "temperature": 0.7,
-                "maxOutputTokens": 2048
-              }
-            }')
-          
-          SUMMARY=$(echo "$RESPONSE" | jq -r '.candidates[0].content.parts[0].text // "Error"')
-          echo "summary<<EOF" >> $GITHUB_OUTPUT
-          echo "$SUMMARY" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Gemini Issue Triage
+        # 公式のGemini Actionを使用（Google公式ツール）
+        uses: google-github-actions/run-gemini-cli@v0
+        with:
+          api-key: ${{ secrets.GEMINI_API_KEY }}
+          # 実行したい指示（プロンプト）をここに書く
+          prompt: |
+            以下のGitHub Issueの内容を分析してください。
+            1. 要約（3行以内）
+            2. 期待される解決策の提案
+            3. 緊急度（高・中・低）の判定
+            
+            Issueタイトル: ${{ github.event.issue.title }}
+            Issue本文:
+            ${{ github.event.issue.body }}
