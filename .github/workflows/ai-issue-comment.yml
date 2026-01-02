@@ -3,7 +3,7 @@ name: AI Issue Assistant
 on:
   issues:
     types: [ opened, reopened ]
-    workflow_dispatch: # 手動実行を許可（デバッグ用）
+  workflow_dispatch:
 
 permissions:
   issues: write
@@ -13,18 +13,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Gemini AI Analysis
-        uses: google-github-actions/run-gemini-cli@v0 # Google公式のAction
-        with:
-          api-key: ${{ secrets.GEMINI_API_KEY }}
-          model: "gemini-2.0-flash" # 高速で無料枠が広いモデル
-          prompt: |
-            あなたは優秀なエンジニアです。新しく作成された以下のGitHub Issueを分析し、
-            「背景の要約」「実装のヒント」「推奨されるラベル」を日本語で返答してください。
-            
-            Issue Title: ${{ github.event.issue.title }}
-            Issue Body: ${{ github.event.issue.body }}
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        id: gemini
+        run: |
+          # APIを直接叩いて結果を環境変数に保存する
+          RESPONSE=$(curl -s -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${{ secrets.GEMINI_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "contents": [{
+                "parts": [{"text": "あなたは優秀なエンジニアです。以下のGitHub Issueを分析し、解決のためのヒントを日本語で回答してください。構成は「概要」「実装のヒント」「考慮すべき点」としてください。\n\nTitle: ${{ github.event.issue.title }}\nBody: ${{ github.event.issue.body }}"}]
+              }]
+            }')
+          
+          # 結果をパースしてGitHubの環境変数に書き込む
+          echo "AI_COMMENT=$(echo $RESPONSE | jq -r '.candidates[0].content.parts[0].text')" >> $GITHUB_ENV
 
       - name: Post Comment
         uses: peter-evans/create-or-update-comment@v4
@@ -32,4 +33,4 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           body: |
             ### 🤖 AIアシスタントによる分析
-            ${{ steps.analyze-issue.outputs.response }}
+            ${{ env.AI_COMMENT }}
