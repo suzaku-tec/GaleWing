@@ -1,7 +1,7 @@
 select
     v.id
     , v.name as title
-    , ifnull(c.view_count, 0) as count
+    , COALESCE(c.view_count, 0) as count
 from
 	views v
     inner join (

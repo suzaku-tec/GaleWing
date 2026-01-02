@@ -54,7 +54,7 @@ class CustomRssRssRepositoryTest {
     void testSelectAll() {
         when(sqlManager.getResultList(any(), any())).thenReturn(Collections.emptyList());
 
-        List<Rss> result = customRssRssRepository.selectAll(new Rss());
+        List<Rss> result = customRssRssRepository.selectAll();
         assertEquals(0, result.size());
     }
 }
