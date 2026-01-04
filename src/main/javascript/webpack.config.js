@@ -29,6 +29,7 @@ const config = {
     shortcutter: './src/main/screen/shortcutter.ts',
     galeWingModal: './src/main/screen/modal/index.ts',
     rssBridge: './src/main/screen/rssBridge/index.ts',
+    statics: './src/main/screen/statistics/index.ts',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

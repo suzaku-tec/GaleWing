@@ -26,6 +26,7 @@
     "axios": "^1.13.2",
     "axios-oauth-client": "^2.2.0",
     "bootstrap": "^5.3.8",
+    "chart.js": "^4.5.1",
     "clipboard-copy": "^4.0.1",
     "dotenv": "^16.4.7",
     "dotenv-webpack": "^8.1.1",
