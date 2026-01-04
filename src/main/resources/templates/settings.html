@@ -2,72 +2,75 @@
 <html lang="ja" class="h-100" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="Description" content="Enter your description here"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="Description" content="Enter your description here"/>
 
-  <script src="js/settings.js"></script>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="tree.css">
-  <title>GalwWing</title>
+    <script src="js/settings.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tree.css">
+    <title>GalwWing</title>
 
 </head>
 
 <body class="h-100 bg-light">
 <!-- 全ページを囲む要素 -->
 <main class="h-100">
-  <div class="page-wrapper d-flex flex-row h-100">
+    <div class="page-wrapper d-flex flex-row h-100">
 
-    <!-- サイトバーメニュー -->
-    <nav class="sidebar bg-primary bg-gradient side">
-      <div th:replace="linkMenu"/>
-    </nav>
-    <!-- サイトバーメニュー -->
+        <!-- サイトバーメニュー -->
+        <nav class="sidebar col-md-3" id="sidemenu">
+            <section class="accordion">
+                <!-- サイドメニュー(Site List) -->
+                <div th:replace="linkMenu"/>
+            </section>
+        </nav>
+        <!-- サイトバーメニュー -->
 
-    <!-- 全ページの右のコンテンツ -->
-    <div class="page-content main w-100">
+        <!-- 全ページの右のコンテンツ -->
+        <div class="page-content main w-100">
 
-      <!-- トップバー -->
-      <nav class="navbar px-3 bg-light border-bottom shadow-sm">
-        <div class="navbar-brand toggle-menu">
-          <button class="btn btn-light btn-sm" id="sidebarToggler">
-            <i class="fas fa-bars fa-lg"></i>
-          </button>
+            <!-- トップバー -->
+            <nav class="navbar px-3 bg-light border-bottom shadow-sm">
+                <div class="navbar-brand toggle-menu">
+                    <button class="btn btn-light btn-sm" id="sidebarToggler">
+                        <i class="fas fa-bars fa-lg"></i>
+                    </button>
+                </div>
+            </nav>
+            <!-- トップバー -->
+
+            <!-- 下のコンテンツ -->
+            <form class="content p-3">
+                <div class="container-fuild pt-3">
+                    <div th:each="setting: ${settings}">
+                        <div class="mb-5">
+                            <h3 th:text="${setting.overview}"></h3>
+                            <p th:text="${setting.description}"></p>
+                            <table class="table table-hover table-bordered">
+                                <tbody>
+                                <tr>
+                                    <td>[[${setting.id}]]</td>
+                                    <td><input type="text" class="form-control" th:id="${setting.id}"
+                                               th:value="${setting.setting}"
+                                               th:name="'settings[' + ${setting.id} + ']'"/>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="update" type="button" class="btn btn-primary">update</button>
+            </form>
+            <!-- 下のコンテンツ -->
+
         </div>
-      </nav>
-      <!-- トップバー -->
-
-      <!-- 下のコンテンツ -->
-      <form class="content p-3">
-        <div class="container-fuild pt-3">
-          <div th:each="setting: ${settings}">
-            <div class="mb-5">
-              <h3 th:text="${setting.overview}"></h3>
-              <p th:text="${setting.description}"></p>
-              <table class="table table-hover table-bordered">
-                <tbody>
-                <tr>
-                  <td>[[${setting.id}]]</td>
-                  <td><input type="text" class="form-control" th:id="${setting.id}"
-                             th:value="${setting.setting}"
-                             th:name="'settings[' + ${setting.id} + ']'"/>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <button id="update" type="button" class="btn btn-primary">update</button>
-      </form>
-      <!-- 下のコンテンツ -->
+        <!-- 全ページの右のコンテンツ -->
 
     </div>
-    <!-- 全ページの右のコンテンツ -->
-
-  </div>
 </main>
 <!-- 全ページを囲む要素 -->
 
