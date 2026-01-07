@@ -30,7 +30,7 @@ public class TitleTagAnalysisAsyncService {
     @Transactional
     @Async("taskTagAnalys")
     public CompletableFuture<Void> asyncMethod(Site site, Feed feed) throws JsonProcessingException {
-        String tagInfoJsonStr = ollamaService.tellMe("以下のWebページタイトルから、コンテンツの主なカテゴリやテーマを表すタグを抽出してください。目的はコンテンツ分類です。\\n\\nタイトル: 「" + feed.title + "」\\n\\n以下のJSONスキーマに厳密に従って出力してください。JSON以外のテキストは一切出力せず、{ で始まり } で終わる有効なJSONのみを返してください。\\n\\n{\\n  \"title\": \"string\",  // 元のタイトル\\n  \"tags\": [\\n    {\\n      \"tag\": \"string\",  // 抽出されたタグ（名詞やキーワード、3〜7個）\\n      \"category\": \"string\",  // タグのカテゴリ（例: 技術、ビジネス、エンタメ）\\n      \"relevance\": \"number\"  // 関連度 (0.0〜1.0)\\n    }\\n  ],\\n  \"primary_category\": \"string\"  // 主要カテゴリ\\n}\\n\n");
+        String tagInfoJsonStr = ollamaService.tellMe("以下のWebページタイトルから、コンテンツの主なカテゴリやテーマを表すタグを抽出してください。目的はコンテンツ分類です。\\n\\nタイトル: 「" + feed.title + "」\\n\\n以下のJSONスキーマに厳密に従って出力してください。JSON以外のテキストは一切出力せず、{ で始まり } で終わる有効なJSONのみを返してください。\\n\\n{\\n  \"title\": \"string\",  // 元のタイトル\\n  \"tags\": [\\n    {\\n      \"tag\": \"string\",  // 抽出されたタグ（名詞やキーワード、3個）\\n      \"category\": \"string\",  // タグのカテゴリ（例: 技術、ビジネス、エンタメ）\\n      \"relevance\": \"number\"  // 関連度 (0.0〜1.0)\\n    }\\n  ],\\n  \"primary_category\": \"string\"  // 主要カテゴリ\\n}\\n\n");
 
         // 1. 先頭の ```json または ```
         tagInfoJsonStr = tagInfoJsonStr.replaceAll("^```(?:json)?\\s*", "").trim();
