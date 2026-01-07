@@ -93,6 +93,9 @@ public class SiteFeedController {
     @Autowired
     private FunctionCtrlRepository functionCtrlRepository;
 
+    @Autowired
+    private RssBridgeService rssBridgeService;
+
     /**
      * 対象サイトのフィードを取得
      *
@@ -219,40 +222,21 @@ public class SiteFeedController {
     @Transactional
     public void addSiteFeed(@RequestBody AddFeedDto dto) throws IOException {
         String[] schemes = {"http", "https"};
-        UrlValidator urlValidator = new UrlValidator(schemes);
+        UrlValidator urlValidator = new UrlValidator(schemes, UrlValidator.ALLOW_LOCAL_URLS);
         dto.setLink(StringUtils.trimToEmpty(dto.getLink()));
         if (!urlValidator.isValid(dto.getLink())) {
             throw new IllegalArgumentException("不正なURLです");
         }
 
-        List<String> rssUrlList = searchRssUrlList(dto.getLink());
+        if (rssBridgeService.isRssBridgeDomain(dto.getLink())) {
+            addSiteAndFeed(dto.getLink());
+            return;
+        }
 
+        List<String> rssUrlList = searchRssUrlList(dto.getLink());
         if (0 < rssUrlList.size()) {
             rssUrlList.stream().forEach(url -> {
-                // TODO メソッド化を考える
-                try {
-                    Optional<SyndFeed> syndFeedOptional = getSyndFeed(url);
-                    syndFeedOptional.ifPresent(syndFeed -> {
-
-                        int cnt = siteRepository.countSiteForHtmlUrl(syndFeed.getLink());
-                        if (0 < cnt) {
-                            return;
-                        }
-
-                        Site site = SiteFactory.create(url, syndFeed);
-
-                        // サイト追加
-                        siteRepository.insertEntity(site);
-
-                        // フィード追加
-                        syndFeed.getEntries().stream()
-                                .map(syndEntry -> feedFactoryService.create(syndEntry, site.uuid))
-                                .forEach(feedRepository::insertEntity);
-                    });
-                } catch (Exception e) {
-                    // 特に何もしない
-                    e.printStackTrace();
-                }
+                addSiteAndFeed(url);
             });
         }
     }
@@ -357,6 +341,37 @@ public class SiteFeedController {
         }
 
         return result;
+    }
+
+    /**
+     * サイト情報とフィード情報を追加する
+     *
+     * @param url RSSのURL
+     */
+    public void addSiteAndFeed(String url) {
+        try {
+            Optional<SyndFeed> syndFeedOptional = getSyndFeed(url);
+            syndFeedOptional.ifPresent(syndFeed -> {
+
+                int cnt = siteRepository.countSiteForHtmlUrl(syndFeed.getLink());
+                if (0 < cnt) {
+                    return;
+                }
+
+                Site site = SiteFactory.create(url, syndFeed);
+
+                // サイト追加
+                siteRepository.insertEntity(site);
+
+                // フィード追加
+                syndFeed.getEntries().stream().distinct()
+                        .map(syndEntry -> feedFactoryService.create(syndEntry, site.uuid))
+                        .forEach(feedRepository::insertEntity);
+            });
+        } catch (Exception e) {
+            // 特に何もしない
+            e.printStackTrace();
+        }
     }
 
 }
