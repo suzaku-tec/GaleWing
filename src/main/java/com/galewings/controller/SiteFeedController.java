@@ -189,7 +189,8 @@ public class SiteFeedController {
         SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(site.xmlUrl)));
         feed.getEntries().stream().filter(syndEntry -> {
                     return !feedRepository.existFeed(syndEntry.getLink());
-                }).map(syndEntry -> feedFactoryService.create(syndEntry, site.uuid))
+                })
+                .map(syndEntry -> feedFactoryService.create(syndEntry, site.uuid))
                 .filter(f -> gwDateService.isRetainedDateAfter(f.publishedDate))
                 .forEach(f -> {
                     try {
