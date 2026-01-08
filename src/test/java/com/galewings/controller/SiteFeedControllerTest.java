@@ -10,20 +10,26 @@ import com.galewings.repository.FeedRepository;
 import com.galewings.repository.FunctionCtrlRepository;
 import com.galewings.repository.SiteRepository;
 import com.galewings.repository.ViewsRepository;
-import com.galewings.service.GoogleAlertService;
-import com.galewings.service.RssBridgeService;
-import com.galewings.service.URLService;
+import com.galewings.service.*;
+import com.galewings.service.async.TitleTagAnalysisAsyncService;
 import com.galewings.task.AutoUpdateTask;
+import com.rometools.rome.feed.synd.SyndEntry;
+import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
+import com.rometools.rome.io.SyndFeedInput;
+import com.rometools.rome.io.XmlReader;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -55,7 +61,16 @@ class SiteFeedControllerTest {
     private FunctionCtrlRepository functionCtrlRepository;
 
     @Mock
+    private FeedFactoryService feedFactoryService;
+
+    @Mock
+    private GwDateService gwDateService;
+
+    @Mock
     private RssBridgeService rssBridgeService;
+
+    @Mock
+    private TitleTagAnalysisAsyncService titleTagAnalysAsyncService;
 
     @BeforeEach
     void setUp() {
@@ -101,6 +116,54 @@ class SiteFeedControllerTest {
     }
 
     @Test
+    void testUpdateFeed_siteUpdate() throws FeedException, IOException {
+        List<Feed> feeds = List.of(new Feed());
+        List<SiteFeedCount> siteFeedCounts = List.of(new SiteFeedCount());
+        Site site = new Site();
+        site.xmlUrl = "http://localhost";
+
+        UpdateFeedDto dto = new UpdateFeedDto();
+        dto.setUuid("test");
+
+        SyndEntry entry = mock(SyndEntry.class);
+        SyndFeed mockFeed = mock(SyndFeed.class);
+        Feed f = new Feed();
+        f.publishedDate = "2026-01-01T00:00:00Z";
+        try (MockedConstruction<XmlReader> xmlMock = mockConstruction(XmlReader.class,
+                (mock, context) -> {
+                    // XmlReaderモックは不要な処理をスキップ
+                });
+             MockedConstruction<SyndFeedInput> ignored = mockConstruction(SyndFeedInput.class,
+                     (mock, context) -> {
+                         when(mock.build(any(XmlReader.class))).thenReturn(mockFeed);
+                     });
+             MockedStatic<Jsoup> jsoupMock = Mockito.mockStatic(Jsoup.class, Mockito.CALLS_REAL_METHODS)) {
+            when(mockFeed.getEntries()).thenReturn(List.of(entry)); // List<SyndEntry> testEntries準備
+            when(siteRepository.getSite(anyString())).thenReturn(site);
+            when(googleAlertService.isGoogleAlert(any())).thenReturn(false);
+            when(feedRepository.existFeed(anyString())).thenReturn(false);
+            when(feedFactoryService.create(any(), any())).thenReturn(f);
+            when(gwDateService.isRetainedDateAfter(anyString())).thenReturn(true);
+            when(titleTagAnalysAsyncService.asyncMethod(any(), any())).thenReturn(mock(CompletableFuture.class));
+            when(feedRepository.insertEntity(any())).thenReturn(0);
+            when(feedRepository.getFeed(anyString())).thenReturn(feeds);
+            when(siteRepository.getSiteFeedCount()).thenReturn(siteFeedCounts);
+
+            Connection connection = mock(Connection.class);
+            Document document = mock(Document.class);
+            Elements elements = new Elements();
+            String link = "https://example.com";
+            jsoupMock.when(() -> Jsoup.connect(link)).thenReturn(connection);
+            when(connection.get()).thenReturn(document);
+            when(document.select(anyString())).thenReturn(elements);
+
+            String s = siteFeedController.updateFeed(dto);
+            assertNotNull(s);
+        }
+
+    }
+
+    @Test
     void testAddSiteFeedError() throws IOException {
         when(siteRepository.insertEntity(any())).thenReturn(0);
 
@@ -127,11 +190,76 @@ class SiteFeedControllerTest {
     @Test
     void testAddSiteFeed_rdf() throws IOException {
         when(siteRepository.insertEntity(any())).thenReturn(0);
+        when(rssBridgeService.isRssBridgeDomain(anyString())).thenReturn(false);
 
         AddFeedDto testDto = new AddFeedDto();
         testDto.setLink("http://127.0.0.1/test.rdf");
 
         siteFeedController.addSiteFeed(testDto);
+
+        verify(rssBridgeService).isRssBridgeDomain(anyString());
+    }
+
+    @Test
+    void testAddSiteFeed_rss() throws IOException {
+        when(siteRepository.insertEntity(any())).thenReturn(0);
+        when(rssBridgeService.isRssBridgeDomain(anyString())).thenReturn(false);
+
+        AddFeedDto testDto = new AddFeedDto();
+        testDto.setLink("http://127.0.0.1/test.rss");
+
+        siteFeedController.addSiteFeed(testDto);
+
+        verify(rssBridgeService).isRssBridgeDomain(anyString());
+    }
+
+    @Test
+    void testAddSiteFeed_rsslist() throws IOException {
+        when(siteRepository.insertEntity(any())).thenReturn(0);
+        when(rssBridgeService.isRssBridgeDomain(anyString())).thenReturn(false);
+
+        AddFeedDto testDto = new AddFeedDto();
+        testDto.setLink("http://127.0.0.1/test.rsslist");
+
+        try (MockedConstruction<SyndFeedInput> ignored = mockConstruction(SyndFeedInput.class,
+                (mock, context) -> {
+                    SyndFeed mockFeed = mock(SyndFeed.class);
+                    when(mock.build(any(XmlReader.class))).thenReturn(mockFeed);
+                })) {
+            siteFeedController.addSiteFeed(testDto);
+
+            assertEquals("http://127.0.0.1/test.rsslist", testDto.getLink());
+        }
+    }
+
+    @Test
+    void testAddSiteFeed_no_syndfeed() throws IOException {
+        when(siteRepository.insertEntity(any())).thenReturn(0);
+        when(rssBridgeService.isRssBridgeDomain(anyString())).thenReturn(false);
+        when(urlService.getUrlDomain(anyString())).thenReturn("http://127.0.0.1");
+
+        AddFeedDto testDto = new AddFeedDto();
+        testDto.setLink("http://127.0.0.1/test.rsslist");
+
+        try (MockedConstruction<SyndFeedInput> ignored = mockConstruction(SyndFeedInput.class,
+                (mock, context) -> {
+                    SyndFeed mockFeed = mock(SyndFeed.class);
+                    when(mock.build(any(XmlReader.class))).thenThrow(new Exception("error"));
+                });
+             MockedStatic<Jsoup> jsoupMock = Mockito.mockStatic(Jsoup.class, Mockito.CALLS_REAL_METHODS)) {
+            Connection connection = mock(Connection.class);
+            Document document = mock(Document.class);
+            Elements elements = new Elements();
+            String link = "https://example.com";
+            String domain = "https://example.com";
+            jsoupMock.when(() -> Jsoup.connect(link)).thenReturn(connection);
+            when(connection.get()).thenReturn(document);
+            when(document.select(anyString())).thenReturn(elements);
+
+            siteFeedController.addSiteFeed(testDto);
+
+            verify(urlService).getUrlDomain(anyString());
+        }
     }
 
     @Test
