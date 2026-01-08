@@ -11,6 +11,7 @@ import com.galewings.repository.FunctionCtrlRepository;
 import com.galewings.repository.SiteRepository;
 import com.galewings.repository.ViewsRepository;
 import com.galewings.service.GoogleAlertService;
+import com.galewings.service.RssBridgeService;
 import com.galewings.service.URLService;
 import com.galewings.task.AutoUpdateTask;
 import com.rometools.rome.io.FeedException;
@@ -52,6 +53,9 @@ class SiteFeedControllerTest {
 
     @Mock
     private FunctionCtrlRepository functionCtrlRepository;
+
+    @Mock
+    private RssBridgeService rssBridgeService;
 
     @BeforeEach
     void setUp() {
@@ -112,6 +116,7 @@ class SiteFeedControllerTest {
     void testAddSiteFeed() throws IOException {
         when(siteRepository.insertEntity(any())).thenReturn(0);
         when(urlService.getUrlDomain(anyString())).thenReturn("http://127.0.0.1");
+        when(rssBridgeService.isRssBridgeDomain(anyString())).thenReturn(true);
 
         AddFeedDto testDto = new AddFeedDto();
         testDto.setLink("http://127.0.0.1");
