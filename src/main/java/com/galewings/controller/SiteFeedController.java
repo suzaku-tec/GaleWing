@@ -348,7 +348,7 @@ public class SiteFeedController {
      *
      * @param url RSSのURL
      */
-    public void addSiteAndFeed(String url) {
+    private void addSiteAndFeed(String url) {
         try {
             Optional<SyndFeed> syndFeedOptional = getSyndFeed(url);
             syndFeedOptional.ifPresent(syndFeed -> {
