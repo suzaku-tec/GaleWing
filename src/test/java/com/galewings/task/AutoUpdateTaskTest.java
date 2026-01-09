@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -57,10 +58,13 @@ class AutoUpdateTaskTest {
 
     @Test
     void testAllUpdate_FullFlow() {
+        URL resource = getClass().getClassLoader().getResource("test-feed.xml");
+        String testXmlPath = resource.toExternalForm();
+
         // 1. テストデータの準備
         Site site = new Site();
         site.uuid = "test-uuid";
-        site.xmlUrl = "https://example.com/rss"; // 実際にはアクセスしないがURL形式が必要
+        site.xmlUrl = testXmlPath; // 実際にはアクセスしないがURL形式が必要
 
         Feed mockFeed = new Feed();
         mockFeed.title = "正常な記事タイトル";
@@ -80,10 +84,6 @@ class AutoUpdateTaskTest {
         when(gwDateService.now()).thenReturn(LocalDate.parse("2023-10-01"));
 
         // 3. 実行
-        // 注意: 内部で `new XmlReader(new URL(site.xmlUrl))` が動くため、
-        // 外部通信を避けるには本来 SyndFeedInput の Mock化が必要ですが、
-        // 簡易的には site.xmlUrl にアクセス可能なURLを入れるか、
-        // SyndFeedInput 自体を Factory 化して Mock するのが定石です。
         autoUpdateTask.allUpdate();
 
         // 4. 検証
