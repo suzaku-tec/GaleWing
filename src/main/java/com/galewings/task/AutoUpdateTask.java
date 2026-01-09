@@ -56,7 +56,7 @@ public class AutoUpdateTask {
                 .forEach(googleAlertService::updateFeed);
 
         siteRepository.getAllSite()
-                .parallelStream()
+                .stream()
                 .filter(site -> !googleAlertService.isGoogleAlert(site))
                 .map(site -> {
                     return new GaleWingSiteFeed() {
@@ -81,7 +81,6 @@ public class AutoUpdateTask {
                     };
                 })
                 .filter(siteFeed -> siteFeed.getOptionalSyndFeed().isPresent())
-                .sequential()
                 .forEach(siteFeed -> {
                     siteFeed.getOptionalSyndFeed().get().getEntries()
                             .stream()
