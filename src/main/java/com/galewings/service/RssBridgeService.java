@@ -6,6 +6,7 @@ import com.galewings.dto.rssbridge.ItemsBean;
 import com.galewings.repository.RssBridgeRepository;
 import com.galewings.util.stream.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,9 @@ public class RssBridgeService {
     private final RssBridgeRepository rssBridgeRepository;
 
     private final RssProxyService rssProxyService;
+
+    @Value("${rsshub.base-url}")
+    private String rsshubBaseUrl;
 
     @Autowired
     public RssBridgeService(RssBridgeRepository rssBridgeRepository, RssProxyService rssProxyService) {
@@ -44,5 +48,15 @@ public class RssBridgeService {
 
     public List<RssBridgeKey> selectKeyList() {
         return rssBridgeRepository.selectKeyList();
+    }
+
+    /**
+     * RSS-Hubのドメインで開始されているかチェックする
+     *
+     * @param url チェック対象URL
+     * @return true:RSS-HUB false:RSS-HUB以外
+     */
+    public boolean isRssBridgeDomain(String url) {
+        return url.startsWith(rsshubBaseUrl);
     }
 }

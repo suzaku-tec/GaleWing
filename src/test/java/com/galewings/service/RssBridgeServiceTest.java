@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 
@@ -52,6 +53,13 @@ class RssBridgeServiceTest {
 
         List<RssBridgeKey> result = rssBridgeService.selectKeyList();
         Assertions.assertEquals(List.of(rssBridgeKey), result);
+    }
+
+    @Test
+    void testIsRssBridgeDomain() {
+        ReflectionTestUtils.setField(rssBridgeService, "rsshubBaseUrl", "http://localhost:3000");
+        boolean result = rssBridgeService.isRssBridgeDomain("http://localhost:3000");
+        Assertions.assertTrue(result);
     }
 }
 

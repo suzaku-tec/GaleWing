@@ -1,6 +1,5 @@
 package com.galewings.task;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.galewings.dto.GaleWingSiteFeed;
 import com.galewings.entity.Site;
 import com.galewings.repository.FeedRepository;
@@ -92,11 +91,6 @@ public class AutoUpdateTask {
                             .filter(feed -> gwDateService.isRetainedDateAfter(feed.publishedDate))
                             .filter(feed -> !feedRepository.existFeed(feed.link))
                             .forEach(feed -> {
-                                try {
-                                    titleTagAnalysisAsyncService.asyncMethod(siteFeed.getSite(), feed);
-                                } catch (JsonProcessingException e) {
-                                    e.printStackTrace();
-                                }
                                 feedRepository.insertEntity(feed);
                             });
 

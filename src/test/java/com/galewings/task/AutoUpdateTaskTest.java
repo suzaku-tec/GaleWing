@@ -1,8 +1,10 @@
 package com.galewings.task;
 
+import com.galewings.entity.Feed;
 import com.galewings.entity.Site;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.SiteRepository;
+import com.galewings.service.FeedFactoryService;
 import com.galewings.service.GoogleAlertService;
 import com.galewings.service.GwDateService;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -30,6 +34,9 @@ class AutoUpdateTaskTest {
     @Mock
     private GoogleAlertService googleAlertService;
 
+    @Mock
+    private FeedFactoryService feedFactoryService;
+
     @InjectMocks
     AutoUpdateTask autoUpdateTask;
 
@@ -47,6 +54,60 @@ class AutoUpdateTaskTest {
         autoUpdateTask.allUpdate();
 
         verify(siteRepository, times(2)).getAllSite();
+    }
+
+    @Test
+    void testAllUpdate_FullFlow() {
+        URL resource = getClass().getClassLoader().getResource("test-feed.xml");
+        String testXmlPath = resource.toExternalForm();
+
+        // 1. テストデータの準備
+        Site site = new Site();
+        site.uuid = "test-uuid";
+        site.xmlUrl = testXmlPath; // 実際にはアクセスしないがURL形式が必要
+
+        Feed mockFeed = new Feed();
+        mockFeed.title = "正常な記事タイトル";
+        mockFeed.link = "https://example.com/item/1";
+        mockFeed.publishedDate = "2023-10-01";
+
+        // 2. Mockの設定
+        when(siteRepository.getAllSite()).thenReturn(List.of(site));
+        when(googleAlertService.isGoogleAlert(any())).thenReturn(false);
+
+        // FeedFactoryServiceのMock
+        when(feedFactoryService.create(any(), anyString())).thenReturn(mockFeed);
+
+        // 日付チェックと存在チェック
+        when(gwDateService.isRetainedDateAfter(anyString())).thenReturn(true);
+        when(feedRepository.existFeed(mockFeed.link)).thenReturn(false); // 新規記事として扱う
+        when(gwDateService.now()).thenReturn(LocalDate.parse("2023-10-01"));
+
+        // 3. 実行
+        autoUpdateTask.allUpdate();
+
+        // 4. 検証
+        verify(googleAlertService, times(1)).updateFeed(any());
+        verify(feedRepository, atLeastOnce()).insertEntity(any());
+    }
+
+    @Test
+    void testAllUpdate_SkipPRFeed() {
+        Site site = new Site();
+        site.uuid = "test-uuid";
+        site.xmlUrl = "https://example.com/rss";
+
+        Feed prFeed = new Feed();
+        prFeed.title = "PR：広告記事";
+
+        when(siteRepository.getAllSite()).thenReturn(List.of(site));
+        when(googleAlertService.isGoogleAlert(any())).thenReturn(false);
+        when(feedFactoryService.create(any(), anyString())).thenReturn(prFeed);
+
+        autoUpdateTask.allUpdate();
+
+        // PR記事なので、DB保存は呼ばれないはず
+        verify(feedRepository, never()).insertEntity(any());
     }
 }
 
