@@ -21,6 +21,7 @@ import com.rometools.rome.io.XmlReader;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,7 @@ import org.mockito.*;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -241,26 +243,64 @@ class SiteFeedControllerTest {
         AddFeedDto testDto = new AddFeedDto();
         testDto.setLink("http://127.0.0.1/test.rsslist");
 
-        try (MockedConstruction<SyndFeedInput> ignored = mockConstruction(SyndFeedInput.class,
-                (mock, context) -> {
-                    SyndFeed mockFeed = mock(SyndFeed.class);
-                    when(mock.build(any(XmlReader.class))).thenThrow(new Exception("error"));
-                });
-             MockedStatic<Jsoup> jsoupMock = Mockito.mockStatic(Jsoup.class, Mockito.CALLS_REAL_METHODS)) {
+        try (MockedStatic<Jsoup> jsoupMock = Mockito.mockStatic(Jsoup.class);  // CALLS_REAL_METHODS削除
+             MockedConstruction<SyndFeedInput> ignored = mockConstruction(SyndFeedInput.class,
+                     (mock, context) -> when(mock.build(any(XmlReader.class))).thenThrow(new Exception("error")))) {
+
             Connection connection = mock(Connection.class);
             Document document = mock(Document.class);
             Elements elements = new Elements();
-            String link = "https://example.com";
-            String domain = "https://example.com";
-            jsoupMock.when(() -> Jsoup.connect(link)).thenReturn(connection);
+
+            // 最小モック
             when(connection.get()).thenReturn(document);
             when(document.select(anyString())).thenReturn(elements);
+            jsoupMock.when(() -> Jsoup.connect(anyString())).thenReturn(connection);
 
             siteFeedController.addSiteFeed(testDto);
 
             verify(urlService).getUrlDomain(anyString());
         }
     }
+
+    @Test
+    void testAddSiteFeed_with_rss_links() throws IOException {
+        when(siteRepository.insertEntity(any())).thenReturn(0);
+        when(rssBridgeService.isRssBridgeDomain(anyString())).thenReturn(false);
+        when(urlService.getUrlDomain(anyString())).thenReturn("https://example.com");
+
+        AddFeedDto testDto = new AddFeedDto();
+        testDto.setLink("https://example.com");
+
+        try (MockedStatic<Jsoup> jsoupMock = Mockito.mockStatic(Jsoup.class);
+             MockedConstruction<SyndFeedInput> ignored = mockConstruction(SyndFeedInput.class,
+                     (mock, context) -> when(mock.build(any(XmlReader.class))).thenThrow(new Exception("error")))) {
+
+            Connection connection = mock(Connection.class);
+            Document document = mock(Document.class);
+
+            // 非空Elements作成（stream通過用）
+            Elements elements = new Elements();
+            Element linkElement = new Element("link").attr("type", "application/rss+xml").attr("href", "/rss.xml");
+            Element aElement = new Element("a").attr("href", "https://example.com/feed.atom");
+            elements.add(linkElement);
+            elements.add(aElement);
+
+            when(connection.get()).thenReturn(document);
+            when(document.select("link[type*='atom+xml'],link[type*='rss+xml'],a[href^='/'],a[href^='" + anyString() + "']"))
+                    .thenReturn(elements);
+            jsoupMock.when(() -> Jsoup.connect(anyString())).thenReturn(connection);
+
+            // urlService.fixUrlのモック（Optional<String>想定）
+            when(urlService.fixUrl(eq("https://example.com"), eq("/rss.xml"))).thenReturn(Optional.of("https://example.com/rss.xml"));
+
+            siteFeedController.addSiteFeed(testDto);
+
+            // 検証：stream全分岐通過確認
+            verify(urlService, times(2)).fixUrl(anyString(), anyString());  // linkとa両方
+            verify(siteRepository, never()).countSiteForHtmlUrl(anyString());  // SyndFeed失敗でaddSiteAndFeed未実行
+        }
+    }
+
 
     @Test
     void testReadAllShowFeed() throws JsonProcessingException {
