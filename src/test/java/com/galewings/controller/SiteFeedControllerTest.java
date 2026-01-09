@@ -326,6 +326,75 @@ class SiteFeedControllerTest {
                 result);
     }
 
+    @Test
+    void testAddSiteFeed_NewSiteAndEntries_FullCoverage() throws IOException {
+        // 1. 準備：判定をバイパスするために .rss を使用
+        String targetUrl = "https://example.com/feed.rss";
+        AddFeedDto dto = new AddFeedDto();
+        dto.setLink(targetUrl);
+
+        // SyndFeedのモックを詳細に設定（SiteFactory.createで落ちないようにする）
+        SyndFeed mockSyndFeed = mock(SyndFeed.class);
+        when(mockSyndFeed.getLink()).thenReturn("https://example.com/home");
+        when(mockSyndFeed.getTitle()).thenReturn("Example Title");
+        when(mockSyndFeed.getDescription()).thenReturn("Example Description");
+        when(mockSyndFeed.getAuthor()).thenReturn("Author");
+        when(mockSyndFeed.getPublishedDate()).thenReturn(new java.util.Date());
+
+        // エントリの準備
+        SyndEntry mockEntry = mock(SyndEntry.class);
+        when(mockEntry.getLink()).thenReturn("https://example.com/item/1");
+        when(mockSyndFeed.getEntries()).thenReturn(List.of(mockEntry));
+
+        // リポジトリとサービスのモック
+        when(rssBridgeService.isRssBridgeDomain(anyString())).thenReturn(false);
+        when(siteRepository.countSiteForHtmlUrl(anyString())).thenReturn(0);
+        when(feedFactoryService.create(any(), any())).thenReturn(new Feed());
+
+        // 2. MockedConstruction で SyndFeedInput と XmlReader をカバー
+        try (MockedConstruction<XmlReader> xmlMock = mockConstruction(XmlReader.class);
+             MockedConstruction<SyndFeedInput> ignored = mockConstruction(SyndFeedInput.class,
+                     (mock, context) -> {
+                         when(mock.build(any(XmlReader.class))).thenReturn(mockSyndFeed);
+                     })) {
+
+            // 3. 実行
+            siteFeedController.addSiteFeed(dto);
+
+            // 4. 検証
+            // ここで失敗する場合、コンソール(System.err)にスタックトレースが出ているはずです
+            verify(siteRepository, atLeastOnce()).insertEntity(any(Site.class));
+            verify(feedRepository, atLeastOnce()).insertEntity(any(Feed.class));
+        }
+    }
+
+    @Test
+    void testAddSiteFeed_AlreadyExists() throws IOException {
+        // 準備
+        String targetUrl = "http://example.com/rss.xml";
+        AddFeedDto dto = new AddFeedDto();
+        dto.setLink(targetUrl);
+
+        SyndFeed mockSyndFeed = mock(SyndFeed.class);
+        when(mockSyndFeed.getLink()).thenReturn("http://example.com/home");
+
+        // 既にサイトが1件以上登録されている状態
+        when(siteRepository.countSiteForHtmlUrl("http://example.com/home")).thenReturn(1);
+
+        try (MockedConstruction<SyndFeedInput> ignored = mockConstruction(SyndFeedInput.class,
+                (mock, context) -> {
+                    when(mock.build(any(XmlReader.class))).thenReturn(mockSyndFeed);
+                })) {
+
+            // 実行
+            siteFeedController.addSiteFeed(dto);
+
+            // 検証: countチェックのあと、insertは呼ばれないはず
+            verify(siteRepository, never()).insertEntity(any(Site.class));
+            verify(feedRepository, never()).insertEntity(any(Feed.class));
+        }
+    }
+
     private FunctionCtrl createFunctionCtrlMock(String id, String flg) {
         FunctionCtrl functionCtrl = new FunctionCtrl();
         functionCtrl.id = id;
