@@ -1,15 +1,13 @@
-import { Grid } from "gridjs";
 import { IElementEvent } from "./elementEvent";
 import GaleWingApi from "../api/galeWingApi";
 
-export default class SummaryEvent implements IElementEvent {
+export default class InformationGatheringEvent implements IElementEvent {
   constructor() {
   }
 
   execute(link: string): void {
-
     var api = GaleWingApi.getInstance();
-    api.summaryAdd(link);
+    api.informationGatheringAdd(link);
   }
 
 }

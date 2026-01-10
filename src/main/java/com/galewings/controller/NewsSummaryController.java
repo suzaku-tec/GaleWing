@@ -29,7 +29,7 @@ public class NewsSummaryController {
     @ResponseBody
     public void addSummary(Model model, @RequestParam(name = "uuid", required = true) String uuid) {
         if (!newsSummaryRepository.exists(uuid)) {
-            newsSummaryRepository.insert(uuid);
+            newsSummaryRepository.insertSummary(uuid);
         }
     }
 

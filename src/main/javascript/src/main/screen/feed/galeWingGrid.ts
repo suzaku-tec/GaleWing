@@ -1,6 +1,6 @@
 import GaleWingApi from '../../api/galeWingApi';
 import { Grid, Row, html, h } from 'gridjs';
-import { JSX, VNode } from 'preact';
+import { VNode } from 'preact';
 import ReadAllShowFeed from '../../events/readAllShowFeed';
 import UpdateFeed from '../../events/updateFeed';
 import init from '../cardGridLayout';
@@ -8,10 +8,7 @@ import SettingApi from '../../api/settingApi';
 import ElementEvent from '../../events/elementEvent';
 import CirculationEvent from '../../events/circulationEvent';
 import SummaryEvent from '../../events/summaryEvent';
-import { faL } from '@fortawesome/free-solid-svg-icons';
-import { HtmlHTMLAttributes } from 'react';
-import { showModal } from '../modal';
-import relationListEvent from '../../events/modal/relationListEvent';
+import InformationGatheringEvent from '../../events/informationGatheringEvent';
 
 export enum HeaderIndex {
   title,
@@ -114,14 +111,29 @@ export default class GaleWingGrid {
       { name: 'imageUrl', hidden: true },
       { name: 'chkSts', hidden: true },
       {
-        name: 'relation', hidden: false, formatter: (cell: any, row: Row) => {
-          return h('button', {
-            className: 'btn btn-light btn-outline-secondary',
-            onClick: () => {
-              new relationListEvent().execute(row.cells[HeaderIndex.link].data!.toString());
-            }
-          }, 'rel');
-        }
+        name: 'action', hidden: false, formatter: (cell: any, row: Row) => {
+
+          return h('div', { className: 'button-container' }, [
+            // 編集ボタン
+            h('button', {
+              className: 'btn btn-light btn-outline-secondary my-1',
+              onClick: () => new SummaryEvent().execute(row.cells[HeaderIndex.link].data!.toString())
+            }, '要約'),
+
+            // 削除ボタン
+            h('button', {
+              className: 'btn btn-light btn-outline-secondary my-1',
+              onClick: () => new InformationGatheringEvent().execute(row.cells[HeaderIndex.link].data!.toString())
+            }, '収集')
+          ]);
+
+          // return h('button', {
+          //   className: 'btn btn-light btn-outline-secondary',
+          //   onClick: () => {
+          //     new relationListEvent().execute(row.cells[HeaderIndex.link].data!.toString());
+          //   }
+          // }, 'rel');
+        }, attributes: { style: 'padding: 1px' }
       }
     ];
   }
@@ -155,11 +167,6 @@ export default class GaleWingGrid {
     new ElementEvent(new CirculationEvent(grid, limit)).setup(
       "click",
       document.getElementById("circulation")
-    )
-
-    new ElementEvent(new SummaryEvent(grid, limit)).setup(
-      "click",
-      document.getElementById("summary")
     )
 
     this.setupGridRowClickEvent(grid);
