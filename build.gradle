@@ -200,6 +200,9 @@ dependencies {
 
     // その他 Spring Data JPA などの既存設定はそのまま
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // AST解析用のライブラリ
+    implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.26.2'
 }
 
 sonarqube {
@@ -411,4 +414,16 @@ tasks.register('ensureOllamaRunning') {
 
         println "Ollama container is running."
     }
+}
+
+// AST解析を実行するカスタムタスク
+tasks.register('generateAST', JavaExec) {
+    group = 'documentation'
+    description = 'プロジェクトのソースコードを解析して構造情報を出力します'
+
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'gradle.task.ASTExtractor'
+
+    // 解析対象プロジェクトのルート（デフォルトはカレント）
+    args projectDir.absolutePath
 }
