@@ -88,6 +88,7 @@ public class AutoUpdateTask {
                             .filter(feed -> !Strings.CS.startsWith(feed.title, "PR："))
                             .filter(feed -> StringUtils.isNotBlank(feed.publishedDate))
                             .filter(feed -> gwDateService.isRetainedDateAfter(feed.publishedDate))
+                            .filter(feed -> StringUtils.isNotBlank(feed.link))
                             .filter(feed -> !feedRepository.existFeed(feed.link))
                             .forEach(feed -> {
                                 feedRepository.insertEntity(feed);
