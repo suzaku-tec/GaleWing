@@ -31,7 +31,7 @@ export default class UpdateFeed implements IElementEvent {
         // 未読数の更新
         response.data.siteFeedCounts.forEach((element: any) => {
           var countElement = document.getElementById(element.uuid + '_count');
-          countElement.innerText = element.count;
+          countElement!.innerText = element.count;
         });
 
         // grid更新

@@ -54,3 +54,4 @@ logs/blog.log
 /library.db
 src/main/resources/txt/customRssHtml/*
 htmlReport
+output
