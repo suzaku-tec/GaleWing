@@ -29,7 +29,7 @@ class NewsDtoSummaryRepositoryTest {
     void testInsert() {
         when(sqlManager.executeUpdate(any(), any())).thenReturn(0);
 
-        newsSummaryRepository.insert("uuid");
+        newsSummaryRepository.insertSummary("uuid");
     }
 
     @Test
@@ -61,7 +61,7 @@ class NewsDtoSummaryRepositoryTest {
     void testUpdate() {
         when(sqlManager.executeUpdate(any(), any())).thenReturn(0);
 
-        int result = newsSummaryRepository.update("uuid", "summary");
+        int result = newsSummaryRepository.updateSummary("uuid", "summary");
         Assertions.assertEquals(0, result);
     }
 
