@@ -26,7 +26,8 @@ export default class GaleWingApi {
     circulationStatusList: "/circulation/status/list",
     updateIcon: "/site/updateIcon",
     summaryDelete: "/news/summary/delete",
-    summaryAdd: "/news/summary/add",
+    summaryAdd: "/feed/analyze/summary",
+    informationGatheringAdd: "/feed/analyze/informationGathering",
     functionCtrlUpdate: "/functionCtrl/update",
     viewsSave: '/views/save',
     readDispList: "/readListFeed",
@@ -191,8 +192,17 @@ export default class GaleWingApi {
   }
 
   async summaryAdd(uuid: string) {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.summaryAdd + "?uuid=" + uuid;
-    await axios.post(ajaxUrl);
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.summaryAdd;
+    await axios.post(ajaxUrl, {
+      link: uuid
+    });
+  }
+
+  async informationGatheringAdd(uuid: string) {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.informationGatheringAdd;
+    await axios.post(ajaxUrl, {
+      link: uuid
+    });
   }
 
   async functionCtrlUpdate(id: string, flg: string) {

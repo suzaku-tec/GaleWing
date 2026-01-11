@@ -15,12 +15,32 @@ import java.util.Map;
 @Transactional
 public class NewsSummaryRepository {
 
+    private enum FeedType {
+        SUMMARY("summary"),
+        INFORMATION_GATHERING("information_gathering");
+
+        public final String code;
+
+        FeedType(String code) {
+            this.code = code;
+        }
+    }
+
     @Autowired
     SqlManager sqlManager;
 
-    public void insert(String uuid) {
+    public void insertSummary(String uuid) {
         Map<String, String> params = new HashMap<>();
         params.put("feed_uuid", uuid);
+        params.put("feed_type", FeedType.SUMMARY.code);
+        sqlManager.executeUpdate(new ClasspathSqlResource("sql/newsSummary/insert_summary.sql")
+                , params);
+    }
+
+    public void insertInformationGathering(String uuid) {
+        Map<String, String> params = new HashMap<>();
+        params.put("feed_uuid", uuid);
+        params.put("feed_type", FeedType.INFORMATION_GATHERING.code);
         sqlManager.executeUpdate(new ClasspathSqlResource("sql/newsSummary/insert_summary.sql")
                 , params);
     }
@@ -41,10 +61,20 @@ public class NewsSummaryRepository {
                 , params);
     }
 
-    public int update(String uuid, String summary) {
+    public int updateSummary(String uuid, String summary) {
         Map<String, String> params = new HashMap<>();
         params.put("uuid", uuid);
         params.put("summary", summary);
+        params.put("type", FeedType.SUMMARY.code);
+
+        return sqlManager.executeUpdate(new ClasspathSqlResource("sql/newsSummary/update_summary.sql"), params);
+    }
+
+    public int updateInformationGathering(String uuid, String summary) {
+        Map<String, String> params = new HashMap<>();
+        params.put("uuid", uuid);
+        params.put("summary", summary);
+        params.put("type", FeedType.INFORMATION_GATHERING.code);
 
         return sqlManager.executeUpdate(new ClasspathSqlResource("sql/newsSummary/update_summary.sql"), params);
     }
