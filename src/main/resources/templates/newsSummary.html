@@ -1,128 +1,132 @@
 <!DOCTYPE html>
 <html lang="ja" class="h-100" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="Description" content="Enter your description here"/>
-  <script src="/js/newsSummary.js"></script>
-  <link rel="stylesheet" href="../../style.css">
-  <title>GaleWing</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="Description" content="Enter your description here"/>
+    <script src="/js/newsSummary.js"></script>
+    <link rel="stylesheet" href="../../style.css">
+    <title>GaleWing</title>
 </head>
 
 <body>
 <!-- 全ページを囲む要素 -->
 <main class="container mw-100" role="main">
-  <div class="row">
-    <input type="hidden" id="identifier" value="" th:value="${identifier}">
+    <div class="row">
+        <input type="hidden" id="identifier" value="" th:value="${identifier}">
 
-    <!-- サイトバーメニュー -->
-    <nav class="sidebar col-md-3" id="sidemenu">
-      <div th:replace="linkMenu"/>
+        <!-- サイトバーメニュー -->
+        <nav class="sidebar col-md-3" id="sidemenu">
+            <div th:replace="linkMenu"/>
 
-    </nav>
-    <!-- サイトバーメニュー -->
+        </nav>
+        <!-- サイトバーメニュー -->
 
-    <!-- 全ページの右のコンテンツ -->
-    <div class="col-md-9" id="mainContent">
+        <!-- 全ページの右のコンテンツ -->
+        <div class="col-md-9" id="mainContent">
 
-      <!-- トップバー -->
-      <!-- トップバー -->
+            <!-- トップバー -->
+            <!-- トップバー -->
 
-      <!-- 下のコンテンツ -->
-      <div class="content p-3">
-        <div>
-          <!-- アイコン -->
+            <!-- 下のコンテンツ -->
+            <div class="content p-3">
+                <div>
+                    <!-- アイコン -->
 
-          <!-- メインコンテンツ -->
-          <div>
+                    <!-- メインコンテンツ -->
+                    <div>
 
-          </div>
-          <div id="cardLayout" class="contentLayout">
-            <ul class="card-list">
-              <li class="card-item rounded border border-secondary border border-3"
-                  th:each="newsSummary: ${newsSummaryList}">
-                <div class="card-item-link">
-                  <div class="card-item-body">
-                    <div class="card-item-title"><a th:href="${newsSummary.feedUuid}">[[${newsSummary.title}]]</a></div>
-                  </div>
+                    </div>
+                    <div id="cardLayout" class="contentLayout">
+                        <ul class="card-list">
+                            <li class="card-item rounded border border-secondary border border-3"
+                                th:each="newsSummary: ${newsSummaryList}">
+                                <div class="card-item-link">
+                                    <div class="card-item-body">
+                                        <div class="card-item-title"><a th:href="${newsSummary.feedUuid}">[[${newsSummary.title}]]</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-2">
+                                    <button name="summary" th:data-summary="${newsSummary.summary}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal" class="btn btn-info">要約
+                                    </button>
+                                    <button name="del" th:data-id="${newsSummary.feedUuid}" class="btn btn-danger">
+                                        削除
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="p-2">
-                  <button name="summary" th:data-summary="${newsSummary.summary}" data-bs-toggle="modal"
-                          data-bs-target="#exampleModal" class="btn btn-info">要約
-                  </button>
-                  <button name="del" th:data-id="${newsSummary.feedUuid}" class="btn btn-danger">削除</button>
-                </div>
-              </li>
-            </ul>
-          </div>
+            </div>
+            <!-- 下のコンテンツ -->
+
         </div>
-      </div>
-      <!-- 下のコンテンツ -->
+        <!-- 全ページの右のコンテンツ -->
 
     </div>
-    <!-- 全ページの右のコンテンツ -->
-
-  </div>
 </main>
 <!-- 全ページを囲む要素 -->
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
-  <div class="modal-dialog" id="modal-dialog">
-    <div class="modal-content" id="modal-content">
-      <div class="modal-header" id="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="btn-close" id="modal-header-btn-close" data-bs-dismiss="modal"
-                aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="modal-body">
-      </div>
-      <div class="modal-footer" id="modal-footer">
-      </div>
+    <div class="modal-dialog modal-xl" id="modal-dialog">
+        <div class="modal-content" id="modal-content">
+            <div class="modal-header" id="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" id="modal-header-btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-body">
+            </div>
+            <div class="modal-footer" id="modal-footer">
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 <div style="display: none;">
-  <div id="modalAddSiteBody">
-    <p>フィードのURL もしくは、WebサイトのURL</p>
-    <div>
-      <input class="form-control addSiteUrl" placeholder="example.com">
+    <div id="modalAddSiteBody">
+        <p>フィードのURL もしくは、WebサイトのURL</p>
+        <div>
+            <input class="form-control addSiteUrl" placeholder="example.com">
+        </div>
+        <div>
+            <input type="checkbox" id="isUseTitle" checked><label
+                for="isUseTitle">フィードのタイトルを表示名に利用する</label>
+        </div>
     </div>
-    <div>
-      <input type="checkbox" id="isUseTitle" checked><label
-      for="isUseTitle">フィードのタイトルを表示名に利用する</label>
+    <div id="modalAddSiteFooter">
+        <button type="button" class="btn btn-primary modal-submit">complete!</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
     </div>
-  </div>
-  <div id="modalAddSiteFooter">
-    <button type="button" class="btn btn-primary modal-submit">complete!</button>
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
-  </div>
-  <div id="modalImportOpmlBody">
-    <div>
-      <label for="importOpmlFile" class="form-label">Upload Opml file</label>
-      <input class="form-control" type="file" id="importOpmlFile">
+    <div id="modalImportOpmlBody">
+        <div>
+            <label for="importOpmlFile" class="form-label">Upload Opml file</label>
+            <input class="form-control" type="file" id="importOpmlFile">
+        </div>
     </div>
-  </div>
-  <div id="modalImportOpmlFooter">
-    <button type="button" class="btn btn-primary modal-submit">import</button>
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
-  </div>
-  <div id="updateMessageModal">
-    <div style="text-align: center;">
-      <div class="spinner-grow" role="status">
-      </div>
-      <span>Updating...</span>
+    <div id="modalImportOpmlFooter">
+        <button type="button" class="btn btn-primary modal-submit">import</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
     </div>
-  </div>
-  <div class="confirmModal">
-    <div class="confirmFooter">
-      <button type="button" class="btn btn-primary confirmOk">ok</button>
-      <button type="button" class="btn btn-secondary confirmCancel" data-dismiss="modal">cancel
-      </button>
+    <div id="updateMessageModal">
+        <div style="text-align: center;">
+            <div class="spinner-grow" role="status">
+            </div>
+            <span>Updating...</span>
+        </div>
     </div>
-  </div>
+    <div class="confirmModal">
+        <div class="confirmFooter">
+            <button type="button" class="btn btn-primary confirmOk">ok</button>
+            <button type="button" class="btn btn-secondary confirmCancel" data-dismiss="modal">cancel
+            </button>
+        </div>
+    </div>
 </div>
 
 <a id="downloadLink" style="display: none;"></a>
