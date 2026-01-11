@@ -24,13 +24,19 @@ class FeedReportControllerTest {
 
     @Test
     void testSummary() {
-        feedReportController.summary(new FeedReportDto());
+        FeedReportDto testFeedReportDto = new FeedReportDto();
+        testFeedReportDto.link = "http://example.com";
+
+        feedReportController.summary(testFeedReportDto);
         verify(feedReportService).summary(anyString());
     }
 
     @Test
     void testInformationGathering() {
-        feedReportController.informationGathering(new FeedReportDto());
+        FeedReportDto testFeedReportDto = new FeedReportDto();
+        testFeedReportDto.link = "http://example.com";
+
+        feedReportController.informationGathering(testFeedReportDto);
         verify(feedReportService).informationGathering(anyString());
     }
 }
