@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import FeedApi from './disp/feedApi';
+import { VNode } from 'preact';
 
 export default class GaleWingApi {
   public readonly apiUrls = {
@@ -36,6 +37,10 @@ export default class GaleWingApi {
     instagramContentsList: '/rssBridge/instagram/contentsList',
     redditContentsList: '/rssBridge/reddit/contentsList',
     blueskyContantsList: '/rssBridge/bluesky/contentsList',
+    podcastAdd: '/podcast/add',
+    podcastSync: '/podcast/sync',
+    podcastNotReadFeed: '/podcast/notReadFeed',
+    podcastMarkRead: '/podcast/markRead',
   };
 
   private static singleton: GaleWingApi;
@@ -252,6 +257,31 @@ export default class GaleWingApi {
     let ajaxUrl = this.getBaseUrl() + this.apiUrls.blueskyContantsList;
     return await axios.post(ajaxUrl, {
       username
+    });
+  }
+
+  async podcastAdd(url: string, title: string): Promise<AxiosResponse<any>> {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastAdd;
+    return await axios.post(ajaxUrl, {
+      url,
+      title
+    });
+  }
+
+  async podcastSync(): Promise<AxiosResponse<any>> {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastSync;
+    return await axios.post(ajaxUrl);
+  }
+
+  async podcastNotReadFeed(): Promise<AxiosResponse<any>> {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastNotReadFeed;
+    return await axios.post(ajaxUrl);
+  }
+
+  async podcastMarkRead(url: string): Promise<AxiosResponse<any>> {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastMarkRead;
+    return await axios.post(ajaxUrl, {
+      url
     });
   }
 

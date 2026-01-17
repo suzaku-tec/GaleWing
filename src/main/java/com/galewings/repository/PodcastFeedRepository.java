@@ -22,7 +22,6 @@ public class PodcastFeedRepository {
         return sqlManager.insertEntity(podcastFeed);
     }
 
-    @Transactional
     public boolean isExist(String url) {
         Map<String, String> params = new HashMap<>();
         params.put("url", url);
@@ -30,13 +29,17 @@ public class PodcastFeedRepository {
         return 0 < sqlManager.getCount(new ClasspathSqlResource("sql/podcastFeed/selectForUrl.sql"), params);
     }
 
-    @Transactional
     public boolean isNotExist(String url) {
         return !isExist(url);
     }
 
-    @Transactional
     public List<PodcastFeed> selectAll() {
         return sqlManager.getResultList(PodcastFeed.class, new ClasspathSqlResource("sql/podcastFeed/selectAll.sql"));
+    }
+
+    public int markRead(String url) {
+        Map<String, String> params = new HashMap<>();
+        params.put("url", url);
+        return sqlManager.executeUpdate(new ClasspathSqlResource("sql/podcastFeed/markRead.sql"), params);
     }
 }
