@@ -16,7 +16,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 class PodcastServiceTest {
     @Mock
@@ -46,7 +46,7 @@ class PodcastServiceTest {
 
     @Test
     void testCreatePodcastFeed() {
-        PodcastFeed result = podcastService.createPodcastFeed("url");
+        PodcastFeed result = podcastService.createPodcastFeed("url", title, syndEntry.getPublishedDate());
         Assertions.assertEquals("url", result.url);
     }
 

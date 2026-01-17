@@ -1,1 +1,1 @@
-select * from podcast_feed
+select * from podcast_feed where read = false
