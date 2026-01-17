@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -46,15 +47,18 @@ public class GwDateService {
     }
 
     public enum DateFormat {
-        SQLITE_DATE_FORMAT("yyyy-MM-dd", "uuuu-MM-dd"), FILE_TIME_FORMAT("yyyyMMddHHmmss", "uuuuMMddHHmmss");
+        SQLITE_DATE_FORMAT("yyyy-MM-dd", "uuuu-MM-dd"), FILE_TIME_FORMAT("yyyyMMddHHmmss", "uuuuMMddHHmmss"), DATE_TIME_COMMON("yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd hh:mm:ss");
 
         public final String stringFormat;
 
         public final DateTimeFormatter dtf;
 
+        public final SimpleDateFormat sdf;
+
         DateFormat(String format, String dateTimeFormat) {
             this.stringFormat = format;
             this.dtf = DateTimeFormatter.ofPattern(dateTimeFormat);
+            this.sdf = new SimpleDateFormat(stringFormat);
         }
     }
 }
