@@ -2,56 +2,95 @@ package com.galewings.repository;
 
 import com.galewings.entity.PodcastFeed;
 import com.miragesql.miragesql.SqlManager;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import com.miragesql.miragesql.SqlResource;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class PodcastFeedRepositoryTest {
+
     @Mock
-    SqlManager sqlManager;
+    private SqlManager sqlManager;
+
     @InjectMocks
-    PodcastFeedRepository podcastFeedRepository;
+    private PodcastFeedRepository target;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+    private static final String TEST_URL = "https://example.com/podcast";
 
     @Test
+    @DisplayName("insert: エンティティの挿入が成功すること")
     void testInsert() {
-        when(sqlManager.insertEntity(any())).thenReturn(0);
-        int result = podcastFeedRepository.insert(new PodcastFeed());
-        Assertions.assertEquals(0, result);
+        PodcastFeed feed = new PodcastFeed();
+        when(sqlManager.insertEntity(any(PodcastFeed.class))).thenReturn(1);
+
+        int result = target.insert(feed);
+
+        assertEquals(1, result);
+        verify(sqlManager, times(1)).insertEntity(feed);
     }
 
     @Test
-    void testIsExist() {
-        when(sqlManager.getCount(any(), any())).thenReturn(0);
-        boolean result = podcastFeedRepository.isExist("url");
-        Assertions.assertEquals(false, result);
+    @DisplayName("isExist: データが存在する場合にtrueを返すこと")
+    void testIsExist_True() {
+        when(sqlManager.getCount(any(SqlResource.class), anyMap())).thenReturn(1);
+
+        boolean result = target.isExist(TEST_URL);
+
+        assertTrue(result);
     }
 
     @Test
-    void testIsNotExist() {
-        when(sqlManager.getCount(any(), any())).thenReturn(0);
-        boolean result = podcastFeedRepository.isNotExist("url");
-        Assertions.assertEquals(true, result);
+    @DisplayName("isExist: データが存在しない場合にfalseを返すこと")
+    void testIsExist_False() {
+        when(sqlManager.getCount(any(SqlResource.class), anyMap())).thenReturn(0);
+
+        boolean result = target.isExist(TEST_URL);
+
+        assertFalse(result);
     }
 
     @Test
+    @DisplayName("isNotExist: データが存在しない場合にtrueを返すこと")
+    void testIsNotExist_True() {
+        // isExistがfalseを返すケース
+        when(sqlManager.getCount(any(SqlResource.class), anyMap())).thenReturn(0);
+
+        boolean result = target.isNotExist(TEST_URL);
+
+        assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("selectAll: 全件取得ができること")
     void testSelectAll() {
-        when(sqlManager.getResultList(any(), any())).thenReturn(Collections.emptyList());
-        List<PodcastFeed> result = podcastFeedRepository.selectAll();
-        Assertions.assertEquals(Collections.emptyList(), result);
+        List<PodcastFeed> expectedList = Collections.singletonList(new PodcastFeed());
+        when(sqlManager.getResultList(eq(PodcastFeed.class), any(SqlResource.class))).thenReturn(expectedList);
+
+        List<PodcastFeed> result = target.selectAll();
+
+        assertEquals(expectedList.size(), result.size());
+        verify(sqlManager, times(1)).getResultList(eq(PodcastFeed.class), any(SqlResource.class));
+    }
+
+    @Test
+    @DisplayName("markRead: 更新が成功し、更新件数が返ること")
+    void testMarkRead() {
+        when(sqlManager.executeUpdate(any(SqlResource.class), anyMap())).thenReturn(1);
+
+        int result = target.markRead(TEST_URL);
+
+        assertEquals(1, result);
+        verify(sqlManager, times(1)).executeUpdate(any(SqlResource.class), anyMap());
     }
 }
-
-//Generated with love by TestMe :) Please report issues and submit feature requests at: http://weirddev.com/forum#!/testme
