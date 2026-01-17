@@ -30,6 +30,7 @@ const config = {
     galeWingModal: './src/main/screen/modal/index.ts',
     rssBridge: './src/main/screen/rssBridge/index.ts',
     statics: './src/main/screen/statistics/index.ts',
+    podcast: './src/main/screen/podcast/index.ts',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

@@ -1,23 +1,22 @@
 package com.galewings.service;
 
+import com.galewings.entity.Podcast;
 import com.galewings.entity.PodcastFeed;
 import com.galewings.repository.PodcastFeedRepository;
 import com.galewings.repository.PodcastRepository;
+import com.rometools.rome.feed.synd.SyndFeed;
+import com.rometools.rome.io.FeedException;
+import com.rometools.rome.io.SyndFeedInput;
+import com.rometools.rome.io.XmlReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.InputSource;
 
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.*;
+import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 @Service
 public class PodcastService {
@@ -28,62 +27,53 @@ public class PodcastService {
     @Autowired
     private PodcastFeedRepository podcastFeedRepository;
 
+    @Autowired
+    private GwDateService gwDateService;
+
     public void sync() {
         podcastRepository.selectAll().stream().map(podcast -> {
-            return readRssXml(podcast.url);
-        }).filter(Optional::isPresent)
+                    return getFeed(podcast.url);
+                }).filter(Optional::isPresent)
                 .map(Optional::get)
-                .map(document -> document.getElementsByTagName("enclosure"))
-                .flatMap(nodeList -> IntStream
-                        .range(0, nodeList.getLength())
-                        .mapToObj(nodeList::item))
-                .map(node -> (Element) node)
-                .filter(element -> "audio/mpeg".equals(element.getAttribute("type")))
-                .map(element -> element.getAttribute("url"))
-                .filter(podcastFeedRepository::isNotExist)
-                .map(this::createPodcastFeed)
-                .sequential()
+                .flatMap(syndFeed -> syndFeed.getEntries().stream())
+                .filter(syndEntry -> podcastFeedRepository.isNotExist(syndEntry.getLink()))
+                .map(syndEntry -> createPodcastFeed(syndEntry.getLink(), syndEntry.getTitle(), syndEntry.getPublishedDate()))
                 .forEach(podcastFeedRepository::insert);
     }
 
-    private Optional<Document> readRssXml(String url) {
+    private Optional<SyndFeed> getFeed(String url) {
         try {
-            URL tmpUrl = new URL(url);
-
-            // URLを開き、データを読み取るためのストリームを作成
-            try(BufferedReader reader = new BufferedReader(new InputStreamReader(tmpUrl.openStream(),
-                    StandardCharsets.UTF_8))) {
-                // 読み取ったデータを格納する文字列バッファ
-                StringBuilder xmlData = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    xmlData.append(line).append("\r\n");
-                }
-
-                // XMLデータを解析してDOMオブジェクトを取得
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                factory.setNamespaceAware(true);
-                factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-                factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
-                factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-                factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-                factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-                factory.setExpandEntityReferences(false);
-                DocumentBuilder builder = factory.newDocumentBuilder();
-                return Optional.of(builder.parse(new InputSource(new StringReader(xmlData.toString())))) ;
-            }
-
-        } catch (Exception e) {
-            return Optional.empty();
+            SyndFeed syndFeed = new SyndFeedInput().build(new XmlReader(new URL(url)));
+            return Optional.of(syndFeed);
+        } catch (FeedException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public PodcastFeed createPodcastFeed(String url) {
+    public PodcastFeed createPodcastFeed(String url, String title, Date publishedDate) {
         PodcastFeed pf = new PodcastFeed();
         pf.id = UUID.randomUUID().toString();
         pf.url = url;
+        pf.title = title;
+        pf.publishedDate = GwDateService.DateFormat.DATE_TIME_COMMON.sdf.format(publishedDate);
         return pf;
     }
 
+    public int addPodcast(String url, String title) {
+        Podcast podcast = new Podcast();
+        podcast.url = url;
+        podcast.title = title;
+        podcast.id = UUID.randomUUID().toString();
+        return podcastRepository.insert(podcast);
+    }
 
+    public List<PodcastFeed> getNotReadFeed() {
+        return podcastFeedRepository.selectAll();
+    }
+
+    public int markRead(String url) {
+        return podcastFeedRepository.markRead(url);
+    }
 }

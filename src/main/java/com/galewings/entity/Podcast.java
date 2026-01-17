@@ -8,4 +8,8 @@ public class Podcast {
 
     @Column(name = "url")
     public String url;
+
+    @Column(name = "title")
+    public String title;
+
 }
