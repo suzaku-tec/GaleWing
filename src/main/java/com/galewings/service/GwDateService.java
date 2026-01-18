@@ -10,6 +10,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 
+import static com.galewings.service.GwDateService.DateFormat.SQLITE_DATE_FORMAT;
+
 @Component
 public class GwDateService {
 
@@ -61,4 +63,25 @@ public class GwDateService {
             this.sdf = new SimpleDateFormat(stringFormat);
         }
     }
+
+    public boolean isToday(String dateStr, DateTimeFormatter format) {
+        String nowDate = now().format(SQLITE_DATE_FORMAT.dtf);
+
+        String compareDateStr = LocalDate.parse(dateStr, format).format(SQLITE_DATE_FORMAT.dtf);
+        return nowDate.equals(compareDateStr);
+    }
+
+    public String convertDateFormat(String dateStr, String beforFormat, String afterFormat) {
+        DateTimeFormatter dtFormat = DateTimeFormatter.ofPattern(beforFormat);
+        LocalDate date = LocalDate.parse(dateStr, dtFormat);
+        DateTimeFormatter dtFormatAfter = DateTimeFormatter.ofPattern(afterFormat);
+        return date.format(dtFormatAfter);
+    }
+
+    public boolean isTargetDate(LocalDate targetDate, String comparDate, DateTimeFormatter format) {
+        String target = targetDate.format(SQLITE_DATE_FORMAT.dtf);
+        String compareDateStr = LocalDate.parse(comparDate, format).format(SQLITE_DATE_FORMAT.dtf);
+        return target.equals(compareDateStr);
+    }
+
 }

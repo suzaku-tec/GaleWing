@@ -1,6 +1,7 @@
 package com.galewings.controller;
 
 import com.galewings.dto.statistics.ReadRateDto;
+import com.galewings.dto.statistics.ranking.RankingDto;
 import com.galewings.service.StaticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,5 +33,10 @@ public class StaticsController {
     @PostMapping("/readRate")
     public ReadRateDto getReadRate() {
         return staticsService.selectReadRate();
+    }
+
+    @PostMapping("/rank/word")
+    public RankingDto getWordRank() {
+        return staticsService.selectWordRank();
     }
 }
