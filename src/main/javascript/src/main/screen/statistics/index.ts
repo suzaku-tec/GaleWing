@@ -22,6 +22,10 @@ library.add(faBars, faCheck, faSyncAlt, faPlus, faWrench, faTh, faIdCard);
 dom.watch();
 export default { hideModifier };
 
+const colors = [
+  '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+  '#FF9F40', '#8AC249', '#E91E63', '#00BCD4', '#607D8B'
+];
 window.onload = function () {
   const main = document.getElementById('main')!;
   // axiosのヘッダー設定
@@ -46,5 +50,43 @@ window.onload = function () {
       options: {},
     });
   });
+
+  const wordRankCanvas = document.createElement('canvas');
+  wordRankCanvas.classList.add('mt-5');
+  main.appendChild(wordRankCanvas);
+  staticsApi.getWordRank().then((response) => {
+    const labels = response.data.labels;
+    const datasets = response.data.datasets;
+
+    new Chart(wordRankCanvas, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: datasets,
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            reverse: true, // 【重要】1位を一番上にする
+            min: 1,
+            ticks: {
+              stepSize: 1, // 1刻みにする
+              precision: 0 // 小数点を表示しない
+            },
+            title: {
+              display: true,
+              text: 'Rank'
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            position: 'top',
+          }
+        }
+      },
+    });
+  })
 
 }

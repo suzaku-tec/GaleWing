@@ -1,8 +1,8 @@
 package com.galewings.controller;
 
 import com.galewings.dto.statistics.ReadRateDto;
+import com.galewings.dto.statistics.ranking.RankingDto;
 import com.galewings.service.StaticsService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.servlet.ModelAndView;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 class StaticsControllerTest {
@@ -26,7 +27,7 @@ class StaticsControllerTest {
     @Test
     void testIndex() {
         ModelAndView result = staticsController.index();
-        Assertions.assertEquals("statics", result.getViewName());
+        assertEquals("statics", result.getViewName());
     }
 
     @Test
@@ -35,7 +36,16 @@ class StaticsControllerTest {
         when(staticsService.selectReadRate()).thenReturn(test);
 
         ReadRateDto result = staticsController.getReadRate();
-        Assertions.assertEquals(test, result);
+        assertEquals(test, result);
+    }
+
+    @Test
+    void testGetWordRank() {
+        RankingDto test = new RankingDto();
+        when(staticsService.selectWordRank()).thenReturn(test);
+
+        RankingDto result = staticsController.getWordRank();
+        assertEquals(test, result);
     }
 }
 

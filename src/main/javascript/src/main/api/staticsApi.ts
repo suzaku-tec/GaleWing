@@ -31,6 +31,11 @@ export default class StaticsApi {
     let ajaxUrl = this.getBaseUrl() + "readRate";
     return await axios.post(ajaxUrl);
   }
+
+  async getWordRank(): Promise<AxiosResponse<any>> {
+    let ajaxUrl = this.getBaseUrl() + "rank/word";
+    return await axios.post(ajaxUrl);
+  }
 }
 
 class StaticsApiURLError extends Error { }
