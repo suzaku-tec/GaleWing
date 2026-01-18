@@ -1,10 +1,15 @@
 package com.galewings.repository;
 
 import com.galewings.dto.statistics.ReadRateDto;
+import com.galewings.dto.statistics.ranking.RankDto;
 import com.miragesql.miragesql.ClasspathSqlResource;
 import com.miragesql.miragesql.SqlManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class StaticsRepository {
@@ -32,5 +37,12 @@ public class StaticsRepository {
      */
     public ReadRateDto selectReadRate() {
         return sqlManager.getSingleResult(ReadRateDto.class, new ClasspathSqlResource("sql/statics/selectReadRate.sql"));
+    }
+
+    public List<RankDto> selectWordRank(String minDate, String maxDate) {
+        Map<String, String> params = new HashMap<>();
+        params.put("minDate", minDate);
+        params.put("maxDate", maxDate);
+        return sqlManager.getResultList(RankDto.class, new ClasspathSqlResource("sql/statics/selectWordRank.sql"), params);
     }
 }
