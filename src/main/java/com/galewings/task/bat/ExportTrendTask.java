@@ -1,5 +1,6 @@
 package com.galewings.task.bat;
 
+import com.atilika.kuromoji.ipadic.Token;
 import com.atilika.kuromoji.ipadic.Tokenizer;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.TrendRepository;
@@ -21,7 +22,7 @@ public class ExportTrendTask implements Runnable {
 
     private static final String NOUN = "名詞";
 
-    private static final Set PartOfSpeechLevel2HoldSet = Set.of("一般", "固有名詞", "サ変接続");
+    private static final Set<String> PartOfSpeechLevel2HoldSet = Set.of("一般", "固有名詞", "サ変接続");
 
     private final FeedRepository feedRepository;
 
@@ -46,7 +47,7 @@ public class ExportTrendTask implements Runnable {
                 .filter(token -> !"*".equals(token.getBaseForm()))
                 .filter(token -> NOUN.equals(token.getPartOfSpeechLevel1()))
                 .filter(token -> PartOfSpeechLevel2HoldSet.contains(token.getPartOfSpeechLevel2()))
-                .map(token -> token.getBaseForm())
+                .map(Token::getBaseForm)
                 .collect(Collectors.groupingBy(word -> word, Collectors.counting()));
 
         wordCounter.forEach((word, count) -> {
