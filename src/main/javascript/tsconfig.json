@@ -2,20 +2,33 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
-    "module": "es6",
-    "target": "es5",
+    "module": "nodenext",
+    "target": "esnext",
     "allowJs": true,
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
     "alwaysStrict": true,
-    "strict": true,
-    "baseUrl": "src",
+    "strict": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
     "jsx": "react",
+    "rootDir": "./src",
+    "typeRoots": [
+      "./src/types",
+      "./node_modules/@types"
+    ],
     "paths": {
-      "*": [
-        "@types/*"
+      "@types/*": [
+        "./src/@types"
+      ],
+      "gridjs": [
+        "./node_modules/gridjs/dist/src/grid"
       ]
     },
-    "outDir": "dist"
+    "types": [
+      "node",
+      "jest"
+    ],
+    "outDir": "./dist"
   },
   "include": [
     "src/**/*.ts"

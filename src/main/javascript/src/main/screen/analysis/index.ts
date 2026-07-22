@@ -38,7 +38,7 @@ library.add(
 );
 dom.watch();
 
-import { Grid, html } from 'gridjs';
+import Grid, { html } from 'gridjs';
 import 'gridjs/dist/theme/mermaid.css';
 
 import SettingApi from '../../api/settingApi';
@@ -69,7 +69,7 @@ async function createGrid(data: any) {
       {
         name: 'title',
         hidden: false,
-        formatter: (cell, row) =>
+        formatter: (cell: any, row: any) =>
           html(
             `<a href='javascript:void(0)' rel="noopener" class="rss-link" data-link="${row.cells[1].data}">${row.cells[0].data}</a>`,
           ),
@@ -93,7 +93,7 @@ async function createGrid(data: any) {
 function initGridEvent(grid: Grid) {
   let api = GaleWingApi.getInstance();
 
-  grid.on('rowClick', (event, row) => {
+  grid.on('rowClick', (event: Event, row: any) => {
     let link = row?.cell(1).data?.toLocaleString();
     if (link) {
       window.open(link);

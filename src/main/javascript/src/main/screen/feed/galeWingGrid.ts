@@ -1,5 +1,7 @@
 import GaleWingApi from '../../api/galeWingApi';
-import { Grid, Row, html, h } from 'gridjs';
+import { Row, html, h } from 'gridjs';
+import * as gridjs from "gridjs";
+console.log(gridjs);
 import { VNode } from 'preact';
 import ReadAllShowFeed from '../../events/readAllShowFeed';
 import UpdateFeed from '../../events/updateFeed';
@@ -32,7 +34,7 @@ export default class GaleWingGrid {
 
   public data: any = [];
 
-  public grid: Grid | null = null;
+  public grid: gridjs.Grid | null = null;
 
   static getInstance() {
     if (!this.singleton) {
@@ -55,7 +57,7 @@ export default class GaleWingGrid {
         setting.outputLog();
         var limit = Number(setting.get('feed_rows'));
 
-        this.grid = await this.createGrid(res.data, limit);
+        await this.createGrid(res.data, limit);
 
         this.setupGridEvent(this.grid, limit);
 
@@ -68,7 +70,7 @@ export default class GaleWingGrid {
 
   async createGrid(data: any, limit: any) {
 
-    return new Grid({
+    this.grid = new gridjs.Grid({
       columns: this.createGridColumn(),
       pagination: {
         limit: Number(limit),
@@ -76,7 +78,9 @@ export default class GaleWingGrid {
       sort: true,
       search: false,
       data: data,
-    }).render(<HTMLInputElement>document.getElementById('wrapper'));
+    });
+
+    this.grid.render(<HTMLInputElement>document.getElementById('wrapper'));
   }
 
   createGridColumn() {
@@ -153,7 +157,7 @@ export default class GaleWingGrid {
     );
   }
 
-  setupGridEvent(grid: Grid, limit: Number) {
+  setupGridEvent(grid: gridjs.Grid, limit: Number) {
     new ElementEvent(new UpdateFeed('identifier', grid)).setup(
       'click',
       document.getElementById('updateFeed'),
@@ -172,9 +176,9 @@ export default class GaleWingGrid {
     this.setupGridRowClickEvent(grid);
   }
 
-  setupGridRowClickEvent(grid: Grid) {
+  setupGridRowClickEvent(grid: gridjs.Grid) {
 
-    grid.on('cellClick', (event, ...columns) => {
+    grid.on('cellClick', (event: Event, ...columns: any[]) => {
       let col = columns[0];
       let colConfig = columns[1];
       let row = columns[2];

@@ -47,6 +47,6 @@ export default class GridLayoutChgEvent implements IElementEvent {
     var gridNavLink = navLinks.find((element) => {
       return (element as HTMLElement).dataset.layout === GridLayoutChgEvent.GRID_ELEMENT_ID;
     });
-    gridNavLink.classList.add(NavLink.ACTIVE_CLASS_NAME);
+    gridNavLink!.classList.add(NavLink.ACTIVE_CLASS_NAME);
   }
 }

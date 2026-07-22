@@ -1,4 +1,4 @@
-import { Grid } from 'gridjs';
+import Grid from 'gridjs';
 import axios from 'axios';
 import { IElementEvent } from './elementEvent';
 
