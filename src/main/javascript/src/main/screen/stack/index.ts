@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'gridjs/dist/theme/mermaid.css';
 
 import hideModifier from '@popperjs/core/lib/modifiers/hide';
-import { Grid } from 'gridjs';
+import Grid from 'gridjs';
 
 import GaleWingApi from '../../api/galeWingApi';
 

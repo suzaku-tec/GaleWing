@@ -15,7 +15,6 @@ const config = {
     settings: './src/main/screen/setting/index.ts',
     siteManagement: './src/main/screen/site/index.ts',
     stack: './src/main/screen/stack/index.ts',
-    youtube: './src/main/screen/youtube/galeWingYoutube.ts',
     analysis: './src/main/screen/analysis/index.ts',
     category: './src/main/screen/category/index.ts',
     siteCategory: './src/main/screen/siteCategory/index.ts',
@@ -31,6 +30,7 @@ const config = {
     rssBridge: './src/main/screen/rssBridge/index.ts',
     statics: './src/main/screen/statistics/index.ts',
     podcast: './src/main/screen/podcast/index.ts',
+    aiRecommend: './src/main/screen/aiRecommend/index.ts',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

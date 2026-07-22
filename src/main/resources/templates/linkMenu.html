@@ -53,4 +53,7 @@
     <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('statistics') eq '1'}">
         <a class="list-group-item" href="/statics/">Dashboard</a>
     </li>
+    <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('airecommend') eq '1'}">
+        <a class="list-group-item" href="/ai/recommend/">AI Recommend</a>
+    </li>
 </ul>

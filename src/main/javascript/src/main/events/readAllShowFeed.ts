@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { IElementEvent } from './elementEvent';
-import { Grid } from 'gridjs';
+import Grid from 'gridjs';
 import { getSite } from '../screen/siteList';
 
 export default class ReadAllShowFeed implements IElementEvent {
