@@ -41,6 +41,7 @@ export default class GaleWingApi {
     podcastSync: '/podcast/sync',
     podcastNotReadFeed: '/podcast/notReadFeed',
     podcastMarkRead: '/podcast/markRead',
+    aiRecommendRead: '/ai/recommend/read',
   };
 
   private static singleton: GaleWingApi;
@@ -283,6 +284,11 @@ export default class GaleWingApi {
     return await axios.post(ajaxUrl, {
       url
     });
+  }
+
+  async aiRecommendRead(id: string): Promise<AxiosResponse<any>> {
+    let ajaxUrl = this.getBaseUrl() + this.apiUrls.aiRecommendRead + "/" + id;
+    return await axios.post(ajaxUrl);
   }
 
   private getBaseUrl(): string {

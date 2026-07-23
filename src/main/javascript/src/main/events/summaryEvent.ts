@@ -1,4 +1,3 @@
-import { Grid } from "gridjs";
 import { IElementEvent } from "./elementEvent";
 import GaleWingApi from "../api/galeWingApi";
 

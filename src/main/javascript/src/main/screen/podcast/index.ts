@@ -21,7 +21,7 @@ import hideModifier from '@popperjs/core/lib/modifiers/hide';
 import ElementEvent from '../../events/elementEvent';
 import AddPodcastEvent from '../../events/modal/addPodcastEvent';
 import UpdatePodcatFeedEvent from '../../events/updatePodcatFeedEvent';
-import { Grid, Row, html, h } from 'gridjs';
+import Grid, { Row, html, h } from 'gridjs';
 import SettingApi from '../../api/settingApi';
 import GaleWingApi from '../../api/galeWingApi';
 import { read } from 'fs';
@@ -69,7 +69,7 @@ window.onload = async () => {
       data: data,
     }).render(<HTMLInputElement>document.getElementById('wrapper'));
 
-    grid.on('cellClick', (event, ...columns) => {
+    grid.on('cellClick', (event: Event, ...columns: any[]) => {
       let col = columns[0];
       let colConfig = columns[1];
       let row = columns[2]!;
