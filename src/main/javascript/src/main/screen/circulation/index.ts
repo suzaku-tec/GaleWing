@@ -50,7 +50,7 @@ import hideModifier from '@popperjs/core/lib/modifiers/hide';
 
 import axios from 'axios';
 import GaleWingApi from '../../api/galeWingApi';
-import { Grid } from 'gridjs';
+import Grid from 'gridjs';
 import AxiosSetting from '../../setting/AxiosSetting';
 
 window.onload = async () => {
@@ -68,7 +68,7 @@ window.onload = async () => {
     sort: true,
     search: true,
     data: circulationList.data,
-    }).render(<HTMLInputElement>document.getElementById('wrapper'));
+  }).render(<HTMLInputElement>document.getElementById('wrapper'));
 };
 
 

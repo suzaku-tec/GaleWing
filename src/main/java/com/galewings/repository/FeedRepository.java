@@ -172,6 +172,21 @@ public class FeedRepository {
     }
 
     /**
+     * 指定した日付以降のデータを取得する
+     *
+     * @param localDate 対象日付
+     * @return フィードリスト
+     */
+    public List<Feed> selectPublicDateFrom(LocalDate localDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd 00:00:00");
+        Map<String, String> params = new HashMap<>();
+        params.put("fromDate", localDate.format(formatter));
+
+        return sqlManager.getResultList(Feed.class,
+                new ClasspathSqlResource("sql/feed/select_public_from.sql"), params);
+    }
+
+    /**
      * フィード単一取得
      *
      * @param link 対象リンク
