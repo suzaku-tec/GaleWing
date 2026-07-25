@@ -46,16 +46,16 @@ export default class GaleWingGrid {
   }
 
   private setupGrid() {
-    let api = GaleWingApi.getInstance();
+    const api = GaleWingApi.getInstance();
     api
       .getFeedList(window.location.href)
       .then(async (res) => {
         this.data = res.data;
 
-        let setting = new SettingApi();
+        const setting = new SettingApi();
         await setting.init();
         setting.outputLog();
-        var limit = Number(setting.get('feed_rows'));
+        const limit = Number(setting.get('feed_rows'));
 
         await this.createGrid(res.data, limit);
 
@@ -157,7 +157,7 @@ export default class GaleWingGrid {
     );
   }
 
-  setupGridEvent(grid: gridjs.Grid, limit: Number) {
+  setupGridEvent(grid: gridjs.Grid, limit: number) {
     new ElementEvent(new UpdateFeed('identifier', grid)).setup(
       'click',
       document.getElementById('updateFeed'),
@@ -179,25 +179,25 @@ export default class GaleWingGrid {
   setupGridRowClickEvent(grid: gridjs.Grid) {
 
     grid.on('cellClick', (event: Event, ...columns: any[]) => {
-      let col = columns[0];
-      let colConfig = columns[1];
-      let row = columns[2];
+      const col = columns[0];
+      const colConfig = columns[1];
+      const row = columns[2];
 
       if (colConfig.name === 'title') {
-        let link = row.cells[HeaderIndex.link].data!.toLocaleString();
+        const link = row.cells[HeaderIndex.link].data!.toLocaleString();
 
         // リンク押下の場合はリンクの遷移を実施。それ以外は個別にリンクを表示
         if ((event.target as any).localName !== 'a') {
           window.open(link, '_blank');
         }
 
-        let api = GaleWingApi.getInstance();
+        const api = GaleWingApi.getInstance();
         api
           .read(link)
           .then(() => {
 
             // リンク押下の場合はリンクの遷移を実施。それ以外は個別にリンクを表示
-            let targetElement: HTMLElement | null = event.target as HTMLElement;
+            const targetElement: HTMLElement | null = event.target as HTMLElement;
             if (targetElement.tagName.toLowerCase() === 'a') {
               targetElement.classList = 'rss-read-link';
             } else {
@@ -213,7 +213,7 @@ export default class GaleWingGrid {
   }
 
   stack(uuid: string | null | undefined, link: string | undefined) {
-    let api = GaleWingApi.getInstance();
+    const api = GaleWingApi.getInstance();
     api.stackFeed(window.location.href, uuid, link);
   }
 

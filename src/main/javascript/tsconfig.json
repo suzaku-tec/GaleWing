@@ -2,10 +2,10 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
-    "module": "nodenext",
+    "module": "ESNext",
     "target": "esnext",
     "allowJs": true,
-    "moduleResolution": "node16",
+    "moduleResolution": "bundler",
     "alwaysStrict": true,
     "strict": false,
     "skipLibCheck": true,

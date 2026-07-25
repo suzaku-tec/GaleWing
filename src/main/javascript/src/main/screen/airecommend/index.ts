@@ -45,7 +45,7 @@ window.onload = () => {
   Array.from(elements).forEach((element) => {
     if (element instanceof HTMLElement) {
       element.addEventListener("click", async (event) => {
-        let api = GaleWingApi.getInstance();
+        const api = GaleWingApi.getInstance();
         await api.aiRecommendRead(element.dataset.recommendid).then((res) => {
           console.log(res.data);
         });

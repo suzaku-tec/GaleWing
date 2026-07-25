@@ -10,7 +10,7 @@ let modal: Modal;
  */
 export function showModal(type: string, title: string, submitFuncs: ((modal: Modal, modalBody: HTMLElement) => void)[]): void {
 
-  let { typeModalBody, typeModalFooter } = initModal(type, title);
+  const { typeModalBody, typeModalFooter } = initModal(type, title);
 
   modal = new Modal(document.getElementById('modal')!);
 
@@ -37,7 +37,7 @@ export function showExecModal(type: string, title: string, exec: () => void): vo
 }
 
 export function showExecFuncModal(type: string, title: string, exec: (modalBody: HTMLElement) => void, submitFuncs: ((modal: Modal, modalBody: HTMLElement) => void)[]): void {
-  let { typeModalBody, typeModalFooter } = initModal(type, title);
+  const { typeModalBody, typeModalFooter } = initModal(type, title);
   exec(typeModalBody);
   modal = new Modal(document.getElementById('modal')!);
   modal.show();
@@ -60,24 +60,24 @@ export function closeModal(): void {
 }
 
 function initModal(type: string, title: string): { typeModalBody: HTMLElement; typeModalFooter: HTMLElement } {
-  let modalBody = document.getElementById('modal-body')!;
+  const modalBody = document.getElementById('modal-body')!;
   while (modalBody.firstChild) {
     modalBody.removeChild(modalBody.firstChild);
   }
 
-  let modalFooter = document.getElementById('modal-footer')!;
+  const modalFooter = document.getElementById('modal-footer')!;
   while (modalFooter.firstChild) {
     modalFooter.removeChild(modalFooter.firstChild);
   }
 
-  let typeModalBody = document.getElementById(type + 'ModalBody')!;
-  let typeModalFooter = document.getElementById(type + 'ModalFooter')!;
+  const typeModalBody = document.getElementById(type + 'ModalBody')!;
+  const typeModalFooter = document.getElementById(type + 'ModalFooter')!;
 
-  let modalTitle = document.getElementById('modalTitle')!;
+  const modalTitle = document.getElementById('modalTitle')!;
   modalTitle.textContent = title;
 
-  let cloneTypeModalBody = typeModalBody.cloneNode(true) as HTMLElement;
-  let cloneTypeModalFooter = typeModalFooter.cloneNode(true) as HTMLElement;
+  const cloneTypeModalBody = typeModalBody.cloneNode(true) as HTMLElement;
+  const cloneTypeModalFooter = typeModalFooter.cloneNode(true) as HTMLElement;
 
   modalBody.appendChild(cloneTypeModalBody);
   modalFooter.appendChild(cloneTypeModalFooter);
@@ -87,12 +87,12 @@ function initModal(type: string, title: string): { typeModalBody: HTMLElement; t
 
 function disposeModal(modal: Modal): EventListenerOrEventListenerObject {
   return (event) => {
-    let modalBody = document.getElementById('modal-body')!;
+    const modalBody = document.getElementById('modal-body')!;
     while (modalBody.firstChild) {
       modalBody.removeChild(modalBody.firstChild);
     }
 
-    let modalFooter = document.getElementById('modal-footer')!;
+    const modalFooter = document.getElementById('modal-footer')!;
     while (modalFooter.firstChild) {
       modalFooter.removeChild(modalFooter.firstChild);
     }

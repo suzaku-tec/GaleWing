@@ -30,12 +30,12 @@ export class Shortcutter {
 
         return keys?.includes(event.key);
       }).forEach((shortcut) => {
-        let evName = shortcut.dataset.shortcutEvent;
+        const evName = shortcut.dataset.shortcutEvent;
         if(!evName) {
           // イベント指定がない場合は、デフォルトでclickイベントを発火させる
           shortcut.click();
         } else {
-          let e = new Event(evName);
+          const e = new Event(evName);
           shortcut.dispatchEvent(e);
         }
       });
