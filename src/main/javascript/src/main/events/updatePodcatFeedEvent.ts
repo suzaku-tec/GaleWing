@@ -4,7 +4,7 @@ import UpdateMessageEvent from "./modal/updateMessageEvent";
 
 export default class UpdateFeed implements IElementEvent {
   execute(param?: any): void {
-    var ume = new UpdateMessageEvent();
+    const ume = new UpdateMessageEvent();
     ume.execute();
 
     GaleWingApi.getInstance().podcastSync().catch((error: any) => {

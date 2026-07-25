@@ -6,16 +6,16 @@ import { Modal } from "bootstrap";
 export default class relationListEvent implements IElementEvent {
   execute(link: string): void {
 
-    let api = GaleWingApi.getInstance();
+    const api = GaleWingApi.getInstance();
 
     api.relationList(link)
       .then((res) => {
-        let urls: { title: string, link: string }[] = res.data;
+        const urls: { title: string, link: string }[] = res.data;
         showExecFuncModal('relationList', 'Relation List', (typeModalBody: HTMLElement) => {
           console.log('urls', urls);
           console.log('typeModalBody', typeModalBody);
           urls.forEach((item: { title: string, link: string }) => {
-            let linkElement = document.createElement('a');
+            const linkElement = document.createElement('a');
             linkElement.href = item.link;
             linkElement.textContent = item.title;
             linkElement.style.border = '5px';
@@ -23,9 +23,9 @@ export default class relationListEvent implements IElementEvent {
             typeModalBody.appendChild(document.createElement('br'));
           });
         }, [(modal: Modal, modalBody: HTMLElement) => {
-          let urlElements = modalBody.getElementsByTagName('a');
+          const urlElements = modalBody.getElementsByTagName('a');
 
-          let urls = Array.from(urlElements).map((element: HTMLAnchorElement) => {
+          const urls = Array.from(urlElements).map((element: HTMLAnchorElement) => {
             return element.href;
           });
 

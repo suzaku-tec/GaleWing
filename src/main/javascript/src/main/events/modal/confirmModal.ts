@@ -1,20 +1,19 @@
 import { Modal } from 'bootstrap';
-import { IElementEvent } from '../elementEvent';
 
 export default class ConfirmModalEvent {
   private modal: Modal;
 
   constructor(msg: string, execute: () => void) {
-    let div = document.createElement('div');
+    const div = document.createElement('div');
     div.innerText = msg;
 
-    let modalBody = document.getElementById('modal-body')!;
+    const modalBody = document.getElementById('modal-body')!;
     modalBody.appendChild(div);
 
-    let confirmFooter = document.getElementsByClassName('confirmFooter')[0];
-    let footer = this.initFooter(confirmFooter, execute);
+    const confirmFooter = document.getElementsByClassName('confirmFooter')[0];
+    const footer = this.initFooter(confirmFooter, execute);
 
-    let modalHeaderCloseBtn = document.getElementById('modal-header-btn-close')!;
+    const modalHeaderCloseBtn = document.getElementById('modal-header-btn-close')!;
     modalHeaderCloseBtn.style.display = 'none';
 
     document.getElementById('exampleModal')!.addEventListener(
@@ -52,7 +51,7 @@ export default class ConfirmModalEvent {
   }
 
   private initFooter(confirmFooter: Element, execute: () => void) {
-    let footer = document.getElementById('modal-footer')!;
+    const footer = document.getElementById('modal-footer')!;
     footer.appendChild(confirmFooter.cloneNode(true));
     footer
       .getElementsByClassName('confirmOk')!

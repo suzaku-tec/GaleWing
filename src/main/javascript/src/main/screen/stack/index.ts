@@ -7,11 +7,11 @@ import Grid from 'gridjs';
 import GaleWingApi from '../../api/galeWingApi';
 
 window.onload = () => {
-  var api = GaleWingApi.getInstance();
+  const api = GaleWingApi.getInstance();
 
   api.getStackList(window.location.href).then((res) => {
     console.log(res.data);
-    var grid = new Grid({
+    new Grid({
       columns: [
         { name: 'title' },
         { name: 'uuid', hidden: true },

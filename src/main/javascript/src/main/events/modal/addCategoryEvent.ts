@@ -4,12 +4,12 @@ import GaleWingApi from '../../api/galeWingApi';
 
 export default class AddCategoryEvent implements IElementEvent {
   execute(): void {
-    let modal = new Modal(document.getElementById('exampleModal')!);
+    const modal = new Modal(document.getElementById('exampleModal')!);
 
-    let executeBtn = document.getElementById('execute')!;
+    const executeBtn = document.getElementById('execute')!;
     executeBtn.addEventListener('click', () => {
-      let nameEl = <HTMLInputElement>document.getElementById('name')!;
-      let descriptionEl = <HTMLInputElement>document.getElementById('description')!;
+      const nameEl = <HTMLInputElement>document.getElementById('name')!;
+      const descriptionEl = <HTMLInputElement>document.getElementById('description')!;
       GaleWingApi.getInstance()
         .addCategory(nameEl.value, descriptionEl.value)
         .then(() => {
