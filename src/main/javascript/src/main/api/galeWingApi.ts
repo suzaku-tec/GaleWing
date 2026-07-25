@@ -49,26 +49,26 @@ export default class GaleWingApi {
   private constructor() { }
 
   getFeedList(url: string): Promise<AxiosResponse<any>> {
-    let baseUrl = new URL(window.location.href);
+    const baseUrl = new URL(window.location.href);
     this.checkUrl(baseUrl);
-    let ajaxUrl = baseUrl.origin + this.apiUrls.feedList + baseUrl.search;
+    const ajaxUrl = baseUrl.origin + this.apiUrls.feedList + baseUrl.search;
     return axios.get(ajaxUrl);
   }
 
   getSiteList(url: string): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.siteList;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.siteList;
     return axios.get(ajaxUrl);
   }
 
   deleteSite(location: string, uuid: string) {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.deleteSite;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.deleteSite;
     return axios.post(ajaxUrl, { uuid: uuid });
   }
 
   getStackList(url: string): Promise<AxiosResponse<any>> {
-    let baseUrl = new URL(url);
+    const baseUrl = new URL(url);
     this.checkUrl(baseUrl);
-    let ajaxUrl = baseUrl.origin + this.apiUrls.stackList;
+    const ajaxUrl = baseUrl.origin + this.apiUrls.stackList;
     return axios.get(ajaxUrl);
   }
 
@@ -80,37 +80,37 @@ export default class GaleWingApi {
     if (!uuid) {
       return Promise.reject();
     }
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.stackFeed;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.stackFeed;
     return axios.post(ajaxUrl, { uuid: uuid, link: link });
   }
 
   settingJson(): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.settingJson;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.settingJson;
     return axios.get(ajaxUrl);
   }
 
   jaroWinklerDistance(title: string): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.jaroWinklerDistance;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.jaroWinklerDistance;
     return axios.get(ajaxUrl, { params: { targetTitle: title } });
   }
 
   analysisFeedAllRead(links: string[]): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.analysisFeedAllRead;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.analysisFeedAllRead;
     return axios.post(ajaxUrl, { links: links });
   }
 
   siteCategoryList(siteUuid: string): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.siteCategoryList;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.siteCategoryList;
     return axios.post(ajaxUrl, { siteUuid: siteUuid });
   }
 
   addCategory(name: string, description: string): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.addCategory;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.addCategory;
     return axios.post(ajaxUrl, { name: name, description: description });
   }
 
   deleteCategory(uuid: string): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.deleteCategory;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.deleteCategory;
     return axios.post(ajaxUrl, { uuid: uuid });
   }
 
@@ -123,22 +123,22 @@ export default class GaleWingApi {
   }
 
   executeStatsSql(id: string): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.executeStatsSql;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.executeStatsSql;
     return axios.post(ajaxUrl, { id: id });
   }
 
   getStatsIdList(): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.statsIdList;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.statsIdList;
     return axios.post(ajaxUrl);
   }
 
   updateIcon(uuid: string): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.updateIcon;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.updateIcon;
     return axios.post(ajaxUrl, { uuid: uuid });
   }
 
   viewSave(viewId: string, viewName: string, siteIdList: string[]): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.viewsSave;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.viewsSave;
     return axios.post(ajaxUrl, { viewId: viewId, viewName: viewName, siteIdList: siteIdList });
   }
 
@@ -147,17 +147,17 @@ export default class GaleWingApi {
     siteUuid: string,
     categoryUuid: string,
   ): Promise<AxiosResponse<any>> {
-    let url = this.getBaseUrl() + kbn;
+    const url = this.getBaseUrl() + kbn;
     return axios.post(url, { siteUuid: siteUuid, categoryUuid: categoryUuid });
   }
 
   translationEnJp(text: string): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.translationEnJp;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.translationEnJp;
     return axios.post(ajaxUrl, { text: text }, { headers: { 'Content-Type': 'application/json' } });
   }
 
   async read(link: string) {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.read;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.read;
     const response = await axios.post(ajaxUrl, {
       link: link,
     });
@@ -168,14 +168,14 @@ export default class GaleWingApi {
   }
 
   async executeTask(taskName: string) {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.executeTask;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.executeTask;
     await axios.post(ajaxUrl, {
       name: taskName,
     });
   }
 
   async circulationAdd(link: string, title: string) {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.circulationAdd;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.circulationAdd;
     await axios.post(ajaxUrl, {
       link: link,
       title: title
@@ -183,36 +183,36 @@ export default class GaleWingApi {
   }
 
   async circulationList() {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.circulationList;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.circulationList;
     return await axios.post(ajaxUrl);
   }
 
   async circulationStatusList() {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.circulationStatusList;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.circulationStatusList;
     return await axios.post(ajaxUrl);
   }
 
   async deleteSummary(uuid: string) {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.summaryDelete;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.summaryDelete;
     return await axios.post(ajaxUrl + "?uuid=" + uuid);
   }
 
   async summaryAdd(uuid: string) {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.summaryAdd;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.summaryAdd;
     await axios.post(ajaxUrl, {
       link: uuid
     });
   }
 
   async informationGatheringAdd(uuid: string) {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.informationGatheringAdd;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.informationGatheringAdd;
     await axios.post(ajaxUrl, {
       link: uuid
     });
   }
 
   async functionCtrlUpdate(id: string, flg: string) {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.functionCtrlUpdate;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.functionCtrlUpdate;
     return await axios.post(ajaxUrl, {
       id: id,
       flg: flg
@@ -220,49 +220,49 @@ export default class GaleWingApi {
   }
 
   async readDispList(urls: string[]) {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.readDispList;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.readDispList;
     return await axios.post(ajaxUrl, {
       urls: urls
     });
   }
 
   async getViewSiteList(viewId: string) {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.viewSiteList;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.viewSiteList;
     return await axios.post(ajaxUrl, {
       viewId
     });
   }
 
   async relationList(link: string): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.relationList;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.relationList;
     return await axios.post(ajaxUrl, {
       link: link
     });
   }
 
   async instantiateRssBridge(username: string): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.instagramContentsList;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.instagramContentsList;
     return await axios.post(ajaxUrl, {
       username
     });
   }
 
   async redditContentsList(subReddit: string): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.redditContentsList;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.redditContentsList;
     return await axios.post(ajaxUrl, {
       subReddit
     });
   }
 
   async blueskyContentsList(username: string): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.blueskyContantsList;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.blueskyContantsList;
     return await axios.post(ajaxUrl, {
       username
     });
   }
 
   async podcastAdd(url: string, title: string): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastAdd;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastAdd;
     return await axios.post(ajaxUrl, {
       url,
       title
@@ -270,29 +270,29 @@ export default class GaleWingApi {
   }
 
   async podcastSync(): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastSync;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastSync;
     return await axios.post(ajaxUrl);
   }
 
   async podcastNotReadFeed(): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastNotReadFeed;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastNotReadFeed;
     return await axios.post(ajaxUrl);
   }
 
   async podcastMarkRead(url: string): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastMarkRead;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastMarkRead;
     return await axios.post(ajaxUrl, {
       url
     });
   }
 
   async aiRecommendRead(id: string): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + this.apiUrls.aiRecommendRead + "/" + id;
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.aiRecommendRead + "/" + id;
     return await axios.post(ajaxUrl);
   }
 
   private getBaseUrl(): string {
-    let baseUrl = new URL(window.location.href);
+    const baseUrl = new URL(window.location.href);
     this.checkUrl(baseUrl);
     return baseUrl.origin;
   }

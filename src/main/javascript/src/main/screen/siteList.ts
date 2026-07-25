@@ -3,14 +3,14 @@ function getSiteList(): HTMLElement {
 }
 
 function getSite(identifier: string) {
-  var target = document.getElementById(identifier)!;
-  var parent = target.parentElement;
+  const target = document.getElementById(identifier)!;
+  const parent = target.parentElement;
 
-  var prevParentElement = parent ? <HTMLElement>parent.previousElementSibling : null;
-  var nextParentElement = parent ? <HTMLElement>parent.nextElementSibling : null;
+  const prevParentElement = parent ? <HTMLElement>parent.previousElementSibling : null;
+  const nextParentElement = parent ? <HTMLElement>parent.nextElementSibling : null;
 
-  var prevElement = prevParentElement ? prevParentElement.firstElementChild : null;
-  var nextElement = nextParentElement ? nextParentElement.firstElementChild : null;
+  const prevElement = prevParentElement ? prevParentElement.firstElementChild : null;
+  const nextElement = nextParentElement ? nextParentElement.firstElementChild : null;
 
   return { target: target, prev: prevElement, next: nextElement };
 }

@@ -96,7 +96,7 @@ function setupEvent() {
 
   new ElementEvent(new TitleListEvent()).setup('click', document.getElementById('mdTitleList'));
 
-  let ps = setupPlayer();
+  const ps = setupPlayer();
   new ElementEvent(ps).setup('click', document.getElementById('playTitle'));
 
   document.getElementById('subPrev')?.addEventListener('click', () => {
@@ -110,10 +110,10 @@ function setupEvent() {
 }
 
 function setupPlayer() {
-  let ps = new PlaySound();
+  const ps = new PlaySound();
   ps.setTalking(() => {
     // TODO 再生のコントロールを検討する
-    var rssLinks = document.getElementsByClassName('rss-link');
+    const rssLinks = document.getElementsByClassName('rss-link');
 
     (async () => {
       await Array.from(rssLinks).reduce((promise, rssLink) => {
@@ -132,12 +132,12 @@ function setupPlayer() {
  */
 function setupSidebar() {
   // toggleボタンをセレクト
-  let sidebarToggler = document.getElementById('sidebarToggler');
+  const sidebarToggler = document.getElementById('sidebarToggler');
 
   // 表示状態用の変数
   let showSidebar = true;
-  var sidemenu = document.getElementById('sidemenu');
-  var mainContent = document.getElementById('mainContent');
+  const sidemenu = document.getElementById('sidemenu');
+  const mainContent = document.getElementById('mainContent');
 
   // イベント追加
   sidebarToggler?.addEventListener('click', () => {

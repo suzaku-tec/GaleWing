@@ -1,9 +1,14 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
-const path = require('path');
+import { resolve as _resolve } from 'path';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // webpack.config.js
-const Dotenv = require('dotenv-webpack');
+import Dotenv from 'dotenv-webpack';
 
 const isProduction = process.env.NODE_ENV == 'production';
 
@@ -33,7 +38,7 @@ const config = {
     aiRecommend: './src/main/screen/aiRecommend/index.ts',
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: _resolve(__dirname, 'dist'),
     filename: '[name].js',
     publicPath: '/',
     libraryExport: 'default',
@@ -75,7 +80,7 @@ const config = {
   },
 };
 
-module.exports = () => {
+export default () => {
   if (isProduction) {
     config.mode = 'production';
   } else {

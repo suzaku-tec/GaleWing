@@ -41,15 +41,15 @@ export default class PlaySound implements IElementEvent {
       },
     });
 
-    let arrayBuffer = synthesis.data;
+    const arrayBuffer = synthesis.data;
     console.log(arrayBuffer);
 
     return new Promise<void>((resolve, reject) => {
       if (arrayBuffer instanceof ArrayBuffer) {
         // The 2nd argument for decodeAudioData
-        let successCallback = (audioBuffer: AudioBuffer): void => {
+        const successCallback = (audioBuffer: AudioBuffer): void => {
           /* audioBuffer is the instance of AudioBuffer */
-          let source = createAudioBufferSource(this.context, audioBuffer);
+          const source = createAudioBufferSource(this.context, audioBuffer);
           source.onended = () => {
             resolve();
           };
@@ -58,7 +58,7 @@ export default class PlaySound implements IElementEvent {
           source.start(0);
         };
         // The 3rd argument for decodeAudioData
-        let errorCallback = (error: { message: any }) => {
+        const errorCallback = (error: { message: any }) => {
           if (error instanceof Error) {
             window.alert(error.message);
           } else {
@@ -75,7 +75,7 @@ export default class PlaySound implements IElementEvent {
 }
 
 function createAudioBufferSource(context: AudioContext, audioBuffer: AudioBuffer) {
-  let source = context.createBufferSource();
+  const source = context.createBufferSource();
   // Set the instance of AudioBuffer
   source.buffer = audioBuffer;
   // Set parameters

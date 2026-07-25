@@ -4,11 +4,11 @@ import { IElementEvent } from './elementEvent';
 
 export default class ReadDispListEvent implements IElementEvent {
   execute(): void {
-    let gridjsTdList = Array.from(document.getElementsByClassName('gridjs-td'));
+    const gridjsTdList = Array.from(document.getElementsByClassName('gridjs-td'));
 
     GaleWingGrid.getInstance().setStopRowClickFlg(true);
 
-    var urls = gridjsTdList
+    const urls = gridjsTdList
       .map((td) => td.querySelector('a.rss-link'))
       .filter((el) => el !== null)
       .map((el) => <HTMLAnchorElement>el)
@@ -26,7 +26,7 @@ export default class ReadDispListEvent implements IElementEvent {
       });
 
     GaleWingApi.getInstance().readDispList(urls);
-    let targetBadge = <HTMLSpanElement>document.querySelector('a.bg-warning span.badge');
+    const targetBadge = <HTMLSpanElement>document.querySelector('a.bg-warning span.badge');
     const cnt = targetBadge?.innerText;
     if (Number(cnt)) targetBadge.innerText = String(Number(cnt) - urls.length);
 

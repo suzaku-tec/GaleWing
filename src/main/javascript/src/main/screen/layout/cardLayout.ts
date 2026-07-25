@@ -59,7 +59,7 @@ window.onload = async () => {
     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
   };
 
-  let setting = new SettingApi();
+  const setting = new SettingApi();
   await setting.init();
   setting.outputLog();
 
@@ -80,7 +80,7 @@ export default class CardLayout {
     this.displayCount = rows ? Number(rows) : 0;
     this.startIndex = 0;
 
-    let api = GaleWingApi.getInstance();
+    const api = GaleWingApi.getInstance();
     api.getFeedList(window.location.href).then((res) => {
       this.feedJson = res.data;
 
@@ -90,14 +90,14 @@ export default class CardLayout {
 
     // イベント紐づけ
     // 各種ボタン
-    var previousLink = document.getElementById("previous-link");
-    var nextLink = document.getElementById("next-link");
+    const previousLink = document.getElementById("previous-link");
+    const nextLink = document.getElementById("next-link");
 
     previousLink?.addEventListener("click", () => {
       if(!previousLink?.parentElement?.classList.contains("disabled")) {
-        var pageIndexValEL = document.getElementById("pageIndexVal");
-        var str = pageIndexValEL?.innerText
-        var page = Number(str) - 1;
+        const pageIndexValEL = document.getElementById("pageIndexVal");
+        const str = pageIndexValEL?.innerText
+        const page = Number(str) - 1;
         this.startIndex = page * this.displayCount
         const displayDataJson = this.feedJson.slice(this.startIndex, this.startIndex + this.displayCount);
         this.deleteDispList();
@@ -108,9 +108,9 @@ export default class CardLayout {
 
     nextLink?.addEventListener("click", () => {
       if(!nextLink?.parentElement?.classList.contains("disabled")) {
-        var pageIndexValEL = document.getElementById("pageIndexVal");
-        var str = pageIndexValEL?.innerText
-        var page = Number(str);
+        const pageIndexValEL = document.getElementById("pageIndexVal");
+        const str = pageIndexValEL?.innerText
+        const page = Number(str);
         this.startIndex = page * this.displayCount
         const displayDataJson = this.feedJson.slice(this.startIndex, this.startIndex + this.displayCount);
         this.deleteDispList();
@@ -122,26 +122,26 @@ export default class CardLayout {
   }
 
   private deleteDispList() {
-    var layout = document.getElementById('cardLayout');
+    const layout = document.getElementById('cardLayout');
     while(layout?.firstChild ){
       layout.removeChild( layout.firstChild );
     }
   }
 
   private initPager(page: number) {
-    var pageIndexValEL = document.getElementById("pageIndexVal");
+    const pageIndexValEL = document.getElementById("pageIndexVal");
     if(pageIndexValEL) pageIndexValEL.innerText = page.toString();
 
-    var previous = document.getElementById("previous");
-    var startSpace = document.getElementById("startSpace");
-    var previousIndex = document.getElementById("previousIndex");
-    var previousIndexVal = document.getElementById("previousIndexVal");
-    var nextIndex = document.getElementById("nextIndex");
-    var nextIndexVal = document.getElementById("nextIndexVal");
-    var endSpace = document.getElementById("endSpace");
-    var next = document.getElementById("next");
+    const previous = document.getElementById("previous");
+    const startSpace = document.getElementById("startSpace");
+    const previousIndex = document.getElementById("previousIndex");
+    const previousIndexVal = document.getElementById("previousIndexVal");
+    const nextIndex = document.getElementById("nextIndex");
+    const nextIndexVal = document.getElementById("nextIndexVal");
+    const endSpace = document.getElementById("endSpace");
+    const next = document.getElementById("next");
 
-    var max = this.deleteDispList.length / this.displayCount + 1;
+    const max = this.deleteDispList.length / this.displayCount + 1;
 
     if(page == 1) {
       previous?.classList.add("disabled");
@@ -180,12 +180,12 @@ export default class CardLayout {
    */
   private setupSidebar() {
     // toggleボタンをセレクト
-    let sidebarToggler = document.getElementById('sidebarToggler');
+    const sidebarToggler = document.getElementById('sidebarToggler');
 
     // 表示状態用の変数
     let showSidebar = true;
-    let sidemenu = document.getElementById('sidemenu');
-    let mainContent = document.getElementById('mainContent');
+    const sidemenu = document.getElementById('sidemenu');
+    const mainContent = document.getElementById('mainContent');
 
     // イベント追加
     sidebarToggler?.addEventListener('click', () => {
