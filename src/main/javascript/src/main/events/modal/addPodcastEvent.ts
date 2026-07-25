@@ -12,10 +12,10 @@ export default class AddPodcastEvent implements IElementEvent {
 
 
   private modalPodcastSite(modal: Modal, modalBody: HTMLElement) {
-    let url = (modalBody.getElementsByClassName("podcastUrl")[0] as HTMLInputElement).value;
-    let title = (modalBody.getElementsByClassName("podcastTitle")[0] as HTMLInputElement).value;
+    const url = (modalBody.getElementsByClassName("podcastUrl")[0] as HTMLInputElement).value;
+    const title = (modalBody.getElementsByClassName("podcastTitle")[0] as HTMLInputElement).value;
 
-    GaleWingApi.getInstance().podcastAdd(url, title).catch((error: any) => {
+    GaleWingApi.getInstance().podcastAdd(url, title).catch(() => {
       alert('Failed to add podcast.');
     }).finally(() => {
       modal.hide();

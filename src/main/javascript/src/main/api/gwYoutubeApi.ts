@@ -24,7 +24,7 @@ export default class GwYoutubeApi {
   }
 
   channelVideos(channelId: string) {
-    var response = this.ajaxGet(this.baseUrl + channelId + '/videos');
+    const response = this.ajaxGet(this.baseUrl + channelId + '/videos');
     response.then((res) => console.log(res));
   }
 

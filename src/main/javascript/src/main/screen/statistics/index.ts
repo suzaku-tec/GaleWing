@@ -22,10 +22,6 @@ library.add(faBars, faCheck, faSyncAlt, faPlus, faWrench, faTh, faIdCard);
 dom.watch();
 export default { hideModifier };
 
-const colors = [
-  '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
-  '#FF9F40', '#8AC249', '#E91E63', '#00BCD4', '#607D8B'
-];
 window.onload = function () {
   const main = document.getElementById('main')!;
   // axiosのヘッダー設定

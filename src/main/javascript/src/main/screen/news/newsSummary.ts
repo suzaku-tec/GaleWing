@@ -64,24 +64,24 @@ window.onload = async () => {
   // axiosのヘッダー設定
   axios.defaults.headers.common = AxiosSetting.header;
 
-  let api = GaleWingApi.getInstance();
+  const api = GaleWingApi.getInstance();
 
-  let summaryBtnList = document.getElementsByName("summary");
+  const summaryBtnList = document.getElementsByName("summary");
   summaryBtnList.forEach(summaryBtn => {
-    let modal = new Modal(document.getElementById('exampleModal')!);
+    const modal = new Modal(document.getElementById('exampleModal')!);
 
     summaryBtn?.addEventListener("click", async () => {
-      let summary = summaryBtn.dataset.summary!;
-      let modalBody = document.getElementById("modal-body");
+      const summary = summaryBtn.dataset.summary!;
+      const modalBody = document.getElementById("modal-body");
       const html: string = await marked(summary);
       modalBody!.innerHTML = html;
     });
   });
 
-  let delBtnList = document.getElementsByName("del");
+  const delBtnList = document.getElementsByName("del");
   delBtnList.forEach(delBtn => {
     delBtn?.addEventListener("click", (e) => {
-      let uuid = delBtn.dataset.id!;
+      const uuid = delBtn.dataset.id!;
       api.deleteSummary(uuid).then(() => delBtn.parentElement?.parentElement?.classList.add("grid-card-read"));
     });
   });

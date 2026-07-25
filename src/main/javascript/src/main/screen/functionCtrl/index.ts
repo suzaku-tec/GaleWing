@@ -23,7 +23,7 @@ dom.watch();
 window.onload = function () {
 
   const checkCollection = document.getElementsByClassName("form-check-input");
-  let api = GaleWingApi.getInstance();
+  const api = GaleWingApi.getInstance();
   Array.from(checkCollection).forEach(checkEl => {
     checkEl.addEventListener("click", () => {
       const val = (<HTMLInputElement>checkEl).checked ? "1": "0";

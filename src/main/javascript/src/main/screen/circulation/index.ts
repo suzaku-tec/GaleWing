@@ -57,7 +57,7 @@ window.onload = async () => {
   // axiosのヘッダー設定
   axios.defaults.headers.common = AxiosSetting.header;
 
-  let api = GaleWingApi.getInstance();
+  const api = GaleWingApi.getInstance();
   const circulationList = await api.circulationList();
 
   new Grid({

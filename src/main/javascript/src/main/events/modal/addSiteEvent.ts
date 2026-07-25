@@ -12,8 +12,8 @@ export default class AddSiteEvent implements IElementEvent {
 
 
   private modalAddSite(modal: Modal, modalBody: HTMLElement) {
-    let link = (modalBody.getElementsByClassName('addSiteUrl')[0] as HTMLInputElement).value;
-    let uri = new URL(window.location.href);
+    const link = (modalBody.getElementsByClassName('addSiteUrl')[0] as HTMLInputElement).value;
+    const uri = new URL(window.location.href);
     axios
       .post(uri.origin + '/addFeed', {
         link: link,
@@ -24,6 +24,7 @@ export default class AddSiteEvent implements IElementEvent {
         modal.hide();
       })
       .catch((error) => {
+        console.error(error);
         modal.hide();
       });
   }

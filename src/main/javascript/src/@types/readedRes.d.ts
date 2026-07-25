@@ -1,4 +1,4 @@
 declare module 'readedRes' {
-  export var uuid: string;
-  export var count: number;
+  export let uuid: string;
+  export let count: number;
 }
