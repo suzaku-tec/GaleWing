@@ -113,7 +113,7 @@ class SiteFeedControllerTest {
 
         String result = siteFeedController.updateFeed(new UpdateFeedDto());
         assertEquals(
-                "{\"feeds\":[{\"title\":null,\"uuid\":null,\"link\":null,\"uri\":null,\"author\":null,\"comments\":null,\"publishedDate\":null,\"opened\":false,\"readed\":false,\"imageUrl\":null,\"contentTerxt\":null}],\"siteFeedCounts\":[{\"uuid\":null,\"title\":null,\"count\":0,\"faviconBase64\":null}]}",
+                "{\"feeds\":[{\"title\":null,\"uuid\":null,\"link\":null,\"uri\":null,\"author\":null,\"comments\":null,\"publishedDate\":null,\"opened\":false,\"readed\":false,\"imageUrl\":null,\"contentTerxt\":null,\"translateTitle\":null}],\"siteFeedCounts\":[{\"uuid\":null,\"title\":null,\"count\":0,\"faviconBase64\":null}]}",
                 result);
     }
 
