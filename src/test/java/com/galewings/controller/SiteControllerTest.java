@@ -43,7 +43,7 @@ class SiteControllerTest {
 
         String result = siteController.getSiteList();
         Assertions.assertEquals(
-                "[{\"uuid\":null,\"title\":null,\"htmlUrl\":null,\"xmlUrl\":null,\"faviconBase64\":null,\"lastUpdate\":null,\"feedUpdateDate\":null}]",
+                "[{\"uuid\":null,\"title\":null,\"htmlUrl\":null,\"xmlUrl\":null,\"faviconBase64\":null,\"lastUpdate\":null,\"feedUpdateDate\":null,\"translate\":false}]",
                 result);
     }
 
@@ -55,7 +55,7 @@ class SiteControllerTest {
 
         String result = siteController.index(modelMock);
         Assertions.assertEquals("/site/management", result);
-        Assertions.assertEquals(1, modelMock.asMap().entrySet().size());
+        Assertions.assertEquals(1, modelMock.asMap().size());
     }
 
     @Test
