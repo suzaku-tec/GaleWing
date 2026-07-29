@@ -123,6 +123,12 @@ public class SiteFeedController {
             feeds.forEach(feed -> feed.imageUrl = null);
         }
 
+        feeds.forEach(feed -> {
+            if (StringUtils.isNotEmpty(feed.translateTitle)) {
+                feed.title = "[翻訳]" + feed.translateTitle;
+            }
+        });
+
         return feeds;
     }
 
