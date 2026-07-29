@@ -9,95 +9,102 @@ import java.io.Serializable;
 @Table(name = "feed")
 public class Feed implements Serializable {
 
-  @Override
-  public String toString() {
-    return "Feed{" +
-            "title='" + title + '\'' +
-            ", uuid='" + uuid + '\'' +
-            ", link='" + link + '\'' +
-            ", uri='" + uri + '\'' +
-            ", author='" + author + '\'' +
-            ", comments='" + comments + '\'' +
-            ", publishedDate='" + publishedDate + '\'' +
-            ", opened='" + opened + '\'' +
-            ", readed='" + readed + '\'' +
-            '}';
-  }
+    @Override
+    public String toString() {
+        return "Feed{" +
+                "title='" + title + '\'' +
+                ", uuid='" + uuid + '\'' +
+                ", link='" + link + '\'' +
+                ", uri='" + uri + '\'' +
+                ", author='" + author + '\'' +
+                ", comments='" + comments + '\'' +
+                ", publishedDate='" + publishedDate + '\'' +
+                ", opened='" + opened + '\'' +
+                ", readed='" + readed + '\'' +
+                '}';
+    }
 
-  @Column(name = "title")
-  public String title;
+    @Column(name = "title")
+    public String title;
 
-  @Column(name = "uuid")
-  public String uuid;
+    @Column(name = "uuid")
+    public String uuid;
 
-  @Column(name = "link")
-  public String link;
+    @Column(name = "link")
+    public String link;
 
-  @Column(name = "uri")
-  public String uri;
+    @Column(name = "uri")
+    public String uri;
 
-  @Column(name = "author")
-  public String author;
+    @Column(name = "author")
+    public String author;
 
-  @Column(name = "comments")
-  public String comments;
+    @Column(name = "comments")
+    public String comments;
 
-  @Column(name = "publishedDate")
-  public String publishedDate;
+    @Column(name = "publishedDate")
+    public String publishedDate;
 
-  @Column(name = "opened")
-  public boolean opened;
+    @Column(name = "opened")
+    public boolean opened;
 
-  @Column(name = "readed")
-  public boolean readed;
+    @Column(name = "readed")
+    public boolean readed;
 
-  @Column(name = "imageUrl")
-  public String imageUrl;
+    @Column(name = "imageUrl")
+    public String imageUrl;
 
-  @Column(name = "contentTerxt")
-  public String contentTerxt;
+    @Column(name = "contentTerxt")
+    public String contentTerxt;
 
-  public String getTitle() {
-    return title;
-  }
+    @Column(name = "translatetitle")
+    public String translateTitle;
 
-  public String getUuid() {
-    return uuid;
-  }
+    public String getTitle() {
+        return title;
+    }
 
-  public String getLink() {
-    return link;
-  }
+    public String getUuid() {
+        return uuid;
+    }
 
-  public String getUri() {
-    return uri;
-  }
+    public String getLink() {
+        return link;
+    }
 
-  public String getAuthor() {
-    return author;
-  }
+    public String getUri() {
+        return uri;
+    }
 
-  public String getComments() {
-    return comments;
-  }
+    public String getAuthor() {
+        return author;
+    }
 
-  public String getPublishedDate() {
-    return publishedDate;
-  }
+    public String getComments() {
+        return comments;
+    }
 
-  public boolean getOpened() {
-    return this.opened;
-  }
+    public String getPublishedDate() {
+        return publishedDate;
+    }
 
-  public boolean getReaded() {
-    return readed;
-  }
+    public boolean getOpened() {
+        return this.opened;
+    }
 
-  public String getImageUrl() {
-    return imageUrl;
-  }
+    public boolean getReaded() {
+        return readed;
+    }
 
-  public String getContentTerxt() {
-    return contentTerxt;
-  }
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public String getContentTerxt() {
+        return contentTerxt;
+    }
+
+    public String getTranslateTitle() {
+        return translateTitle;
+    }
 }

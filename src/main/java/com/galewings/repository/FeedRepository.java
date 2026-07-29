@@ -252,4 +252,12 @@ public class FeedRepository {
         params.put("endDateTime", endDateTime.format(formatter));
         return sqlManager.getResultList(Feed.class, new ClasspathSqlResource("sql/feed/select_feed_to_range.sql"), params);
     }
+
+    public int updateTranslateTitle(Feed feed) {
+        Map<String, String> params = new HashMap<>();
+        params.put("uuid", feed.getUuid());
+        params.put("link", feed.getLink());
+        params.put("translateTitle", feed.getTranslateTitle());
+        return sqlManager.executeUpdate(new ClasspathSqlResource("sql/feed/update_translate_title.sql"), params);
+    }
 }
