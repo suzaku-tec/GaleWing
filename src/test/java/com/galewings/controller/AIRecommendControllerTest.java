@@ -5,6 +5,7 @@ import com.galewings.entity.AIRecommendFeed;
 import com.galewings.entity.Feed;
 import com.galewings.repository.FeedRepository;
 import com.galewings.service.AIRecommendService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,7 +14,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -35,32 +35,32 @@ class AIRecommendControllerTest {
 
     @Test
     void index() {
-        AIRecommendFeed testData1_AiRecommendFeed = new AIRecommendFeed();
-        testData1_AiRecommendFeed.id = "1";
-        testData1_AiRecommendFeed.title = "title1";
-        AIRecommendFeed testData2_AiRecommendFeed = new AIRecommendFeed();
-        testData2_AiRecommendFeed.id = "2";
-        testData2_AiRecommendFeed.title = "title2";
+        AIRecommendFeed testData1AiRecommendFeed = new AIRecommendFeed();
+        testData1AiRecommendFeed.id = "1";
+        testData1AiRecommendFeed.title = "title1";
+        AIRecommendFeed testData2AiRecommendFeed = new AIRecommendFeed();
+        testData2AiRecommendFeed.id = "2";
+        testData2AiRecommendFeed.title = "title2";
 
-        Feed testData1_Feed = new Feed();
-        Feed testData2_Feed = new Feed();
+        Feed testData1Feed = new Feed();
+        Feed testData2Feed = new Feed();
 
-        ModelMock testData_ModelMock = new ModelMock();
+        ModelMock testDataModelMock = new ModelMock();
 
         when(aiRecommendService.selectAIRecommndFeed()).thenReturn(List.of(
-                testData1_AiRecommendFeed,
-                testData2_AiRecommendFeed
+                testData1AiRecommendFeed,
+                testData2AiRecommendFeed
         ));
 
         when(aiRecommendService.selectAIRecommendOrigin("1")).thenReturn(List.of(
-                testData1_Feed,
-                testData2_Feed
+                testData1Feed,
+                testData2Feed
         ));
 
-        String result = aiRecommendController.index(testData_ModelMock);
+        String result = aiRecommendController.index(testDataModelMock);
 
-        assertEquals("ai_recommend/index", result);
-        assertEquals(2, ((List<?>) testData_ModelMock.getAttribute("recommends")).size());
+        Assertions.assertEquals("ai_recommend/index", result);
+        Assertions.assertEquals(2, ((List<?>) testDataModelMock.getAttribute("recommends")).size());
     }
 
     @Test
@@ -72,7 +72,7 @@ class AIRecommendControllerTest {
 
         List<AIRecommendFeed> aiRecommendFeeds = aiRecommendController.selectFeed();
 
-        assertEquals(2, aiRecommendFeeds.size());
+        Assertions.assertEquals(2, aiRecommendFeeds.size());
     }
 
     @Test
@@ -84,7 +84,7 @@ class AIRecommendControllerTest {
 
         List<Feed> feedList = aiRecommendController.selectFeedOrigin("1");
 
-        assertEquals(2, feedList.size());
+        Assertions.assertEquals(2, feedList.size());
     }
 
     @Test
