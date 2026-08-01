@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -60,7 +61,7 @@ class AIRecommendControllerTest {
         String result = aiRecommendController.index(testDataModelMock);
 
         Assertions.assertEquals("ai_recommend/index", result);
-        Assertions.assertEquals(2, ((List<?>) testDataModelMock.getAttribute("recommends")).size());
+        Assertions.assertEquals(2, ((List<?>) Objects.requireNonNull(testDataModelMock.getAttribute("recommends"))).size());
     }
 
     @Test
