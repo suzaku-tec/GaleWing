@@ -15,13 +15,18 @@ import com.galewings.service.filter.ClassificationResult;
 import com.galewings.service.filter.GwRuleBasedNewsClassifier;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
-import com.rometools.rome.io.XmlReader;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.xml.stream.XMLStreamException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +89,7 @@ public class AutoUpdateTask {
                         Optional<SyndFeed> result;
 
                         try {
-                            SyndFeed syndFeed = new SyndFeedInput().build(new XmlReader(new URL(site.xmlUrl)));
+                            SyndFeed syndFeed = new SyndFeedInput().build(readUrlToXmlReader(URI.create(site.xmlUrl).toURL()));
                             result = Optional.ofNullable(syndFeed);
                         } catch (Exception e) {
                             result = Optional.empty();
@@ -165,5 +170,10 @@ public class AutoUpdateTask {
         feedClassification.setClassifiedAt(gwDateService.now().format(GwDateService.DateFormat.SQLITE_DATE_FORMAT.dtf));
         feedClassificationRepository.mergeClassification(feedClassification);
     }
+
+    private Reader readUrlToXmlReader(URL url) throws IOException, XMLStreamException {
+        return new BufferedReader(new InputStreamReader(url.openStream()));
+    }
+
 
 }

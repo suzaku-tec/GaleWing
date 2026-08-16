@@ -10,6 +10,7 @@ import com.galewings.service.GoogleAlertService;
 import com.galewings.service.GwDateService;
 import com.galewings.service.filter.ClassificationResult;
 import com.galewings.service.filter.GwRuleBasedNewsClassifier;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -52,7 +53,7 @@ class AutoUpdateTaskTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -74,6 +75,7 @@ class AutoUpdateTaskTest {
     void testAllUpdate_FullFlow() {
         ClassificationResult classificationResult = new ClassificationResult("Test Category", Collections.emptySet(), 0.0, Collections.emptyList());
         URL resource = getClass().getClassLoader().getResource("test-feed.xml");
+        Assertions.assertNotNull(resource);
         String testXmlPath = resource.toExternalForm();
 
         // 1. テストデータの準備
