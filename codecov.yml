@@ -2,3 +2,5 @@ ignore:
   - "gradle/task/**/*class"
   - "**/dto/**"
   - "**/GaleWingsApplication.java"
+  - "**/config/**"
+  - "**/entity/**"
