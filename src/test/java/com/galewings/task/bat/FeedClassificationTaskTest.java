@@ -37,12 +37,12 @@ class FeedClassificationTaskTest {
     FeedClassificationTask feedClassificationTask;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testRun_Feed0件() {
+    void testRun_Feed_0() {
         when(feedRepository.getAllFeed()).thenReturn(Collections.emptyList());
 
         feedClassificationTask.run();
@@ -52,7 +52,7 @@ class FeedClassificationTaskTest {
     }
 
     @Test
-    public void testRun_Feed1件_分類結果なし() {
+    void testRun_Feed_1() {
         Feed feed = new Feed();
         ClassificationResult classificationResult = new ClassificationResult("Test Category", Collections.emptySet(), 0.0, Collections.emptyList());
         when(feedRepository.getAllFeed()).thenReturn(List.of(feed));
@@ -70,7 +70,7 @@ class FeedClassificationTaskTest {
     }
 
     @Test
-    public void testRun_Feed1件_分類結果あり() {
+    void testRun_Feed_1_ExistingClassification() {
         Feed feed = new Feed();
         ClassificationResult classificationResult = new ClassificationResult("Test Category", Collections.emptySet(), 0.0, Collections.emptyList());
         FeedClassification feedClassification = new FeedClassification();
