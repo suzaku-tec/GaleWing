@@ -11,7 +11,6 @@ import com.galewings.repository.SiteRepository;
 import com.galewings.service.FeedFactoryService;
 import com.galewings.service.GoogleAlertService;
 import com.galewings.service.GwDateService;
-import com.galewings.service.async.TitleTagAnalysisAsyncService;
 import com.galewings.service.filter.ClassificationResult;
 import com.galewings.service.filter.GwRuleBasedNewsClassifier;
 import com.rometools.rome.feed.synd.SyndFeed;
@@ -30,6 +29,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
+/**
+ *
+ */
 @Component
 public class AutoUpdateTask {
 
@@ -52,9 +54,6 @@ public class AutoUpdateTask {
     private GoogleAlertService googleAlertService;
 
     @Autowired
-    private TitleTagAnalysisAsyncService titleTagAnalysisAsyncService;
-
-    @Autowired
     private FeedFactoryService feedFactoryService;
 
     @Autowired
@@ -63,41 +62,36 @@ public class AutoUpdateTask {
     @Autowired
     private FeedClassificationRepository feedClassificationRepository;
 
-    @Autowired
-    private GwDateService dateService;
-
     @Scheduled(cron = "${update.scheduler.cron}")
     public void allUpdate() {
         // Googleアラート用の更新
         siteRepository.getAllSite()
                 .parallelStream()
-                .filter(site -> !googleAlertService.isGoogleAlert(site))
+                .filter(site -> googleAlertService.isGoogleAlert(site))
                 .forEach(googleAlertService::updateFeed);
 
         siteRepository.getAllSite()
                 .stream()
                 .filter(site -> !googleAlertService.isGoogleAlert(site))
-                .map(site -> {
-                    return new GaleWingSiteFeed() {
-                        @Override
-                        public Site getSite() {
-                            return site;
+                .map(site -> new GaleWingSiteFeed() {
+                    @Override
+                    public Site getSite() {
+                        return site;
+                    }
+
+                    @Override
+                    public Optional<SyndFeed> getOptionalSyndFeed() {
+                        Optional<SyndFeed> result;
+
+                        try {
+                            SyndFeed syndFeed = new SyndFeedInput().build(new XmlReader(new URL(site.xmlUrl)));
+                            result = Optional.ofNullable(syndFeed);
+                        } catch (Exception e) {
+                            result = Optional.empty();
                         }
 
-                        @Override
-                        public Optional<SyndFeed> getOptionalSyndFeed() {
-                            Optional<SyndFeed> result;
-
-                            try {
-                                SyndFeed syndFeed = new SyndFeedInput().build(new XmlReader(new URL(site.xmlUrl)));
-                                result = Optional.ofNullable(syndFeed);
-                            } catch (Exception e) {
-                                result = Optional.empty();
-                            }
-
-                            return result;
-                        }
-                    };
+                        return result;
+                    }
                 })
                 .filter(siteFeed -> siteFeed.getOptionalSyndFeed().isPresent())
                 .forEach(siteFeed -> {
@@ -119,6 +113,10 @@ public class AutoUpdateTask {
     }
 
     private final ObjectMapper mapper = new ObjectMapper();
+
+    /**
+     * Convert Set to JSON
+     */
     private final Function<Set<?>, String> convertSetToJson = (Set<?> set) -> {
         try {
             return mapper.writeValueAsString(set);
@@ -127,6 +125,9 @@ public class AutoUpdateTask {
         }
     };
 
+    /**
+     * Convert Map to JSON
+     */
     private final Function<Map<String, ?>, String> convertMapToJson = (Map<String, ?> map) -> {
         try {
             return mapper.writeValueAsString(map);
@@ -135,6 +136,9 @@ public class AutoUpdateTask {
         }
     };
 
+    /**
+     * Convert List to JSON
+     */
     private final Function<List<String>, String> convertListToJson = (List<String> list) -> {
         try {
             return mapper.writeValueAsString(list);
@@ -143,6 +147,11 @@ public class AutoUpdateTask {
         }
     };
 
+    /**
+     * Insert feed classification
+     *
+     * @param feed Feed entity
+     */
     private void insertFeedClassify(Feed feed) {
         // Implementation for inserting feed classification
         ClassificationResult classificationResult = gwRuleBasedNewsClassifier.classify(feed);
@@ -153,7 +162,7 @@ public class AutoUpdateTask {
         feedClassification.setScoresJson(convertMapToJson.apply(classificationResult.scores));
         feedClassification.setMatchedRuleIdsJson(convertListToJson.apply(classificationResult.matchedRules));
         feedClassification.setClassifierVersion(gwRuleBasedNewsClassifier.getVersion());
-        feedClassification.setClassifiedAt(dateService.now().format(GwDateService.DateFormat.SQLITE_DATE_FORMAT.dtf));
+        feedClassification.setClassifiedAt(gwDateService.now().format(GwDateService.DateFormat.SQLITE_DATE_FORMAT.dtf));
         feedClassificationRepository.mergeClassification(feedClassification);
     }
 
