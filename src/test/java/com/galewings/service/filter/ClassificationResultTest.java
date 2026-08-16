@@ -24,7 +24,7 @@ class ClassificationResultTest {
 
     @Test
     void from_score_empty() {
-        ClassificationResult result = ClassificationResult.from(Collections.EMPTY_MAP);
+        ClassificationResult result = ClassificationResult.from(Collections.emptyMap());
 
         assertEquals("other", result.primaryCategory);
         assertEquals(Set.of("other"), result.categories);
