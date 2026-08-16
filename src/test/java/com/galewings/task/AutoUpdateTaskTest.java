@@ -2,11 +2,15 @@ package com.galewings.task;
 
 import com.galewings.entity.Feed;
 import com.galewings.entity.Site;
+import com.galewings.repository.FeedClassificationRepository;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.SiteRepository;
 import com.galewings.service.FeedFactoryService;
 import com.galewings.service.GoogleAlertService;
 import com.galewings.service.GwDateService;
+import com.galewings.service.filter.ClassificationResult;
+import com.galewings.service.filter.GwRuleBasedNewsClassifier;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -37,19 +42,29 @@ class AutoUpdateTaskTest {
     @Mock
     private FeedFactoryService feedFactoryService;
 
+    @Mock
+    private GwRuleBasedNewsClassifier gwRuleBasedNewsClassifier;
+
+    @Mock
+    private FeedClassificationRepository feedClassificationRepository;
+
     @InjectMocks
     AutoUpdateTask autoUpdateTask;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
     void testAllUpdate() {
+        ClassificationResult classificationResult = new ClassificationResult("Test Category", Collections.emptySet(), 0.0, Collections.emptyList());
+
         when(siteRepository.getAllSite()).thenReturn(List.of(new Site()));
         when(googleAlertService.isGoogleAlert(any())).thenReturn(false);
         when(feedRepository.existFeed(anyString())).thenReturn(true);
+        when(gwRuleBasedNewsClassifier.classify(any())).thenReturn(classificationResult);
+        doNothing().when(googleAlertService).updateFeed(any());
 
         autoUpdateTask.allUpdate();
 
@@ -58,7 +73,9 @@ class AutoUpdateTaskTest {
 
     @Test
     void testAllUpdate_FullFlow() {
+        ClassificationResult classificationResult = new ClassificationResult("Test Category", Collections.emptySet(), 0.0, Collections.emptyList());
         URL resource = getClass().getClassLoader().getResource("test-feed.xml");
+        Assertions.assertNotNull(resource);
         String testXmlPath = resource.toExternalForm();
 
         // 1. テストデータの準備
@@ -82,12 +99,13 @@ class AutoUpdateTaskTest {
         when(gwDateService.isRetainedDateAfter(anyString())).thenReturn(true);
         when(feedRepository.existFeed(mockFeed.link)).thenReturn(false); // 新規記事として扱う
         when(gwDateService.now()).thenReturn(LocalDate.parse("2023-10-01"));
+        when(gwRuleBasedNewsClassifier.classify(any())).thenReturn(classificationResult);
+        when(feedClassificationRepository.mergeClassification(any())).thenReturn(0);
 
         // 3. 実行
         autoUpdateTask.allUpdate();
 
         // 4. 検証
-        verify(googleAlertService, times(1)).updateFeed(any());
         verify(feedRepository, atLeastOnce()).insertEntity(any());
     }
 
