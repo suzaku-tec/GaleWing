@@ -1,12 +1,12 @@
-package com.galewings.service.filter;
+package com.galewings.dto;
 
-public class ClassificationRule {
+public class ClassificationRuleDto {
     public String id;
     public String category;
     public String keyword;
     public int weight;
 
-    public ClassificationRule(String category, String id, String keyword, int weight) {
+    public ClassificationRuleDto(String category, String id, String keyword, int weight) {
         this.category = category;
         this.id = id;
         this.keyword = keyword;
