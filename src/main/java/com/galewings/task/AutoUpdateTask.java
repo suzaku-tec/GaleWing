@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -171,7 +170,7 @@ public class AutoUpdateTask {
         feedClassificationRepository.mergeClassification(feedClassification);
     }
 
-    private Reader readUrlToXmlReader(URL url) throws IOException, XMLStreamException {
+    private Reader readUrlToXmlReader(URL url) throws IOException {
         return new BufferedReader(new InputStreamReader(url.openStream()));
     }
 
