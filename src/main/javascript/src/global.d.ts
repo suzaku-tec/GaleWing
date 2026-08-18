@@ -92,6 +92,8 @@ declare module "gridjs" {
     constructor(config: any);
     render(element: HTMLElement | null): void;
     on(eventName: string, callback: (event: Event, ...args: any[]) => void): void;
+    updateConfig(config: any): Grid;
+    forceRender(): void;
   }
 
   export class Row {

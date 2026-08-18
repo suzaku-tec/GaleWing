@@ -36,6 +36,7 @@ const config = {
     statics: './src/main/screen/statistics/index.ts',
     podcast: './src/main/screen/podcast/index.ts',
     aiRecommend: './src/main/screen/aiRecommend/index.ts',
+    feedCategory: './src/main/screen/feedCategory/index.ts',
   },
   output: {
     path: _resolve(__dirname, 'dist'),
