@@ -1,314 +1,331 @@
 import axios, { AxiosResponse } from 'axios';
 import FeedApi from './disp/feedApi';
-import { VNode } from 'preact';
 
 export default class GaleWingApi {
-  public readonly apiUrls = {
-    feedList: '/feedlist',
-    siteList: '/sitelist',
-    deleteSite: '/site/delete',
-    stackList: '/stack/list',
-    stackFeed: '/stack/add',
-    settingJson: '/settings/list/json',
-    jaroWinklerDistance: '/analysis/jaroWinklerDistance',
-    analysisFeedAllRead: '/analysis/feed/allRead',
-    siteCategoryList: '/category/site/list',
-    deleteCategory: '/category/delete',
-    addCategory: '/category/add',
-    addSiteCategory: '/siteCategory/add',
-    deleteSiteCategory: '/siteCategory/delete',
-    translationEnJp: '/minhon/transelate',
-    read: '/read',
-    executeStatsSql: '/stats/executeStatsSql',
-    statsIdList: '/stats/statsIdList',
-    executeTask: '/task/executeTask',
-    circulationAdd: "/circulation/add",
-    circulationList: "/circulation/list",
-    circulationStatusList: "/circulation/status/list",
-    updateIcon: "/site/updateIcon",
-    summaryDelete: "/news/summary/delete",
-    summaryAdd: "/feed/analyze/summary",
-    informationGatheringAdd: "/feed/analyze/informationGathering",
-    functionCtrlUpdate: "/functionCtrl/update",
-    viewsSave: '/views/save',
-    readDispList: "/readListFeed",
-    viewSiteList: "/views/siteList",
-    relationList: '/relation/list',
-    instagramContentsList: '/rssBridge/instagram/contentsList',
-    redditContentsList: '/rssBridge/reddit/contentsList',
-    blueskyContantsList: '/rssBridge/bluesky/contentsList',
-    podcastAdd: '/podcast/add',
-    podcastSync: '/podcast/sync',
-    podcastNotReadFeed: '/podcast/notReadFeed',
-    podcastMarkRead: '/podcast/markRead',
-    aiRecommendRead: '/ai/recommend/read',
-  };
-
-  private static singleton: GaleWingApi;
-
-  private constructor() { }
-
-  getFeedList(url: string): Promise<AxiosResponse<any>> {
-    const baseUrl = new URL(window.location.href);
-    this.checkUrl(baseUrl);
-    const ajaxUrl = baseUrl.origin + this.apiUrls.feedList + baseUrl.search;
-    return axios.get(ajaxUrl);
-  }
-
-  getSiteList(url: string): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.siteList;
-    return axios.get(ajaxUrl);
-  }
-
-  deleteSite(location: string, uuid: string) {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.deleteSite;
-    return axios.post(ajaxUrl, { uuid: uuid });
-  }
-
-  getStackList(url: string): Promise<AxiosResponse<any>> {
-    const baseUrl = new URL(url);
-    this.checkUrl(baseUrl);
-    const ajaxUrl = baseUrl.origin + this.apiUrls.stackList;
-    return axios.get(ajaxUrl);
-  }
-
-  stackFeed(
-    url: string,
-    uuid: string | null | undefined,
-    link: string | undefined,
-  ): Promise<AxiosResponse<any>> {
-    if (!uuid) {
-      return Promise.reject();
-    }
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.stackFeed;
-    return axios.post(ajaxUrl, { uuid: uuid, link: link });
-  }
-
-  settingJson(): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.settingJson;
-    return axios.get(ajaxUrl);
-  }
-
-  jaroWinklerDistance(title: string): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.jaroWinklerDistance;
-    return axios.get(ajaxUrl, { params: { targetTitle: title } });
-  }
-
-  analysisFeedAllRead(links: string[]): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.analysisFeedAllRead;
-    return axios.post(ajaxUrl, { links: links });
-  }
-
-  siteCategoryList(siteUuid: string): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.siteCategoryList;
-    return axios.post(ajaxUrl, { siteUuid: siteUuid });
-  }
-
-  addCategory(name: string, description: string): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.addCategory;
-    return axios.post(ajaxUrl, { name: name, description: description });
-  }
-
-  deleteCategory(uuid: string): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.deleteCategory;
-    return axios.post(ajaxUrl, { uuid: uuid });
-  }
-
-  addSiteCategory(siteUuid: string, categoryUuid: string): Promise<AxiosResponse<any>> {
-    return this.fixSiteCategory(this.apiUrls.addSiteCategory, siteUuid, categoryUuid);
-  }
-
-  deleteSiteCategory(siteUuid: string, categoryUuid: string): Promise<AxiosResponse<any>> {
-    return this.fixSiteCategory(this.apiUrls.deleteSiteCategory, siteUuid, categoryUuid);
-  }
-
-  executeStatsSql(id: string): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.executeStatsSql;
-    return axios.post(ajaxUrl, { id: id });
-  }
-
-  getStatsIdList(): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.statsIdList;
-    return axios.post(ajaxUrl);
-  }
-
-  updateIcon(uuid: string): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.updateIcon;
-    return axios.post(ajaxUrl, { uuid: uuid });
-  }
-
-  viewSave(viewId: string, viewName: string, siteIdList: string[]): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.viewsSave;
-    return axios.post(ajaxUrl, { viewId: viewId, viewName: viewName, siteIdList: siteIdList });
-  }
-
-  private fixSiteCategory(
-    kbn: string,
-    siteUuid: string,
-    categoryUuid: string,
-  ): Promise<AxiosResponse<any>> {
-    const url = this.getBaseUrl() + kbn;
-    return axios.post(url, { siteUuid: siteUuid, categoryUuid: categoryUuid });
-  }
-
-  translationEnJp(text: string): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.translationEnJp;
-    return axios.post(ajaxUrl, { text: text }, { headers: { 'Content-Type': 'application/json' } });
-  }
-
-  async read(link: string) {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.read;
-    const response = await axios.post(ajaxUrl, {
-      link: link,
-    });
-    // 未読数の更新
-    response.data.forEach((element: { uuid: string; count: number }) => {
-      FeedApi.getInstance().unreadUpdate(element.uuid, element.count.toString());
-    });
-  }
-
-  async executeTask(taskName: string) {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.executeTask;
-    await axios.post(ajaxUrl, {
-      name: taskName,
-    });
-  }
-
-  async circulationAdd(link: string, title: string) {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.circulationAdd;
-    await axios.post(ajaxUrl, {
-      link: link,
-      title: title
-    });
-  }
-
-  async circulationList() {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.circulationList;
-    return await axios.post(ajaxUrl);
-  }
-
-  async circulationStatusList() {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.circulationStatusList;
-    return await axios.post(ajaxUrl);
-  }
-
-  async deleteSummary(uuid: string) {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.summaryDelete;
-    return await axios.post(ajaxUrl + "?uuid=" + uuid);
-  }
-
-  async summaryAdd(uuid: string) {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.summaryAdd;
-    await axios.post(ajaxUrl, {
-      link: uuid
-    });
-  }
-
-  async informationGatheringAdd(uuid: string) {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.informationGatheringAdd;
-    await axios.post(ajaxUrl, {
-      link: uuid
-    });
-  }
-
-  async functionCtrlUpdate(id: string, flg: string) {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.functionCtrlUpdate;
-    return await axios.post(ajaxUrl, {
-      id: id,
-      flg: flg
-    });
-  }
-
-  async readDispList(urls: string[]) {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.readDispList;
-    return await axios.post(ajaxUrl, {
-      urls: urls
-    });
-  }
-
-  async getViewSiteList(viewId: string) {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.viewSiteList;
-    return await axios.post(ajaxUrl, {
-      viewId
-    });
-  }
-
-  async relationList(link: string): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.relationList;
-    return await axios.post(ajaxUrl, {
-      link: link
-    });
-  }
-
-  async instantiateRssBridge(username: string): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.instagramContentsList;
-    return await axios.post(ajaxUrl, {
-      username
-    });
-  }
-
-  async redditContentsList(subReddit: string): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.redditContentsList;
-    return await axios.post(ajaxUrl, {
-      subReddit
-    });
-  }
-
-  async blueskyContentsList(username: string): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.blueskyContantsList;
-    return await axios.post(ajaxUrl, {
-      username
-    });
-  }
-
-  async podcastAdd(url: string, title: string): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastAdd;
-    return await axios.post(ajaxUrl, {
-      url,
-      title
-    });
-  }
-
-  async podcastSync(): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastSync;
-    return await axios.post(ajaxUrl);
-  }
-
-  async podcastNotReadFeed(): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastNotReadFeed;
-    return await axios.post(ajaxUrl);
-  }
-
-  async podcastMarkRead(url: string): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastMarkRead;
-    return await axios.post(ajaxUrl, {
-      url
-    });
-  }
-
-  async aiRecommendRead(id: string): Promise<AxiosResponse<any>> {
-    const ajaxUrl = this.getBaseUrl() + this.apiUrls.aiRecommendRead + "/" + id;
-    return await axios.post(ajaxUrl);
-  }
-
-  private getBaseUrl(): string {
-    const baseUrl = new URL(window.location.href);
-    this.checkUrl(baseUrl);
-    return baseUrl.origin;
-  }
-  private checkUrl(url: URL) {
-    if (url.protocol !== 'https:' && url.protocol !== 'http:') {
-      throw new GaleWingURLError();
-    }
-  }
-
-  static getInstance() {
-    if (!this.singleton) {
-      this.singleton = new GaleWingApi();
+    async getFeedsByCategory(selectedCategoryId: string) {
+        const baseUrl = new URL(window.location.href);
+        this.checkUrl(baseUrl);
+        const ajaxUrl = baseUrl.origin + this.apiUrls.categorySelect + "/" + selectedCategoryId;
+        return await axios.post(ajaxUrl);
     }
 
-    return this.singleton;
-  }
+    public readonly apiUrls = {
+        feedList: '/feedlist',
+        siteList: '/sitelist',
+        deleteSite: '/site/delete',
+        stackList: '/stack/list',
+        stackFeed: '/stack/add',
+        settingJson: '/settings/list/json',
+        jaroWinklerDistance: '/analysis/jaroWinklerDistance',
+        analysisFeedAllRead: '/analysis/feed/allRead',
+        siteCategoryList: '/category/site/list',
+        deleteCategory: '/category/delete',
+        addCategory: '/category/add',
+        addSiteCategory: '/siteCategory/add',
+        deleteSiteCategory: '/siteCategory/delete',
+        translationEnJp: '/minhon/transelate',
+        read: '/read',
+        executeStatsSql: '/stats/executeStatsSql',
+        statsIdList: '/stats/statsIdList',
+        executeTask: '/task/executeTask',
+        circulationAdd: "/circulation/add",
+        circulationList: "/circulation/list",
+        circulationStatusList: "/circulation/status/list",
+        updateIcon: "/site/updateIcon",
+        summaryDelete: "/news/summary/delete",
+        summaryAdd: "/feed/analyze/summary",
+        informationGatheringAdd: "/feed/analyze/informationGathering",
+        functionCtrlUpdate: "/functionCtrl/update",
+        viewsSave: '/views/save',
+        readDispList: "/readListFeed",
+        viewSiteList: "/views/siteList",
+        relationList: '/relation/list',
+        instagramContentsList: '/rssBridge/instagram/contentsList',
+        redditContentsList: '/rssBridge/reddit/contentsList',
+        blueskyContantsList: '/rssBridge/bluesky/contentsList',
+        podcastAdd: '/podcast/add',
+        podcastSync: '/podcast/sync',
+        podcastNotReadFeed: '/podcast/notReadFeed',
+        podcastMarkRead: '/podcast/markRead',
+        aiRecommendRead: '/ai/recommend/read',
+        categorySelect: '/feedCategory/select',
+    };
+
+    private static singleton: GaleWingApi;
+
+    private constructor() {
+    }
+
+    getFeedList(): Promise<AxiosResponse<any>> {
+        const baseUrl = new URL(window.location.href);
+        this.checkUrl(baseUrl);
+        const ajaxUrl = baseUrl.origin + this.apiUrls.feedList + baseUrl.search;
+        return axios.get(ajaxUrl);
+    }
+
+    getSiteList(): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.siteList;
+        return axios.get(ajaxUrl);
+    }
+
+    deleteSite(location: string, uuid: string) {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.deleteSite;
+        return axios.post(ajaxUrl, { uuid: uuid });
+    }
+
+    getStackList(url: string): Promise<AxiosResponse<any>> {
+        const baseUrl = new URL(url);
+        this.checkUrl(baseUrl);
+        const ajaxUrl = baseUrl.origin + this.apiUrls.stackList;
+        return axios.get(ajaxUrl);
+    }
+
+    stackFeed(
+        url: string,
+        uuid: string | null | undefined,
+        link: string | undefined,
+    ): Promise<AxiosResponse<any>> {
+        if (!uuid) {
+            return Promise.reject();
+        }
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.stackFeed;
+        return axios.post(ajaxUrl, { uuid: uuid, link: link });
+    }
+
+    settingJson(): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.settingJson;
+        return axios.get(ajaxUrl);
+    }
+
+    jaroWinklerDistance(title: string): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.jaroWinklerDistance;
+        return axios.get(ajaxUrl, { params: { targetTitle: title } });
+    }
+
+    analysisFeedAllRead(links: string[]): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.analysisFeedAllRead;
+        return axios.post(ajaxUrl, { links: links });
+    }
+
+    siteCategoryList(siteUuid: string): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.siteCategoryList;
+        return axios.post(ajaxUrl, { siteUuid: siteUuid });
+    }
+
+    addCategory(name: string, description: string): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.addCategory;
+        return axios.post(ajaxUrl, { name: name, description: description });
+    }
+
+    deleteCategory(uuid: string): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.deleteCategory;
+        return axios.post(ajaxUrl, { uuid: uuid });
+    }
+
+    addSiteCategory(siteUuid: string, categoryUuid: string): Promise<AxiosResponse<any>> {
+        return this.fixSiteCategory(this.apiUrls.addSiteCategory, siteUuid, categoryUuid);
+    }
+
+    deleteSiteCategory(siteUuid: string, categoryUuid: string): Promise<AxiosResponse<any>> {
+        return this.fixSiteCategory(this.apiUrls.deleteSiteCategory, siteUuid, categoryUuid);
+    }
+
+    executeStatsSql(id: string): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.executeStatsSql;
+        return axios.post(ajaxUrl, { id: id });
+    }
+
+    getStatsIdList(): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.statsIdList;
+        return axios.post(ajaxUrl);
+    }
+
+    updateIcon(uuid: string): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.updateIcon;
+        return axios.post(ajaxUrl, { uuid: uuid });
+    }
+
+    viewSave(viewId: string, viewName: string, siteIdList: string[]): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.viewsSave;
+        return axios.post(ajaxUrl, { viewId: viewId, viewName: viewName, siteIdList: siteIdList });
+    }
+
+    private fixSiteCategory(
+        kbn: string,
+        siteUuid: string,
+        categoryUuid: string,
+    ): Promise<AxiosResponse<any>> {
+        const url = this.getBaseUrl() + kbn;
+        return axios.post(url, { siteUuid: siteUuid, categoryUuid: categoryUuid });
+    }
+
+    translationEnJp(text: string): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.translationEnJp;
+        return axios.post(ajaxUrl, { text: text }, { headers: { 'Content-Type': 'application/json' } });
+    }
+
+    async read(link: string) {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.read;
+        const response = await axios.post(ajaxUrl, {
+            link: link,
+        });
+        // 未読数の更新
+        response.data.forEach((element: { uuid: string; count: number }) => {
+            FeedApi.getInstance().unreadUpdate(element.uuid, element.count.toString());
+        });
+    }
+
+    async readCategoryFeed(link: string) {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.read;
+        await axios.post(ajaxUrl, {
+            link: link,
+        });
+    }
+
+    async executeTask(taskName: string) {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.executeTask;
+        await axios.post(ajaxUrl, {
+            name: taskName,
+        });
+    }
+
+    async circulationAdd(link: string, title: string) {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.circulationAdd;
+        await axios.post(ajaxUrl, {
+            link: link,
+            title: title
+        });
+    }
+
+    async circulationList() {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.circulationList;
+        return await axios.post(ajaxUrl);
+    }
+
+    async circulationStatusList() {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.circulationStatusList;
+        return await axios.post(ajaxUrl);
+    }
+
+    async deleteSummary(uuid: string) {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.summaryDelete;
+        return await axios.post(ajaxUrl + "?uuid=" + uuid);
+    }
+
+    async summaryAdd(uuid: string) {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.summaryAdd;
+        await axios.post(ajaxUrl, {
+            link: uuid
+        });
+    }
+
+    async informationGatheringAdd(uuid: string) {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.informationGatheringAdd;
+        await axios.post(ajaxUrl, {
+            link: uuid
+        });
+    }
+
+    async functionCtrlUpdate(id: string, flg: string) {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.functionCtrlUpdate;
+        return await axios.post(ajaxUrl, {
+            id: id,
+            flg: flg
+        });
+    }
+
+    async readDispList(urls: string[]) {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.readDispList;
+        return await axios.post(ajaxUrl, {
+            urls: urls
+        });
+    }
+
+    async getViewSiteList(viewId: string) {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.viewSiteList;
+        return await axios.post(ajaxUrl, {
+            viewId
+        });
+    }
+
+    async relationList(link: string): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.relationList;
+        return await axios.post(ajaxUrl, {
+            link: link
+        });
+    }
+
+    async instantiateRssBridge(username: string): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.instagramContentsList;
+        return await axios.post(ajaxUrl, {
+            username
+        });
+    }
+
+    async redditContentsList(subReddit: string): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.redditContentsList;
+        return await axios.post(ajaxUrl, {
+            subReddit
+        });
+    }
+
+    async blueskyContentsList(username: string): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.blueskyContantsList;
+        return await axios.post(ajaxUrl, {
+            username
+        });
+    }
+
+    async podcastAdd(url: string, title: string): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastAdd;
+        return await axios.post(ajaxUrl, {
+            url,
+            title
+        });
+    }
+
+    async podcastSync(): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastSync;
+        return await axios.post(ajaxUrl);
+    }
+
+    async podcastNotReadFeed(): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastNotReadFeed;
+        return await axios.post(ajaxUrl);
+    }
+
+    async podcastMarkRead(url: string): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.podcastMarkRead;
+        return await axios.post(ajaxUrl, {
+            url
+        });
+    }
+
+    async aiRecommendRead(id: string): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.aiRecommendRead + "/" + id;
+        return await axios.post(ajaxUrl);
+    }
+
+    private getBaseUrl(): string {
+        const baseUrl = new URL(window.location.href);
+        this.checkUrl(baseUrl);
+        return baseUrl.origin;
+    }
+
+    private checkUrl(url: URL) {
+        if (url.protocol !== 'https:' && url.protocol !== 'http:') {
+            throw new GaleWingURLError();
+        }
+    }
+
+    static getInstance() {
+        if (!this.singleton) {
+            this.singleton = new GaleWingApi();
+        }
+
+        return this.singleton;
+    }
 }
 
-class GaleWingURLError extends Error { }
+class GaleWingURLError extends Error {
+}

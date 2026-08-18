@@ -56,4 +56,7 @@
     <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('airecommend') eq '1'}">
         <a class="list-group-item" href="/ai/recommend/">AI Recommend</a>
     </li>
+    <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('feedCategory') eq '1'}">
+        <a class="list-group-item" href="/feedCategory/">Feed Category</a>
+    </li>
 </ul>

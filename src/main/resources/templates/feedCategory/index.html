@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="Description" content="Enter your description here"/>
+    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/feedCategory.js}"></script>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <title>GalwWing</title>
+
+</head>
+
+<body>
+<!-- 全ページを囲む要素 -->
+<main class="container mw-100" role="main">
+    <div class="row">
+        <input type="hidden" id="identifier" value="" th:value="${identifier}">
+
+        <!-- サイトバーメニュー -->
+        <nav class="sidebar col-md-3" id="sidemenu">
+            <section class="accordion">
+                <!-- サイドメニュー(Site List) -->
+                <div th:replace="linkMenu"/>
+
+            </section>
+        </nav>
+        <!-- サイトバーメニュー -->
+
+        <!-- 全ページの右のコンテンツ -->
+        <div class="col-md-9" id="mainContent">
+            <!-- 下のコンテンツ -->
+            <div class="content p-3">
+                <!-- メインコンテンツ -->
+                <div id="gridLayout" class="contentLayout">
+                    <label for="categoryId">カテゴリ</label>
+                    <select id="categoryId">
+                        <option value="">カテゴリを選択</option>
+                        <option th:each="category : ${categoryList}" th:value="${category}"
+                                th:text="${category}"></option>
+                    </select>
+                    <div id="wrapper"></div>
+                </div>
+            </div>
+        </div>
+        <!-- 全ページの右のコンテンツ -->
+
+    </div>
+</main>
+<!-- 全ページを囲む要素 -->
+
+</body>
+
+</html>

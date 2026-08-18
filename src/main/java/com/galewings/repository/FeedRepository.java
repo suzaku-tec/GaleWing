@@ -147,8 +147,8 @@ public class FeedRepository {
     /**
      * フィード登録
      *
-     * @param feed
-     * @return
+     * @param feed フィード情報
+     * @return 登録件数
      */
     @Transactional
     public int insertEntity(Feed feed) {
@@ -253,11 +253,30 @@ public class FeedRepository {
         return sqlManager.getResultList(Feed.class, new ClasspathSqlResource("sql/feed/select_feed_to_range.sql"), params);
     }
 
+    /**
+     * 翻訳タイトルを更新する
+     *
+     * @param feed フィード情報
+     * @return 更新件数
+     */
     public int updateTranslateTitle(Feed feed) {
         Map<String, String> params = new HashMap<>();
         params.put("uuid", feed.getUuid());
         params.put("link", feed.getLink());
         params.put("translateTitle", feed.getTranslateTitle());
         return sqlManager.executeUpdate(new ClasspathSqlResource("sql/feed/update_translate_title.sql"), params);
+    }
+
+    /**
+     * カテゴリIDでフィードを取得する
+     *
+     * @param categoryId カテゴリID
+     * @return フィードリスト
+     */
+    public List<Feed> findByCategoryId(String categoryId) {
+        Map<String, String> params = new HashMap<>();
+        params.put("categoryId", categoryId);
+        return sqlManager.getResultList(Feed.class,
+                new ClasspathSqlResource("sql/feed/select_feed_by_category_id.sql"), params);
     }
 }
