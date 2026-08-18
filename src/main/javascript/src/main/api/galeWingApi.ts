@@ -3,6 +3,13 @@ import FeedApi from './disp/feedApi';
 import { VNode } from 'preact';
 
 export default class GaleWingApi {
+  async getFeedsByCategory(selectedCategoryId: string) {
+    const baseUrl = new URL(window.location.href);
+    this.checkUrl(baseUrl);
+    const ajaxUrl = baseUrl.origin + this.apiUrls.categorySelect + "/" + selectedCategoryId;
+    return await axios.post(ajaxUrl);
+  }
+
   public readonly apiUrls = {
     feedList: '/feedlist',
     siteList: '/sitelist',
@@ -42,6 +49,7 @@ export default class GaleWingApi {
     podcastNotReadFeed: '/podcast/notReadFeed',
     podcastMarkRead: '/podcast/markRead',
     aiRecommendRead: '/ai/recommend/read',
+    categorySelect: '/feedCategory/select',
   };
 
   private static singleton: GaleWingApi;
@@ -164,6 +172,13 @@ export default class GaleWingApi {
     // 未読数の更新
     response.data.forEach((element: { uuid: string; count: number }) => {
       FeedApi.getInstance().unreadUpdate(element.uuid, element.count.toString());
+    });
+  }
+
+  async readCategoryFeed(link: string) {
+    const ajaxUrl = this.getBaseUrl() + this.apiUrls.read;
+    await axios.post(ajaxUrl, {
+      link: link,
     });
   }
 
