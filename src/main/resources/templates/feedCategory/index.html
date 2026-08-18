@@ -34,6 +34,7 @@
             <div class="content p-3">
                 <!-- メインコンテンツ -->
                 <div id="gridLayout" class="contentLayout">
+                    <label for="categoryId">カテゴリ</label>
                     <select id="categoryId">
                         <option value="">カテゴリを選択</option>
                         <option th:each="category : ${categoryList}" th:value="${category}"
