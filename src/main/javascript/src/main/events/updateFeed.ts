@@ -1,4 +1,4 @@
-import { Grid } from 'gridjs';
+import Grid from 'gridjs';
 import axios from 'axios';
 import { IElementEvent } from './elementEvent';
 
@@ -13,12 +13,12 @@ export default class UpdateFeed implements IElementEvent {
   }
 
   execute() {
-    var ume = new UpdateMessageEvent();
+    const ume = new UpdateMessageEvent();
     ume.execute();
 
-    var uri = new URL(window.location.href);
+    const uri = new URL(window.location.href);
 
-    var uuid = (<HTMLInputElement>document.getElementById(this.uuidElementId)).value;
+    const uuid = (<HTMLInputElement>document.getElementById(this.uuidElementId)).value;
 
     console.log('execute', uri);
     axios
@@ -30,7 +30,7 @@ export default class UpdateFeed implements IElementEvent {
 
         // 未読数の更新
         response.data.siteFeedCounts.forEach((element: any) => {
-          var countElement = document.getElementById(element.uuid + '_count');
+          const countElement = document.getElementById(element.uuid + '_count');
           countElement!.innerText = element.count;
         });
 

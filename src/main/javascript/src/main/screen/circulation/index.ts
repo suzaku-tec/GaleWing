@@ -50,14 +50,14 @@ import hideModifier from '@popperjs/core/lib/modifiers/hide';
 
 import axios from 'axios';
 import GaleWingApi from '../../api/galeWingApi';
-import { Grid } from 'gridjs';
+import Grid from 'gridjs';
 import AxiosSetting from '../../setting/AxiosSetting';
 
 window.onload = async () => {
   // axiosのヘッダー設定
   axios.defaults.headers.common = AxiosSetting.header;
 
-  let api = GaleWingApi.getInstance();
+  const api = GaleWingApi.getInstance();
   const circulationList = await api.circulationList();
 
   new Grid({
@@ -68,7 +68,7 @@ window.onload = async () => {
     sort: true,
     search: true,
     data: circulationList.data,
-    }).render(<HTMLInputElement>document.getElementById('wrapper'));
+  }).render(<HTMLInputElement>document.getElementById('wrapper'));
 };
 
 

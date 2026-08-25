@@ -6,7 +6,7 @@ export default class InformationGatheringEvent implements IElementEvent {
   }
 
   execute(link: string): void {
-    var api = GaleWingApi.getInstance();
+    const api = GaleWingApi.getInstance();
     api.informationGatheringAdd(link);
   }
 

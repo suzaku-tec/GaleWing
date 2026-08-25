@@ -149,6 +149,19 @@ class FeedRepositoryTest {
         Assertions.assertEquals(0, result.size());
     }
 
+    @Test
+    void testUpdateTranslateTitle() {
+        when(sqlManager.executeUpdate(any(), any())).thenReturn(0);
+        int result = feedRepository.updateTranslateTitle(new Feed());
+        Assertions.assertEquals(0, result);
+    }
+
+    @Test
+    void testfindByCategoryId() {
+        when(sqlManager.getResultList(any(), any(), any())).thenReturn(new ArrayList<>());
+        List<Feed> result = feedRepository.findByCategoryId("categoryId");
+        Assertions.assertEquals(0, result.size());
+    }
 }
 
 //Generated with love by TestMe :) Please report issues and submit feature requests at: http://weirddev.com/forum#!/testme

@@ -13,11 +13,11 @@ export default class ImportOpml implements IElementEvent {
   }
 
   importOpml(): void {
-    let uri = new URL(window.location.href);
-    let ajaxUrl = uri.origin + '/opml/import';
+    const uri = new URL(window.location.href);
+    const ajaxUrl = uri.origin + '/opml/import';
 
-    let params = new FormData();
-    let inputEl = document.getElementById('importOpmlFile') as HTMLInputElement;
+    const params = new FormData();
+    const inputEl = document.getElementById('importOpmlFile') as HTMLInputElement;
     params.append('file', inputEl.files![0]);
     axios
       .post(ajaxUrl, params)

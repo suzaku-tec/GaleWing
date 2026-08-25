@@ -46,7 +46,7 @@ window.onload = function () {
   });
 
   document.getElementById('executeBtn')?.addEventListener('click', () => {
-    let api = GaleWingApi.getInstance();
+    const api = GaleWingApi.getInstance();
 
     const contentsListDiv = document.getElementById('contentsList');
 

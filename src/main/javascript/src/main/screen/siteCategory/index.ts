@@ -10,13 +10,13 @@ dom.watch();
 
 window.onload = () => {
   document.getElementById('categoryAddBtn')?.addEventListener('click', () => {
-    let siteUuid = (<HTMLInputElement>document.getElementById('siteUuid'))!.value;
-    let categoryUuid = (<HTMLSelectElement>document.getElementById('categorySelect')).value;
+    const siteUuid = (<HTMLInputElement>document.getElementById('siteUuid'))!.value;
+    const categoryUuid = (<HTMLSelectElement>document.getElementById('categorySelect')).value;
 
     GaleWingApi.getInstance()
       .addSiteCategory(siteUuid, categoryUuid)
       .then((res) => {
-        let categoryListEl = document.getElementById('categoryList')!;
+        const categoryListEl = document.getElementById('categoryList')!;
 
         // 子要素の全削除
         while (categoryListEl.firstChild) {
@@ -24,7 +24,7 @@ window.onload = () => {
         }
 
         res.data.forEach((element: { uuid: string; name: string }) => {
-          let tagEl = createTagElement(element.name, element.uuid);
+          const tagEl = createTagElement(element.name, element.uuid);
           categoryListEl?.appendChild(tagEl.label);
           categoryListEl?.appendChild(tagEl.closeBtn);
         });
@@ -33,33 +33,37 @@ window.onload = () => {
 
   Array.from(document.getElementsByClassName('btn-close')).forEach((closeBtnEl) => {
     closeBtnEl.addEventListener('click', () => {
-      let siteUuid = (<HTMLInputElement>document.getElementById('siteUuid'))!.value;
-      let categoryUuid = (<HTMLElement>closeBtnEl).dataset.uuid!;
+      const siteUuid = (<HTMLInputElement>document.getElementById('siteUuid'))!.value;
+      const categoryUuid = (<HTMLElement>closeBtnEl).dataset.uuid!;
 
-      GaleWingApi.getInstance()
-        .deleteSiteCategory(siteUuid, categoryUuid)
-        .then(() => {
-          // ボタン削除
-          closeBtnEl.remove();
-
-          // タグの削除
-          Array.from(document.getElementsByClassName('label'))
-            .filter((el) => categoryUuid === (<HTMLElement>el)!.dataset.uuid)
-            .forEach((el) => {
-              el.remove();
-            });
-        });
+      cleanupCloseBtn(siteUuid, categoryUuid, closeBtnEl);
     });
   });
 };
 
+function cleanupCloseBtn(siteUuid: string, categoryUuid: string, closeBtnEl: Element) {
+  GaleWingApi.getInstance()
+    .deleteSiteCategory(siteUuid, categoryUuid)
+    .then(() => {
+      // ボタン削除
+      closeBtnEl.remove();
+
+      // タグの削除
+      Array.from(document.getElementsByClassName('label'))
+        .filter((el) => categoryUuid === (<HTMLElement>el)!.dataset.uuid)
+        .forEach((el) => {
+          el.remove();
+        });
+    });
+}
+
 function createTagElement(categoryName: string, categoryUuid: string) {
-  let labelDivEl = document.createElement('div');
+  const labelDivEl = document.createElement('div');
   labelDivEl.className = 'label';
   labelDivEl.innerText = categoryName;
   labelDivEl.dataset.uuid = categoryUuid;
 
-  let closeBtn = <HTMLButtonElement>document.createElement('button');
+  const closeBtn = <HTMLButtonElement>document.createElement('button');
   closeBtn.type = 'button';
   closeBtn.className = 'btn-close';
   closeBtn.ariaLabel = 'Close';

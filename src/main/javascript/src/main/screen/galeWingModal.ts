@@ -15,7 +15,7 @@ export default class GaleWingModal {
   }
 
   setBodyClone(bodyElementId: string) {
-    var body = document.getElementById(bodyElementId);
+    const body = document.getElementById(bodyElementId);
 
     if (!body) {
       throw new ReferenceError(`not found element. id:${bodyElementId}`);
@@ -25,7 +25,7 @@ export default class GaleWingModal {
   }
 
   setFooterClone(footerElementId: string) {
-    var footer = document.getElementById(footerElementId);
+    const footer = document.getElementById(footerElementId);
     if (!footer) {
       throw new ReferenceError(`not found element. id:${footerElementId}`);
     }
@@ -34,8 +34,8 @@ export default class GaleWingModal {
   }
 
   setModalSubmit(callback: (event: Event) => void) {
-    var submit = this.modalFooter.getElementsByClassName('modal-submit');
-    var submitEl = submit ? submit[0] : null;
+    const submit = this.modalFooter.getElementsByClassName('modal-submit');
+    const submitEl = submit ? submit[0] : null;
 
     this.submitFunc = (e: Event) => {
       callback(e);
@@ -57,12 +57,12 @@ export default class GaleWingModal {
     document.getElementById('exampleModal')!.addEventListener(
       'hidden.bs.modal',
       (event) => {
-        var modalBody = document.getElementById('modal-body')!;
+        const modalBody = document.getElementById('modal-body')!;
         while (modalBody.firstChild) {
           modalBody.removeChild(modalBody.firstChild);
         }
 
-        var modalFooter = document.getElementById('modal-footer')!;
+        const modalFooter = document.getElementById('modal-footer')!;
         while (modalFooter.firstChild) {
           modalFooter.removeChild(modalFooter.firstChild);
         }

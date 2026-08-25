@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { IElementEvent } from './elementEvent';
-import { Grid } from 'gridjs';
+import Grid from 'gridjs';
 import { getSite } from '../screen/siteList';
 
 export default class ReadAllShowFeed implements IElementEvent {
@@ -11,9 +11,9 @@ export default class ReadAllShowFeed implements IElementEvent {
   }
 
   execute(): void {
-    var element = <HTMLInputElement>document.getElementById('identifier');
-    var identifier = element.value;
-    var uri = new URL(window.location.href);
+    const element = <HTMLInputElement>document.getElementById('identifier');
+    const identifier = element.value;
+    const uri = new URL(window.location.href);
     console.log('identifier: ', identifier);
 
     axios
@@ -22,9 +22,9 @@ export default class ReadAllShowFeed implements IElementEvent {
       })
       .catch((error) => { })
       .finally(() => {
-        var site = getSite(identifier);
+        const site = getSite(identifier);
         if (site && site.next) {
-          var anchor = <HTMLAnchorElement>site.next;
+          const anchor = <HTMLAnchorElement>site.next;
           location.href = anchor.href;
         } else {
           location.reload();
@@ -34,7 +34,7 @@ export default class ReadAllShowFeed implements IElementEvent {
 
   updateSiteFeedCount(data: [{ uuid: string; title: string; count: number }]) {
     data.forEach((d) => {
-      var cntEl = document.getElementById(d.uuid + '_count')!;
+      const cntEl = document.getElementById(d.uuid + '_count')!;
       cntEl.innerText = d.count.toString();
     });
   }

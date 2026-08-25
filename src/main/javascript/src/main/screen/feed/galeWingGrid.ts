@@ -1,5 +1,7 @@
 import GaleWingApi from '../../api/galeWingApi';
-import { Grid, Row, html, h } from 'gridjs';
+import { Row, html, h } from 'gridjs';
+import * as gridjs from "gridjs";
+console.log(gridjs);
 import { VNode } from 'preact';
 import ReadAllShowFeed from '../../events/readAllShowFeed';
 import UpdateFeed from '../../events/updateFeed';
@@ -32,7 +34,7 @@ export default class GaleWingGrid {
 
   public data: any = [];
 
-  public grid: Grid | null = null;
+  public grid: gridjs.Grid | null = null;
 
   static getInstance() {
     if (!this.singleton) {
@@ -44,18 +46,18 @@ export default class GaleWingGrid {
   }
 
   private setupGrid() {
-    let api = GaleWingApi.getInstance();
+    const api = GaleWingApi.getInstance();
     api
       .getFeedList(window.location.href)
       .then(async (res) => {
         this.data = res.data;
 
-        let setting = new SettingApi();
+        const setting = new SettingApi();
         await setting.init();
         setting.outputLog();
-        var limit = Number(setting.get('feed_rows'));
+        const limit = Number(setting.get('feed_rows'));
 
-        this.grid = await this.createGrid(res.data, limit);
+        await this.createGrid(res.data, limit);
 
         this.setupGridEvent(this.grid, limit);
 
@@ -68,7 +70,7 @@ export default class GaleWingGrid {
 
   async createGrid(data: any, limit: any) {
 
-    return new Grid({
+    this.grid = new gridjs.Grid({
       columns: this.createGridColumn(),
       pagination: {
         limit: Number(limit),
@@ -76,7 +78,9 @@ export default class GaleWingGrid {
       sort: true,
       search: false,
       data: data,
-    }).render(<HTMLInputElement>document.getElementById('wrapper'));
+    });
+
+    this.grid.render(<HTMLInputElement>document.getElementById('wrapper'));
   }
 
   createGridColumn() {
@@ -153,7 +157,7 @@ export default class GaleWingGrid {
     );
   }
 
-  setupGridEvent(grid: Grid, limit: Number) {
+  setupGridEvent(grid: gridjs.Grid, limit: number) {
     new ElementEvent(new UpdateFeed('identifier', grid)).setup(
       'click',
       document.getElementById('updateFeed'),
@@ -172,28 +176,28 @@ export default class GaleWingGrid {
     this.setupGridRowClickEvent(grid);
   }
 
-  setupGridRowClickEvent(grid: Grid) {
+  setupGridRowClickEvent(grid: gridjs.Grid) {
 
-    grid.on('cellClick', (event, ...columns) => {
-      let col = columns[0];
-      let colConfig = columns[1];
-      let row = columns[2];
+    grid.on('cellClick', (event: Event, ...columns: any[]) => {
+      const col = columns[0];
+      const colConfig = columns[1];
+      const row = columns[2];
 
       if (colConfig.name === 'title') {
-        let link = row.cells[HeaderIndex.link].data!.toLocaleString();
+        const link = row.cells[HeaderIndex.link].data!.toLocaleString();
 
         // リンク押下の場合はリンクの遷移を実施。それ以外は個別にリンクを表示
         if ((event.target as any).localName !== 'a') {
           window.open(link, '_blank');
         }
 
-        let api = GaleWingApi.getInstance();
+        const api = GaleWingApi.getInstance();
         api
           .read(link)
           .then(() => {
 
             // リンク押下の場合はリンクの遷移を実施。それ以外は個別にリンクを表示
-            let targetElement: HTMLElement | null = event.target as HTMLElement;
+            const targetElement: HTMLElement | null = event.target as HTMLElement;
             if (targetElement.tagName.toLowerCase() === 'a') {
               targetElement.classList = 'rss-read-link';
             } else {
@@ -209,7 +213,7 @@ export default class GaleWingGrid {
   }
 
   stack(uuid: string | null | undefined, link: string | undefined) {
-    let api = GaleWingApi.getInstance();
+    const api = GaleWingApi.getInstance();
     api.stackFeed(window.location.href, uuid, link);
   }
 

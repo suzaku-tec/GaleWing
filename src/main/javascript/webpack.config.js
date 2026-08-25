@@ -1,9 +1,14 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
-const path = require('path');
+import { resolve as _resolve } from 'path';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // webpack.config.js
-const Dotenv = require('dotenv-webpack');
+import Dotenv from 'dotenv-webpack';
 
 const isProduction = process.env.NODE_ENV == 'production';
 
@@ -15,7 +20,6 @@ const config = {
     settings: './src/main/screen/setting/index.ts',
     siteManagement: './src/main/screen/site/index.ts',
     stack: './src/main/screen/stack/index.ts',
-    youtube: './src/main/screen/youtube/galeWingYoutube.ts',
     analysis: './src/main/screen/analysis/index.ts',
     category: './src/main/screen/category/index.ts',
     siteCategory: './src/main/screen/siteCategory/index.ts',
@@ -31,9 +35,11 @@ const config = {
     rssBridge: './src/main/screen/rssBridge/index.ts',
     statics: './src/main/screen/statistics/index.ts',
     podcast: './src/main/screen/podcast/index.ts',
+    aiRecommend: './src/main/screen/aiRecommend/index.ts',
+    feedCategory: './src/main/screen/feedCategory/index.ts',
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: _resolve(__dirname, 'dist'),
     filename: '[name].js',
     publicPath: '/',
     libraryExport: 'default',
@@ -75,7 +81,7 @@ const config = {
   },
 };
 
-module.exports = () => {
+export default () => {
   if (isProduction) {
     config.mode = 'production';
   } else {
