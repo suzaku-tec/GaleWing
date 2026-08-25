@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="Description" content="Enter your description here"/>
+    <script th:src="@{/js/aiRecommend.js}"></script>
+
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" th:href="@{/airecommend_table.css}">
+    <title>GalwWing</title>
+
+</head>
+<body>
+<main class="container mw-100" role="main">
+    <div class="row">
+
+        <!-- サイトバーメニュー -->
+        <nav class="sidebar col-md-3" id="sidemenu">
+            <section class="accordion">
+                <!-- サイドメニュー(Site List) -->
+                <div th:replace="linkMenu"/>
+            </section>
+        </nav>
+
+        <!-- メインコンテンツ -->
+        <div class="col-md-9">
+            <div class="content">
+                <h1>AIおすすめ</h1>
+
+                <table class="recommend">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>title</th>
+                        <th>origin</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="recommend: ${recommends}">
+                        <td>
+                            <button class="readbtn" th:data-recommendid="${recommend.id}">既読</button>
+                        </td>
+                        <td th:text="${recommend.title}"></td>
+                        <td>
+                            <div th:each="feed: ${recommend.feedList}" style="margin: 2px;">
+                                <a th:href="${feed.link}" th:text="${feed.title}" target="_blank"></a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>

@@ -16,7 +16,7 @@ export default class StaticsApi {
   }
 
   private getBaseUrl(): string {
-    let baseUrl = new URL(window.location.href);
+    const baseUrl = new URL(window.location.href);
     this.checkUrl(baseUrl);
     return baseUrl.origin + this.subDomain;
   }
@@ -28,12 +28,12 @@ export default class StaticsApi {
   }
 
   async getReadRate(): Promise<AxiosResponse<{ totalDelivered: number, activeReads: number, opened: number }>> {
-    let ajaxUrl = this.getBaseUrl() + "readRate";
+    const ajaxUrl = this.getBaseUrl() + "readRate";
     return await axios.post(ajaxUrl);
   }
 
   async getWordRank(): Promise<AxiosResponse<any>> {
-    let ajaxUrl = this.getBaseUrl() + "rank/word";
+    const ajaxUrl = this.getBaseUrl() + "rank/word";
     return await axios.post(ajaxUrl);
   }
 }

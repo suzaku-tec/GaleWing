@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // fortawesome
-import { library, dom, text } from '@fortawesome/fontawesome-svg-core';
+import { library, dom } from '@fortawesome/fontawesome-svg-core';
 import {
   faBars,
   faCheck,
@@ -40,7 +40,7 @@ library.add(
 );
 dom.watch();
 
-const headerConfig = [{id: "chk", text: "", type: "checkbox"}, {id:"uuid", text: "uuid", hidden: true}, {id: "title", text: "title"}];
+const headerConfig = [{ id: "chk", text: "", type: "checkbox" }, { id: "uuid", text: "uuid", hidden: true }, { id: "title", text: "title" }];
 
 window.addEventListener("DOMContentLoaded", () => {
 
@@ -48,11 +48,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
   const siteSelect = document.getElementById("siteSelect");
-  siteSelect?.addEventListener("change", async(event) => {
+  siteSelect?.addEventListener("change", async (event) => {
     const viewId = (<HTMLSelectElement>event.target).value;
 
-    let api = GaleWingApi.getInstance();
-    let res = await api.getViewSiteList(viewId);
+    const api = GaleWingApi.getInstance();
+    const res = await api.getViewSiteList(viewId);
 
     removeAllChildNodes(document.getElementById("wrapper")!);
 
@@ -69,12 +69,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
 function saveView() {
 
-  const viewName = (<HTMLInputElement>document.getElementById("viewName")).value;
-
   const viewOptions = <HTMLSelectElement>document.getElementById("siteSelect");
   const selectedViewOption = viewOptions.options[viewOptions.selectedIndex];
 
-  if(!selectedViewOption.value) {
+  if (!selectedViewOption.value) {
     return;
   }
 
@@ -85,15 +83,15 @@ function saveView() {
 function saveNew(): any {
   const viewName = (<HTMLInputElement>document.getElementById("viewName")).value;
 
-  if(!viewName) {
+  if (!viewName) {
     return;
   }
 
   update("", viewName);
 }
 
-function update(viewId:string, viewName:string): void {
-  if(!viewName) {
+function update(viewId: string, viewName: string): void {
+  if (!viewName) {
     return;
   }
 
@@ -139,13 +137,13 @@ function createRow(hederConfig: any[], rowData: any) {
 
     td.style.display = headerConfig.hidden ? 'none' : '';
 
-    if(headerConfig.type === "checkbox") {
+    if (headerConfig.type === "checkbox") {
       const inputEl = document.createElement('input');
       inputEl.type = "checkbox";
       inputEl.checked = rowData[headerConfig.id];
       td.appendChild(inputEl);
     } else {
-      if(rowData[headerConfig.id]) {
+      if (rowData[headerConfig.id]) {
         td.innerText = rowData[headerConfig.id]
       }
     }
@@ -157,18 +155,18 @@ function createRow(hederConfig: any[], rowData: any) {
 
 function removeAllChildNodes(parent: HTMLElement) {
   while (parent.firstChild) {
-      parent.removeChild(parent.firstChild);
+    parent.removeChild(parent.firstChild);
   }
 }
 
-function convertTableToJson(headerConfig : HeaderConfig[], table: HTMLTableElement) {
-  let json = [];
+function convertTableToJson(headerConfig: HeaderConfig[], table: HTMLTableElement) {
+  const json = [];
 
-  for(var rowIndex = 0; rowIndex < table.rows.length; rowIndex++) {
+  for (let rowIndex = 0; rowIndex < table.rows.length; rowIndex++) {
     const row = table.rows[rowIndex];
-    let rowData:any = {};
+    const rowData: any = {};
 
-    for(var cellIndex = 0; cellIndex < headerConfig.length; cellIndex++) {
+    for (let cellIndex = 0; cellIndex < headerConfig.length; cellIndex++) {
       const cell = row.cells[cellIndex];
       const id = headerConfig[cellIndex].id;
 
@@ -182,7 +180,7 @@ function convertTableToJson(headerConfig : HeaderConfig[], table: HTMLTableEleme
 }
 
 function getCellValue(config: HeaderConfig, cell: HTMLTableCellElement) {
-  if(config.type === "checkbox") {
+  if (config.type === "checkbox") {
     return (<HTMLInputElement>cell?.firstChild)?.checked;
   } else {
     return cell.innerText;

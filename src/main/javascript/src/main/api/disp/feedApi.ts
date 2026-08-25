@@ -12,7 +12,7 @@ export default class FeedApi {
   }
 
   unreadUpdate(uuid: string, count: string) {
-    var countElement = <HTMLInputElement>document.getElementById(uuid + '_count');
+    const countElement = <HTMLInputElement>document.getElementById(uuid + '_count');
     countElement.innerText = count;
   }
 }

@@ -21,7 +21,7 @@ import hideModifier from '@popperjs/core/lib/modifiers/hide';
 import ElementEvent from '../../events/elementEvent';
 import AddPodcastEvent from '../../events/modal/addPodcastEvent';
 import UpdatePodcatFeedEvent from '../../events/updatePodcatFeedEvent';
-import { Grid, Row, html, h } from 'gridjs';
+import Grid, { Row, html, h } from 'gridjs';
 import SettingApi from '../../api/settingApi';
 import GaleWingApi from '../../api/galeWingApi';
 import { read } from 'fs';
@@ -40,12 +40,12 @@ window.onload = async () => {
   // init event
   setupEvent();
 
-  let setting = new SettingApi();
+  const setting = new SettingApi();
   await setting.init();
-  var limit = Number(setting.get('feed_rows'));
+  const limit = Number(setting.get('feed_rows'));
 
   GaleWingApi.getInstance().podcastNotReadFeed().then(async (res: { data: any; }) => {
-    let data = res.data;
+    const data = res.data;
     const grid = new Grid({
       columns: [
         { name: 'id', hidden: true },
@@ -69,10 +69,10 @@ window.onload = async () => {
       data: data,
     }).render(<HTMLInputElement>document.getElementById('wrapper'));
 
-    grid.on('cellClick', (event, ...columns) => {
-      let col = columns[0];
-      let colConfig = columns[1];
-      let row = columns[2]!;
+    grid.on('cellClick', (event: Event, ...columns: any[]) => {
+      const col = columns[0];
+      const colConfig = columns[1];
+      const row = columns[2]!;
 
       if (colConfig.name === 'title') {
         GaleWingApi.getInstance().podcastMarkRead(<string>row.cells[gridHeaderIndex.url].data).catch((error: any) => {
@@ -95,12 +95,12 @@ function setupEvent() {
  */
 function setupSidebar() {
   // toggleボタンをセレクト
-  let sidebarToggler = document.getElementById('sidebarToggler');
+  const sidebarToggler = document.getElementById('sidebarToggler');
 
   // 表示状態用の変数
   let showSidebar = true;
-  var sidemenu = document.getElementById('sidemenu');
-  var mainContent = document.getElementById('mainContent');
+  const sidemenu = document.getElementById('sidemenu');
+  const mainContent = document.getElementById('mainContent');
 
   // イベント追加
   sidebarToggler?.addEventListener('click', () => {

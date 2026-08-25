@@ -123,6 +123,12 @@ public class SiteFeedController {
             feeds.forEach(feed -> feed.imageUrl = null);
         }
 
+        feeds.forEach(feed -> {
+            if (StringUtils.isNotEmpty(feed.translateTitle)) {
+                feed.title = "[翻訳]" + feed.translateTitle;
+            }
+        });
+
         return feeds;
     }
 
@@ -231,6 +237,12 @@ public class SiteFeedController {
 
         if (rssBridgeService.isRssBridgeDomain(dto.getLink())) {
             addSiteAndFeed(dto.getLink());
+            return;
+        }
+
+        // xmlの場合の登録
+        if (dto.getLink().endsWith(".xml")) {
+            addSiteAndFeedXml(dto.getLink());
             return;
         }
 
@@ -355,6 +367,37 @@ public class SiteFeedController {
             syndFeedOptional.ifPresent(syndFeed -> {
 
                 int cnt = siteRepository.countSiteForHtmlUrl(syndFeed.getLink());
+                if (0 < cnt) {
+                    return;
+                }
+
+                Site site = SiteFactory.create(url, syndFeed);
+
+                // サイト追加
+                siteRepository.insertEntity(site);
+
+                // フィード追加
+                syndFeed.getEntries().stream().distinct()
+                        .map(syndEntry -> feedFactoryService.create(syndEntry, site.uuid))
+                        .forEach(feedRepository::insertEntity);
+            });
+        } catch (Exception e) {
+            // 特に何もしない
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * サイト情報とフィード情報を追加する
+     *
+     * @param url RSSのURL
+     */
+    private void addSiteAndFeedXml(String url) {
+        try {
+            Optional<SyndFeed> syndFeedOptional = getSyndFeed(url);
+            syndFeedOptional.ifPresent(syndFeed -> {
+
+                int cnt = siteRepository.countSiteForHtmlUrl(url);
                 if (0 < cnt) {
                     return;
                 }

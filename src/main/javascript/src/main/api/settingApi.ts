@@ -1,44 +1,33 @@
 import { AxiosResponse } from 'axios';
 import GaleWingApi from './galeWingApi';
-import { EventEmitter } from 'events';
 
 export default class SettingApi {
-  private settingsJson: [any];
-  private response: Promise<AxiosResponse<any, any>>;
-
-  private static instance: SettingApi;
+  private static settingsJson: [any];
 
   constructor() {
-    this.response = null;
   }
-
-  private initSettingData() {
-    this.response = GaleWingApi.getInstance().settingJson();
-    this.response.then((res) => {
-      this.settingsJson = res.data;
-      this.response = null;
-    });
-    return this.response;
+  private async initSettingData() {
+    // const response: Promise<AxiosResponse<any, any>> = GaleWingApi.getInstance().settingJson();
+    // response.then((res) => {
+    //   SettingApi.settingsJson = res.data;
+    // });
+    // return response;
+    const response: AxiosResponse<any, any> = await GaleWingApi.getInstance().settingJson();
+    SettingApi.settingsJson = response.data;
   }
 
   async init() {
-    if (this.response) {
-      // データ取得中
-      await this.response;
-      return SettingApi.instance;
-    } else if (SettingApi.instance) {
-      // 初期化完了済み
-      return SettingApi.instance;
+    if (SettingApi.settingsJson) {
+      return;
     } else {
       // 初期化
       await this.initSettingData();
-      return SettingApi.instance;
     }
   }
 
   get(key: string) {
-    if (!this.response) {
-      return this.settingsJson
+    if (SettingApi.settingsJson) {
+      return SettingApi.settingsJson
         .filter((setting) => {
           return setting.id === key;
         })
@@ -49,6 +38,6 @@ export default class SettingApi {
   }
 
   outputLog() {
-    console.log(this.settingsJson);
+    console.log(SettingApi.settingsJson);
   }
 }

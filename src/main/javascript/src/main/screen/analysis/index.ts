@@ -38,7 +38,7 @@ library.add(
 );
 dom.watch();
 
-import { Grid, html } from 'gridjs';
+import Grid, { html } from 'gridjs';
 import 'gridjs/dist/theme/mermaid.css';
 
 import SettingApi from '../../api/settingApi';
@@ -47,11 +47,11 @@ import ElementEvent from '../../events/elementEvent';
 import AnalysisReadAll from '../../events/analysisReadAll';
 
 window.onload = async () => {
-  let api = GaleWingApi.getInstance();
-  let target = <HTMLAnchorElement>document.getElementById('target')!;
+  const api = GaleWingApi.getInstance();
+  const target = <HTMLAnchorElement>document.getElementById('target')!;
 
   await api.jaroWinklerDistance(target.innerText).then(async (res) => {
-    let grid = await createGrid(res.data);
+    const grid = await createGrid(res.data);
     initGridEvent(grid);
 
     new ElementEvent(new AnalysisReadAll()).setup('click', document.getElementById('playTitle'));
@@ -60,7 +60,7 @@ window.onload = async () => {
 };
 
 async function createGrid(data: any) {
-  let setting = new SettingApi();
+  const setting = new SettingApi();
   await setting.init();
   setting.outputLog();
 
@@ -69,7 +69,7 @@ async function createGrid(data: any) {
       {
         name: 'title',
         hidden: false,
-        formatter: (cell, row) =>
+        formatter: (cell: any, row: any) =>
           html(
             `<a href='javascript:void(0)' rel="noopener" class="rss-link" data-link="${row.cells[1].data}">${row.cells[0].data}</a>`,
           ),
@@ -91,10 +91,10 @@ async function createGrid(data: any) {
 }
 
 function initGridEvent(grid: Grid) {
-  let api = GaleWingApi.getInstance();
+  const api = GaleWingApi.getInstance();
 
-  grid.on('rowClick', (event, row) => {
-    let link = row?.cell(1).data?.toLocaleString();
+  grid.on('rowClick', (event: Event, row: any) => {
+    const link = row?.cell(1).data?.toLocaleString();
     if (link) {
       window.open(link);
       api.read(link).catch((error: any) => {

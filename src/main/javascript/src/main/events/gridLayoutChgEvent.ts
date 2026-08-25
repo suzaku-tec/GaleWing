@@ -5,8 +5,8 @@ export default class GridLayoutChgEvent implements IElementEvent {
   private static readonly GRID_ELEMENT_ID = 'gridLayout';
 
   execute(): void {
-    var navLinks = Array.from(document.getElementsByClassName(NavLink.CLASS_NAME));
-    var activeGridNavLink = navLinks.find(
+    const navLinks = Array.from(document.getElementsByClassName(NavLink.CLASS_NAME));
+    const activeGridNavLink = navLinks.find(
       (element) =>
         element.classList.contains(NavLink.ACTIVE_CLASS_NAME) &&
         (element as HTMLElement).dataset.layout === GridLayoutChgEvent.GRID_ELEMENT_ID,
@@ -20,7 +20,7 @@ export default class GridLayoutChgEvent implements IElementEvent {
 
     this.activate(navLinks);
 
-    var contentLayouts = Array.from(document.getElementsByClassName('contentLayout'));
+    const contentLayouts = Array.from(document.getElementsByClassName('contentLayout'));
     contentLayouts.forEach((contentLayout) => {
       if (contentLayout.id === GridLayoutChgEvent.GRID_ELEMENT_ID) {
         contentLayout.classList.remove('hiddenContent');
@@ -44,9 +44,9 @@ export default class GridLayoutChgEvent implements IElementEvent {
   }
 
   private activate(navLinks: Element[]) {
-    var gridNavLink = navLinks.find((element) => {
+    const gridNavLink = navLinks.find((element) => {
       return (element as HTMLElement).dataset.layout === GridLayoutChgEvent.GRID_ELEMENT_ID;
     });
-    gridNavLink.classList.add(NavLink.ACTIVE_CLASS_NAME);
+    gridNavLink!.classList.add(NavLink.ACTIVE_CLASS_NAME);
   }
 }

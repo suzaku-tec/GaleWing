@@ -1,0 +1,434 @@
+news:
+  classification:
+    version: 1.0
+    categories:
+      - id: politics
+        keywords:
+          # =============================
+          # 政治・行政
+          # =============================
+          - value: 選挙
+            weight: 5
+          - value: 国会
+            weight: 5
+          - value: 政策
+            weight: 3
+          - value: 政府
+            weight: 3
+          - value: 省庁
+            weight: 4
+          - value: 首相
+            weight: 5
+          - value: 政党
+            weight: 4
+          - value: 法案
+            weight: 5
+          - value: 自治体
+            weight: 4
+          - value: 行政
+            weight: 4
+          - value: 協議
+            weight: 3
+          - value: 認証
+            weight: 3
+          - value: 合意
+            weight: 3
+          - value: 特許
+            weight: 4
+
+      - id: economy
+        keywords:
+          # =============================
+          # 経済・金融
+          # =============================
+          - value: インフレ
+            weight: 5
+          - value: デフレ
+            weight: 5
+          - value: GDP
+            weight: 5
+          - value: 金利
+            weight: 4
+          - value: 利上げ
+            weight: 5
+          - value: 利下げ
+            weight: 5
+          - value: 円相場
+            weight: 5
+          - value: 為替
+            weight: 5
+          - value: 株価
+            weight: 4
+          - value: 日銀
+            weight: 5
+          - value: 市場
+            weight: 4
+          - value: 金
+            weight: 2
+          - value: ビットコイン
+            weight: 3
+          - value: ゴールド
+            weight: 3
+          - value: 投資
+            weight: 4
+          - value: 資産
+            weight: 4
+          - value: 収益
+            weight: 4
+
+      # =============================
+      # 企業・産業
+      # =============================
+      - id: business
+        keywords:
+          - value: 決算
+            weight: 5
+          - value: 営業利益
+            weight: 5
+          - value: 売上高
+            weight: 4
+          - value: 買収
+            weight: 5
+          - value: 合併
+            weight: 5
+          - value: 業務提携
+            weight: 4
+          - value: 破産
+            weight: 5
+          - value: 撤退
+            weight: 4
+          - value: 新製品
+            weight: 4
+          - value: 値上げ
+            weight: 4
+          - value: samsung
+            weight: 4
+          - value: apple
+            weight: 4
+          - value: sony
+            weight: 4
+          - value: nvidia
+            weight: 4
+          - value: intel
+            weight: 4
+          - value: amd
+            weight: 4
+          - value: microsoft
+            weight: 4
+          - value: google
+            weight: 4
+          - value: meta
+            weight: 4
+          - value: amazon
+            weight: 4
+          - value: tesla
+            weight: 4
+
+      - id: technology
+        keywords:
+          # =============================
+          # テクノロジー
+          # =============================
+          - value: 人工知能
+            weight: 5
+          - value: 生成AI
+            weight: 5
+          - value: LLM
+            weight: 5
+          - value: 機械学習
+            weight: 5
+          - value: クラウド
+            weight: 4
+          - value: Kubernetes
+            weight: 5
+          - value: Docker
+            weight: 5
+          - value: 半導体
+            weight: 5
+          - value: 量子コンピューター
+            weight: 5
+          - value: ロボット
+            weight: 4
+          - value: chatgpt
+            weight: 5
+          - value: gemini
+            weight: 5
+          - value: Claude
+            weight: 5
+          - value: デスクトップアプリ
+            weight: 4
+          - value: linux
+            weight: 4
+          - value: windows
+            weight: 4
+          - value: macos
+            weight: 4
+          - value: ios
+            weight: 4
+          - value: android
+            weight: 4
+          - value: mac
+            weight: 3
+          - value: google
+            weight: 4
+          - value: microsoft
+            weight: 4
+          - value: meta
+            weight: 4
+          - value: ユーザー
+            weight: 2
+          - value: アプリ
+            weight: 3
+          - value: サービス
+            weight: 3
+          - value: アクティブ
+            weight: 2
+          - value: macbook
+            weight: 3
+          - value: AI
+            weight: 4
+          - value: ワイヤレス
+            weight: 3
+          - value: イヤホン
+            weight: 3
+          - value: 楽天モバイル
+            weight: 4
+          - value: softbank
+            weight: 4
+          - value: grok
+            weight: 4
+          - value: クラウド
+            weight: 4
+          - value: 仮想コンピュータ
+            weight: 4
+          - value: スマホ
+            weight: 4
+          - value: スマートフォン
+            weight: 4
+          - value: タブレット
+            weight: 4
+          - value: スマートウォッチ
+            weight: 4
+          - value: スマートスピーカー
+            weight: 4
+          - value: モバイル
+            weight: 3
+          - value: トークン
+            weight: 3
+          - value: プロトタイプ
+            weight: 4
+          - value: スマート
+            weight: 2
+          - value: ドコモ
+            weight: 4
+          - value: au
+            weight: 4
+          - value: Spotify
+            weight: 3
+          - value: iphone
+            weight: 4
+          - value: ipad
+            weight: 4
+          - value: デジタル通貨
+            weight: 4
+          - value: 仮想通貨
+            weight: 4
+          - value: 製鉄
+            weight: 3
+          - value: 石炭
+            weight: 3
+          - value: センサー
+            weight: 4
+          - value: 次世代
+            weight: 4
+          - value: ノートPC
+            weight: 4
+          - value: 国産
+            weight: 3
+          - value: GPS
+            weight: 4
+          - value: 回線
+            weight: 2
+          - value: SIM
+            weight: 4
+          - value: ローミング
+            weight: 4
+          - value: 家電
+            weight: 4
+          - value: 防水
+            weight: 2
+          - value: 産業用
+            weight: 4
+
+      - id: security
+        keywords:
+          # =============================
+          # サイバーセキュリティ
+          # =============================
+          - value: 脆弱性
+            weight: 5
+          - value: CVE-
+            weight: 6
+          - value: ランサムウェア
+            weight: 6
+          - value: マルウェア
+            weight: 5
+          - value: サイバー攻撃
+            weight: 6
+          - value: 不正アクセス
+            weight: 6
+          - value: 情報漏えい
+            weight: 6
+          - value: フィッシング
+            weight: 5
+          - value: セキュリティパッチ
+            weight: 5
+          - value: サプライチェーン攻撃
+            weight: 6
+
+      - id: science
+        keywords:
+          # =============================
+          # 科学・医療
+          # =============================
+          - value: 研究
+            weight: 2
+          - value: 発見
+            weight: 3
+          - value: 宇宙
+            weight: 5
+          - value: NASA
+            weight: 5
+          - value: 天文学
+            weight: 5
+          - value: 気候変動
+            weight: 5
+          - value: 医療
+            weight: 4
+          - value: 新薬
+            weight: 5
+          - value: 治験
+            weight: 5
+          - value: 感染症
+            weight: 5
+
+      - id: science
+        keywords:
+          # =============================
+          # 社会・生活
+          # =============================
+          - value: 人口
+            weight: 4
+          - value: 少子化
+            weight: 5
+          - value: 高齢化
+            weight: 5
+          - value: 労働
+            weight: 4
+          - value: 雇用
+            weight: 4
+          - value: 教育
+            weight: 4
+          - value: 福祉
+            weight: 4
+          - value: 消費者
+            weight: 3
+          - value: 生活費
+            weight: 4
+          - value: 個人情報
+            weight: 5
+
+      - id: international
+        keywords:
+          # =============================
+          # 国際・外交
+          # =============================
+          - value: 外交
+            weight: 5
+          - value: 首脳会談
+            weight: 5
+          - value: 国連
+            weight: 5
+          - value: 米国
+            weight: 3
+          - value: 中国
+            weight: 3
+          - value: ロシア
+            weight: 3
+          - value: EU
+            weight: 3
+          - value: 紛争
+            weight: 5
+          - value: 制裁
+            weight: 5
+          - value: 貿易摩擦
+            weight: 5
+          - value: 国際
+            weight: 3
+          - value: ホワイトハウス
+            weight: 4
+
+      - id: disaster
+        keywords:
+          # =============================
+          # 災害・事故・事件
+          # =============================
+          - value: 地震
+            weight: 6
+          - value: 津波
+            weight: 6
+          - value: 台風
+            weight: 6
+          - value: 大雨
+            weight: 5
+          - value: 洪水
+            weight: 6
+          - value: 土砂災害
+            weight: 6
+          - value: 噴火
+            weight: 6
+          - value: 火災
+            weight: 5
+          - value: 事故
+            weight: 4
+          - value: 逮捕
+            weight: 5
+
+      - id: culture
+        keywords:
+          # =============================
+          # 文化・スポーツ
+          # =============================
+          - value: アニメ
+            weight: 5
+          - value: ゲーム
+            weight: 5
+          - value: 映画
+            weight: 4
+          - value: 音楽
+            weight: 4
+          - value: 出版
+            weight: 4
+          - value: 美術
+            weight: 4
+          - value: 野球
+            weight: 5
+          - value: サッカー
+            weight: 5
+          - value: オリンピック
+            weight: 6
+          - value: 大会
+            weight: 2
+          - value: ゲーミング
+            weight: 3
+          - value: FPS
+            weight: 3
+          - value: RPG
+            weight: 3
+          - value: テレビ
+            weight: 4
+          - value: MLB
+            weight: 6
+          - value: Spotify
+            weight: 3
+
