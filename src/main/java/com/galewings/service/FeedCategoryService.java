@@ -5,6 +5,7 @@ import com.galewings.repository.FeedRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * FeedCategoryService
@@ -25,6 +26,14 @@ public class FeedCategoryService {
      * @return カテゴリに関連するフィードのリスト
      */
     public List<Feed> getFeedCategories(String categoryId) {
-        return feedRepository.findByCategoryId(categoryId);
+
+        return feedRepository.findByCategoryId(categoryId).stream()
+                .map(f -> {
+                    if (!Objects.isNull(f.translateTitle)) {
+                        f.title = "【翻訳】" +
+                                f.translateTitle;
+                    }
+                    return f;
+                }).toList();
     }
 }
