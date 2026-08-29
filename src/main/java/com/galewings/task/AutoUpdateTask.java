@@ -157,17 +157,20 @@ public class AutoUpdateTask {
      * @param feed Feed entity
      */
     private void insertFeedClassify(Feed feed) {
-        // Implementation for inserting feed classification
-        ClassificationResult classificationResult = gwRuleBasedNewsClassifier.classify(feed);
-        FeedClassification feedClassification = new FeedClassification();
-        feedClassification.setFeedLink(feed.link);
-        feedClassification.setPrimaryCategory(classificationResult.primaryCategory);
-        feedClassification.setCategoriesJson(convertSetToJson.apply(classificationResult.categories));
-        feedClassification.setScoresJson(convertMapToJson.apply(classificationResult.scores));
-        feedClassification.setMatchedRuleIdsJson(convertListToJson.apply(classificationResult.matchedRules));
-        feedClassification.setClassifierVersion(gwRuleBasedNewsClassifier.getVersion());
-        feedClassification.setClassifiedAt(gwDateService.now().format(GwDateService.DateFormat.SQLITE_DATE_FORMAT.dtf));
-        feedClassificationRepository.mergeClassification(feedClassification);
+        try {
+            ClassificationResult classificationResult = gwRuleBasedNewsClassifier.classify(feed);
+            FeedClassification feedClassification = new FeedClassification();
+            feedClassification.setFeedLink(feed.link);
+            feedClassification.setPrimaryCategory(classificationResult.primaryCategory);
+            feedClassification.setCategoriesJson(convertSetToJson.apply(classificationResult.categories));
+            feedClassification.setScoresJson(convertMapToJson.apply(classificationResult.scores));
+            feedClassification.setMatchedRuleIdsJson(convertListToJson.apply(classificationResult.matchedRules));
+            feedClassification.setClassifierVersion(gwRuleBasedNewsClassifier.getVersion());
+            feedClassification.setClassifiedAt(gwDateService.now().format(GwDateService.DateFormat.SQLITE_DATE_FORMAT.dtf));
+            feedClassificationRepository.mergeClassification(feedClassification);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Reader readUrlToXmlReader(URL url) throws IOException {
