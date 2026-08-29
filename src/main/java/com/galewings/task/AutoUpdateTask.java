@@ -17,6 +17,8 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -65,6 +67,8 @@ public class AutoUpdateTask {
 
     @Autowired
     private FeedClassificationRepository feedClassificationRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(AutoUpdateTask.class);
 
     @Scheduled(cron = "${update.scheduler.cron}")
     public void allUpdate() {
@@ -169,7 +173,7 @@ public class AutoUpdateTask {
             feedClassification.setClassifiedAt(gwDateService.now().format(GwDateService.DateFormat.SQLITE_DATE_FORMAT.dtf));
             feedClassificationRepository.mergeClassification(feedClassification);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("insertFeedClassify error:", e);
         }
     }
 
