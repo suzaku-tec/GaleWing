@@ -122,7 +122,7 @@ class SiteRepositoryTest {
     @Test
     public void testUpdateFeedUpdateDateCheckFormatError() {
         when(gwDateService.checkFormatDate(any(), any())).thenReturn(false);
-        int result = siteRepository.updateFeedUpdateDate(null, null);
+        int result = siteRepository.updateFeedUpdateDate(null, null, null);
         Assertions.assertEquals(0, result);
     }
 
@@ -131,7 +131,7 @@ class SiteRepositoryTest {
         when(gwDateService.checkFormatDate(any(), any())).thenReturn(true);
         when(sqlManager.executeUpdate(any(), any())).thenReturn(1);
 
-        int result = siteRepository.updateFeedUpdateDate("test1", "test2");
+        int result = siteRepository.updateFeedUpdateDate("test1", "test2", "test3");
         Assertions.assertEquals(1, result);
     }
 

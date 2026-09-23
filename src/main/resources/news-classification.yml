@@ -312,7 +312,7 @@ news:
           - value: 感染症
             weight: 5
 
-      - id: science
+      - id: society
         keywords:
           # =============================
           # 社会・生活
