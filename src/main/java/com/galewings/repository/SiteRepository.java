@@ -52,9 +52,8 @@ public class SiteRepository {
     public Site getSite(String uuid) {
         Map<String, String> params = new HashMap<>();
         params.put("uuid", uuid);
-        Site site = sqlManager.getSingleResult(Site.class,
+        return sqlManager.getSingleResult(Site.class,
                 new ClasspathSqlResource("sql/select_site_origin.sql"), params);
-        return site;
     }
 
     /**
@@ -98,18 +97,17 @@ public class SiteRepository {
     public int countSiteForHtmlUrl(String htmlUrl) {
         Map<String, String> params = new HashMap<>();
         params.put(SiteRepository.HTML_URL_STR, htmlUrl);
-        int count = sqlManager.getCount(
+
+        return sqlManager.getCount(
                 new ClasspathSqlResource("sql/site/select_site_for_htmlUrl.sql"),
                 params
         );
-
-        return count;
     }
 
     /**
      * サイト情報追加
      *
-     * @param outline
+     * @param outline テキスト情報
      */
 
     public void insertSite(be.ceau.opml.entity.Outline outline) {
@@ -160,7 +158,7 @@ public class SiteRepository {
      * サイト情報追加
      *
      * @param site サイト情報
-     * @return
+     * @return 登録結果
      */
 
     public int insertEntity(Site site) {
@@ -185,12 +183,13 @@ public class SiteRepository {
     }
 
 
-    public int updateFeedUpdateDate(String uuid, String feedUpdateDate) {
+    public int updateFeedUpdateDate(String uuid, String feedUpdateDate, String lastUpdateDateTime) {
         if (gwDateService.checkFormatDate(feedUpdateDate,
-                GwDateService.DateFormat.SQLITE_DATE_FORMAT)) {
+                GwDateService.DateFormat.SQLITE_DATE_FORMAT) && gwDateService.checkFormatDate(lastUpdateDateTime, DateFormat.DATE_TIME_COMMON)) {
             Map<String, String> param = new HashMap<>();
             param.put("uuid", uuid);
             param.put("feedUpdateDate", feedUpdateDate);
+            param.put("lastUpdateDateTime", lastUpdateDateTime);
 
             return sqlManager.executeUpdate(
                     new ClasspathSqlResource("sql/site/update_feed_updateDate.sql"), param);
@@ -202,7 +201,8 @@ public class SiteRepository {
 
     public int updateFeedLastUpdateDate(String uuid, LocalDate ld) {
         String feedUpdateDate = ld.format(DateFormat.SQLITE_DATE_FORMAT.dtf);
-        return updateFeedUpdateDate(uuid, feedUpdateDate);
+        String lastUpdateDateTime = ld.atStartOfDay().format(DateFormat.DATE_TIME_COMMON.dtf);
+        return updateFeedUpdateDate(uuid, feedUpdateDate, lastUpdateDateTime);
     }
 
     public void updateSiteIcon(String uuid, String base64) {

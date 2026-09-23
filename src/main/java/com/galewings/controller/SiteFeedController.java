@@ -190,6 +190,14 @@ public class SiteFeedController {
         return StringUtils.EMPTY;
     }
 
+    /**
+     * フィードアップデート
+     *
+     * @param site サイト情報
+     * @return フィード情報
+     * @throws FeedException
+     * @throws IOException
+     */
     private String updateFeed(Site site) throws FeedException, IOException {
         List<Feed> feeds;
         SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(site.xmlUrl)));
@@ -206,6 +214,10 @@ public class SiteFeedController {
                     }
                     feedRepository.insertEntity(f);
                 });
+
+        if (!feed.getEntries().isEmpty()) {
+            siteRepository.updateFeedLastUpdateDate(site.uuid, gwDateService.now());
+        }
 
         feeds = feedRepository.getFeed(site.uuid);
 

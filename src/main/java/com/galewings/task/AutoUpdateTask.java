@@ -116,7 +116,10 @@ public class AutoUpdateTask {
                                 insertFeedClassify(feed);
                             });
 
-                    siteRepository.updateFeedLastUpdateDate(siteFeed.getSite().uuid, gwDateService.now());
+                    if (!siteFeed.getOptionalSyndFeed().get().getEntries().isEmpty()) {
+                        siteRepository.updateFeedLastUpdateDate(siteFeed.getSite().uuid, gwDateService.now());
+                    }
+
                 });
     }
 
