@@ -185,12 +185,13 @@ public class SiteRepository {
     }
 
 
-    public int updateFeedUpdateDate(String uuid, String feedUpdateDate) {
+    public int updateFeedUpdateDate(String uuid, String feedUpdateDate, String lastUpdateDateTime) {
         if (gwDateService.checkFormatDate(feedUpdateDate,
                 GwDateService.DateFormat.SQLITE_DATE_FORMAT)) {
             Map<String, String> param = new HashMap<>();
             param.put("uuid", uuid);
             param.put("feedUpdateDate", feedUpdateDate);
+            param.put("lastUpdateDateTime", lastUpdateDateTime);
 
             return sqlManager.executeUpdate(
                     new ClasspathSqlResource("sql/site/update_feed_updateDate.sql"), param);
@@ -202,7 +203,8 @@ public class SiteRepository {
 
     public int updateFeedLastUpdateDate(String uuid, LocalDate ld) {
         String feedUpdateDate = ld.format(DateFormat.SQLITE_DATE_FORMAT.dtf);
-        return updateFeedUpdateDate(uuid, feedUpdateDate);
+        String lastUpdateDateTime = ld.format(DateFormat.DATE_TIME_COMMON.dtf);
+        return updateFeedUpdateDate(uuid, feedUpdateDate, lastUpdateDateTime);
     }
 
     public void updateSiteIcon(String uuid, String base64) {
