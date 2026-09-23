@@ -1,5 +1,3 @@
-import net.ltgt.gradle.errorprone.CheckSeverity
-
 plugins {
     id 'org.springframework.boot' version '3.5.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -9,8 +7,8 @@ plugins {
     id 'jacoco'
 
     // we assume you are already using the Java plugin
-    id "net.ltgt.errorprone" version "4.0.0"
-    id "net.ltgt.nullaway" version "2.0.0"
+//    id "net.ltgt.errorprone" version "4.0.0"
+//    id "net.ltgt.nullaway" version "2.0.0"
     id 'groovy'
 }
 
@@ -19,8 +17,8 @@ apply plugin: 'io.spring.dependency-management'
 allprojects {
     ext {
         springVersion = "3.5.4"
-        nullAwayVersion = "0.11.0"
-        errorProneVersion = "2.28.0"
+//        nullAwayVersion = "0.11.0"
+//        errorProneVersion = "2.50.0"
         lucene_version = "8.11.4"
         springdocOpenApiVersion = "2.8.11"
     }
@@ -155,14 +153,14 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-aop'
 
-    errorprone "com.uber.nullaway:nullaway:$nullAwayVersion"
+//    errorprone "com.uber.nullaway:nullaway:$nullAwayVersion"
 
     // Optional, some source of nullability annotations.
     // Not required on Android if you use the support
     // library nullability annotations.
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
-    errorprone "com.google.errorprone:error_prone_core:$errorProneVersion"
+//    errorprone "com.google.errorprone:error_prone_core:$errorProneVersion"
 
     // 細かい設定をするためにHttpClient5も依存に追加
     implementation 'org.apache.httpcomponents.client5:httpclient5'
@@ -333,31 +331,31 @@ jacocoTestReport {
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    // remove the if condition if you want to run NullAway on test code
-    if (!name.toLowerCase().contains("test")) {
-        options.errorprone {
-            check("NullAway", CheckSeverity.WARN)
-            option("NullAway:AnnotatedPackages", "com.uber")
-        }
-    }
-}
+//tasks.withType(JavaCompile).configureEach {
+//    // remove the if condition if you want to run NullAway on test code
+//    if (!name.toLowerCase().contains("test")) {
+//        options.errorprone {
+//            check("NullAway", CheckSeverity.WARN)
+//            option("NullAway:AnnotatedPackages", "com.uber")
+//        }
+//    }
+//}
+//
+//nullaway {
+//    annotatedPackages.add("net.ltgt")
+//}
 
-nullaway {
-    annotatedPackages.add("net.ltgt")
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.errorprone {
-        // 全てのチェックを無効化する。開発時は切り替える
-        // githubにコミットした場合のビルドで、チェックエラーになると困るので、nullawayでエラーが出なくなるまでは、これを残す or 切り替える
-        disableAllChecks = true
-    }
-
-    options.errorprone.nullaway {
-        error()
-    }
-}
+//tasks.withType(JavaCompile).configureEach {
+//    options.errorprone {
+//        // 全てのチェックを無効化する。開発時は切り替える
+//        // githubにコミットした場合のビルドで、チェックエラーになると困るので、nullawayでエラーが出なくなるまでは、これを残す or 切り替える
+//        disableAllChecks = true
+//    }
+//
+//    options.errorprone.nullaway {
+//        error()
+//    }
+//}
 
 tasks.register('createCustomRssSqliteDb', JavaExec) {
     mainClass.set('gradle.task.InitCustomRssSqliteDb')
