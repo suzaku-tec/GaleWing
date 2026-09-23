@@ -201,7 +201,7 @@ public class SiteRepository {
 
     public int updateFeedLastUpdateDate(String uuid, LocalDate ld) {
         String feedUpdateDate = ld.format(DateFormat.SQLITE_DATE_FORMAT.dtf);
-        String lastUpdateDateTime = ld.format(DateFormat.DATE_TIME_COMMON.dtf);
+        String lastUpdateDateTime = ld.atStartOfDay().format(DateFormat.DATE_TIME_COMMON.dtf);
         return updateFeedUpdateDate(uuid, feedUpdateDate, lastUpdateDateTime);
     }
 
