@@ -52,9 +52,8 @@ public class SiteRepository {
     public Site getSite(String uuid) {
         Map<String, String> params = new HashMap<>();
         params.put("uuid", uuid);
-        Site site = sqlManager.getSingleResult(Site.class,
+        return sqlManager.getSingleResult(Site.class,
                 new ClasspathSqlResource("sql/select_site_origin.sql"), params);
-        return site;
     }
 
     /**
@@ -98,18 +97,17 @@ public class SiteRepository {
     public int countSiteForHtmlUrl(String htmlUrl) {
         Map<String, String> params = new HashMap<>();
         params.put(SiteRepository.HTML_URL_STR, htmlUrl);
-        int count = sqlManager.getCount(
+
+        return sqlManager.getCount(
                 new ClasspathSqlResource("sql/site/select_site_for_htmlUrl.sql"),
                 params
         );
-
-        return count;
     }
 
     /**
      * サイト情報追加
      *
-     * @param outline
+     * @param outline テキスト情報
      */
 
     public void insertSite(be.ceau.opml.entity.Outline outline) {
@@ -160,7 +158,7 @@ public class SiteRepository {
      * サイト情報追加
      *
      * @param site サイト情報
-     * @return
+     * @return 登録結果
      */
 
     public int insertEntity(Site site) {
