@@ -187,7 +187,7 @@ public class SiteRepository {
 
     public int updateFeedUpdateDate(String uuid, String feedUpdateDate, String lastUpdateDateTime) {
         if (gwDateService.checkFormatDate(feedUpdateDate,
-                GwDateService.DateFormat.SQLITE_DATE_FORMAT)) {
+                GwDateService.DateFormat.SQLITE_DATE_FORMAT) && gwDateService.checkFormatDate(lastUpdateDateTime, DateFormat.DATE_TIME_COMMON)) {
             Map<String, String> param = new HashMap<>();
             param.put("uuid", uuid);
             param.put("feedUpdateDate", feedUpdateDate);
