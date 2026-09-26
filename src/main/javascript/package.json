@@ -20,6 +20,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@eonasdan/tempus-dominus": "^6.10.4",
     "@popperjs/core": "^2.11.8",
     "@types/bootstrap": "^5.2.8",
     "@types/google.visualization": "^0.0.74",

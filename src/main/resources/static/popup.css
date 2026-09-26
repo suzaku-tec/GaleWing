@@ -1,0 +1,27 @@
+.popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-content {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 60vw;
+    position: relative;
+    max-width: 600px; /* 大きくなりすぎない上限 */
+    min-width: 280px; /* 狭くなりすぎない下限（任意）*/
+}
+
+.close-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.8rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+}

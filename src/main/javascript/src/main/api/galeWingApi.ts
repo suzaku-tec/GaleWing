@@ -49,6 +49,7 @@ export default class GaleWingApi {
         podcastMarkRead: '/podcast/markRead',
         aiRecommendRead: '/ai/recommend/read',
         categorySelect: '/feedCategory/select',
+        keywordFeed: '/trend/keyword/feeds',
     };
 
     private static singleton: GaleWingApi;
@@ -304,6 +305,11 @@ export default class GaleWingApi {
     async aiRecommendRead(id: string): Promise<AxiosResponse<any>> {
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.aiRecommendRead + "/" + id;
         return await axios.post(ajaxUrl);
+    }
+
+    async keywordFeed(keyword: string): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.keywordFeed + "?keyword=" + encodeURIComponent(keyword);
+        return await axios.get(ajaxUrl);
     }
 
     private getBaseUrl(): string {
