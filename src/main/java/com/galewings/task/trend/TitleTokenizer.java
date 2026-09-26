@@ -20,7 +20,7 @@ public class TitleTokenizer {
     public List<Morpheme> extractKeywords(String title) {
         String normalized = normalize(title);
 
-        Set<String> words = new HashSet<String>();
+        Set<String> words = new HashSet<>();
 
         return tokenizer.tokenize(
                         Tokenizer.SplitMode.B,

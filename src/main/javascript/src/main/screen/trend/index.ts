@@ -86,13 +86,13 @@ function clearFeedList() {
  * 
  * @param feeds フィード情報
  */
-function addFeedItem(feeds: { title: string; url: string }[]) {
+function addFeedItem(feeds: { title: string; url: string; translateTitle?: string }[]) {
   const feedList = document.getElementById('feedList')!;
   feeds.forEach(feed => {
     const listItem = document.createElement('li');
     const linkElement = document.createElement('a');
     linkElement.href = feed.url;
-    linkElement.textContent = feed.title;
+    linkElement.textContent = feed.translateTitle ? "【翻訳】" + feed.translateTitle : feed.title;
     listItem.appendChild(linkElement);
     feedList.appendChild(listItem);
   });
