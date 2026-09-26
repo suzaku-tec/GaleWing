@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="Description" content="Enter your description here"/>
+    <script th:src="@{/js/trend.js}"></script>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" th:href="@{/text.css}">
+    <link rel="stylesheet" th:href="@{/popup.css}">
+    <link rel="stylesheet" th:href="@{/trend.css}">
+    <title>GalwWing</title>
+
+    <style>
+        table {
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+    </style>
+</head>
+
+<body>
+<!-- 全ページを囲む要素 -->
+<main class="container mw-100" role="main">
+    <div class="row">
+        <!-- サイトバーメニュー -->
+        <nav class="sidebar col-md-3" id="sidemenu">
+            <section class="accordion">
+                <!-- サイドメニュー(Site List) -->
+                <div th:replace="linkMenu"/>
+
+            </section>
+        </nav>
+        <!-- サイトバーメニュー -->
+
+        <div class="col-md-9" id="mainContent">
+            <div class="content p-3">
+                <div>
+
+                    <div class="m-1">
+                        <form action="/trend/search" method="get">
+                            <div
+                                    class="input-group"
+                                    id="datePicker"
+                                    data-td-target-input="nearest"
+                                    data-td-target-toggle="nearest"
+                            >
+                                <input id="targetDate"
+                                       name="targetDate"
+                                       type="text"
+                                       class="form-control"
+                                       data-td-target="#datePicker"
+                                       th:value="${targetDate}"
+                                />
+
+                                <button
+                                        type="button"
+                                        class="btn btn-outline-secondary"
+                                        data-td-target="#datePicker"
+                                        data-td-toggle="datetimepicker"
+                                >
+                                    📅
+                                </button>
+                                <div class="m-1">
+                                    <input type="submit" value="search">
+                                </div>
+                            </div>
+                            <div id="calendar" style="position: absolute"></div>
+                        </form>
+                    </div>
+
+                    <!-- メインコンテンツ -->
+                    <div id="gridLayout" class="contentLayout m-1 table">
+                        <table id="trendTable">
+                            <thead class="table-success">
+                            <tr>
+                                <th>キーワード</th>
+                                <th>当日の記事数</th>
+                                <th>前日の記事数</th>
+                                <th>前日からの増加数</th>
+                            </tr>
+                            </thead>
+
+                            <tbody class="table-group-divider">
+                            <tr th:each="keywordPrevDayComparison : ${keywordPrevDayComparisonList}">
+                                <td th:text="${keywordPrevDayComparison.normalizedKeyword}"
+                                    class="clickable-link show-items-link">1
+                                </td>
+                                <td th:text="${keywordPrevDayComparison.articleCount}">山田太郎</td>
+                                <td th:text="${keywordPrevDayComparison.previousCount}">yamada@example.com</td>
+                                <td th:text="${keywordPrevDayComparison.increase}">123</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- 下のコンテンツ -->
+        </div>
+
+    </div>
+    <!-- 全ページの右のコンテンツ -->
+
+</main>
+<div id="feedPopup" class="popup" style="display:none;">
+    <div class="popup-content">
+        <span class="close-btn">&times;</span>
+        <h2>フィード一覧</h2>
+        <ul id="feedList"></ul>
+    </div>
+</div>
+</body>

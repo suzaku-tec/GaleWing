@@ -23,6 +23,10 @@ GaleWingは、Webサイトの情報を収集・管理するためのアプリケ
 *   **`src/main/javascript`**: フロントエンドのJavaScriptコードが含まれています。
 *   **`src/test`**: 単体テストのコードが含まれています。
 
+# sudachi
+
+http://sudachi.s3-website-ap-northeast-1.amazonaws.com/sudachidict/
+
 # License
 
 This project is licensed under the MIT License, see the LICENSE.txt file for details

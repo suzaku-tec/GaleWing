@@ -59,4 +59,7 @@
     <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('feedCategory') eq '1'}">
         <a class="list-group-item" href="/feedCategory/">Feed Category</a>
     </li>
+    <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('trend') eq '1'}">
+        <a class="list-group-item" href="/trend/">trend</a>
+    </li>
 </ul>
