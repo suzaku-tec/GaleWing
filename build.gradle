@@ -21,6 +21,7 @@ allprojects {
 //        errorProneVersion = "2.50.0"
         lucene_version = "8.11.4"
         springdocOpenApiVersion = "2.8.11"
+        sudachi_version = "0.7.5"
     }
 }
 
@@ -201,6 +202,8 @@ dependencies {
 
     // AST解析用のライブラリ
     implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.26.2'
+
+    implementation "com.worksap.nlp:sudachi:$sudachi_version"
 }
 
 sonarqube {
