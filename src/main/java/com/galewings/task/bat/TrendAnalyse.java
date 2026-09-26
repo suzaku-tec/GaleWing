@@ -6,6 +6,7 @@ import com.galewings.repository.FeedKeywordRepository;
 import com.galewings.repository.FeedRepository;
 import com.galewings.task.trend.TitleTokenizer;
 import com.worksap.nlp.sudachi.Morpheme;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,7 @@ public class TrendAnalyse implements Runnable {
         this.feedKeywordRepository = feedKeywordRepository;
     }
 
+    @Scheduled(cron = "${analyze.scheduler.cron}")
     @Override
     public void run() {
         var allFeeds = feedRepository.getAllFeed();
@@ -34,11 +36,9 @@ public class TrendAnalyse implements Runnable {
 
         allFeeds.stream()
                 .filter(feed -> !feedKeywordRepository.isAnalysed(feed.uuid, feed.link))
-                .map((feed) -> {
-                    return new FeedAnalyseResult(titleTokenizer.extractKeywords(feed.title), feed);
-                })
+                .map((feed) -> new FeedAnalyseResult(titleTokenizer.extractKeywords(feed.title), feed))
                 .forEach(feedAnalysResult -> {
-                    feedAnalysResult.keywords.stream().forEach((morpheme) -> {
+                    feedAnalysResult.keywords.forEach((morpheme) -> {
                         FeedKeyword feedKeyword = new FeedKeyword();
                         feedKeyword.feedUuid = feedAnalysResult.feed.uuid;
                         feedKeyword.feedLink = feedAnalysResult.feed.link;
