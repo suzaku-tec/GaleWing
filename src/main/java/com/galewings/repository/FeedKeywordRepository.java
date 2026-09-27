@@ -39,12 +39,24 @@ public class FeedKeywordRepository {
         return count > 0;
     }
 
+    /**
+     * 対象日付のキーワードのランキングを抽出
+     *
+     * @param targetDate 検索対象日付
+     * @return 検索結果
+     */
     public List<KeywordPrevDayComparisonDto> selectKeywordPrevDayComparison(String targetDate) {
         Map<String, String> params = new HashMap<>();
         params.put("targetDate", targetDate);
         return sqlManager.getResultList(KeywordPrevDayComparisonDto.class, new ClasspathSqlResource("sql/feedKeyword/keyword_prev_day_comparison.sql"), params);
     }
 
+    /**
+     * キーワードを含む記事リストを抽出
+     *
+     * @param keyword キーワード
+     * @return フィードリスト
+     */
     public List<Feed> selectKeywordFeed(String keyword) {
         Map<String, String> params = new HashMap<>();
         params.put("keyword", keyword);
