@@ -55,7 +55,7 @@ class ReportControllerTest {
     @Test
     void summaryReport() throws IOException {
         Executor directExecutor = Runnable::run;
-        ReportController controller = new ReportController(reportService, gwDateService, ollamaChatService, directExecutor);
+        ReportController controller = new ReportController(reportService, new GwDateService(), ollamaChatService, directExecutor);
         KeywordSummaryDto keywordSummaryDto = new KeywordSummaryDto();
         KeywordLinkDto keywordLinkDto = new KeywordLinkDto();
         keywordLinkDto.link = "testLink";
@@ -66,6 +66,7 @@ class ReportControllerTest {
 
         controller.summaryReport(keywordSummaryDto);
 
+        verify(reportService, times(1)).report(any(), any());
     }
 
     @Test
