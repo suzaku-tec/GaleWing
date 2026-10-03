@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 class GwDateServiceTest {
@@ -130,4 +131,15 @@ class GwDateServiceTest {
         Assertions.assertTrue(gwDateService.isTargetDate(target, "20230308", fmt));
         Assertions.assertFalse(gwDateService.isTargetDate(target, "20230309", fmt));
     }
+
+    @Test
+    void testNowDateTime() {
+        LocalDateTime testDate = LocalDateTime.of(2023, 3, 8, 0, 10);
+        try (MockedStatic<LocalDateTime> mock = Mockito.mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS)) {
+            mock.when(LocalDateTime::now).thenReturn(testDate);
+            LocalDateTime result = gwDateService.nowDateTime();
+            Assertions.assertEquals(testDate, result);
+        }
+    }
+
 }

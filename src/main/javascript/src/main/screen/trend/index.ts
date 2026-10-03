@@ -43,18 +43,21 @@ window.onload = () => {
     link.addEventListener('click', async (e) => {
       e.preventDefault();
 
-      // リストの初期化
+      // 初期化
       clearFeedList();
+      const popKeyword = document.getElementById("popKeyword") as HTMLInputElement;
+      popKeyword.value = link.innerText || '';
 
       await GaleWingApi.getInstance().keywordFeed(link.innerText || '').then(res => {
         if (res.status != 200) {
           return;
         }
 
-        const feeds: { title: string; url: string }[] = res.data;
-        addFeedItem(feeds);
+        const keyword = link.innerText || '';
+        const feeds: { title: string; link: string }[] = res.data;
+        addFeedItem(keyword, feeds);
       });
-      popup.style.display = 'block';
+      popup.style.display = 'flex';
     });
   });
 
@@ -68,6 +71,21 @@ window.onload = () => {
     if (e.target === popup) {
       popup.style.display = 'none';
     }
+  });
+
+  const sendSummary = document.getElementById("sendSummary")!;
+  sendSummary.addEventListener('click', () => {
+    const linkList = Array.from(document.querySelectorAll<HTMLInputElement>('input[name="feedCheckList"]:checked')).map(checkbox => {
+      const link = checkbox.dataset.link ? checkbox.dataset.link : null;
+      return {
+        link
+      };
+    });
+    const popKeyword = document.getElementById("popKeyword") as HTMLInputElement;
+    GaleWingApi.getInstance().keywordLinkSummaryReport(popKeyword.value, linkList);
+
+    const popup = document.getElementById('feedPopup')!;
+    popup.style.display = 'none';
   });
 }
 
@@ -86,14 +104,21 @@ function clearFeedList() {
  * 
  * @param feeds フィード情報
  */
-function addFeedItem(feeds: { title: string; url: string; translateTitle?: string }[]) {
+function addFeedItem(keyword: string, feeds: { title: string; link: string; translateTitle?: string }[]) {
   const feedList = document.getElementById('feedList')!;
   feeds.forEach(feed => {
-    const listItem = document.createElement('li');
+    const divElement = document.createElement('div');
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.name = "feedCheckList";
+    checkbox.dataset.link = feed.link;
     const linkElement = document.createElement('a');
-    linkElement.href = feed.url;
+    linkElement.href = feed.link;
     linkElement.textContent = feed.translateTitle ? "【翻訳】" + feed.translateTitle : feed.title;
-    listItem.appendChild(linkElement);
-    feedList.appendChild(listItem);
+    // checkbox.appendChild(linkElement);
+    divElement.appendChild(checkbox);
+    divElement.appendChild(linkElement);
+    divElement.classList.add('m-1');
+    feedList.appendChild(divElement);
   });
 }
