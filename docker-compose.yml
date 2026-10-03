@@ -41,6 +41,9 @@ services:
     volumes:
       - ./searxng:/etc/searxng
     restart: unless-stopped
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:18080/
+      - SEARXNG_SECRET=${SEARXNG_SECRET}
 
 volumes:
   pgdata:
