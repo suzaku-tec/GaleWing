@@ -56,3 +56,5 @@ src/main/resources/txt/customRssHtml/*
 htmlReport
 output
 /src/main/resources/sudachi/system_core.dic
+
+/reports/*.txt

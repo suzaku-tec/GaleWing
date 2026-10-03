@@ -11,10 +11,12 @@
     background: #fff;
     padding: 1.5rem;
     border-radius: 8px;
-    width: 60vw;
+    width: 80vw;
     position: relative;
-    max-width: 600px; /* 大きくなりすぎない上限 */
+    max-width: 940px; /* 大きくなりすぎない上限 */
     min-width: 280px; /* 狭くなりすぎない下限（任意）*/
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .close-btn {

@@ -112,7 +112,11 @@
     <div class="popup-content">
         <span class="close-btn">&times;</span>
         <h2>フィード一覧</h2>
-        <ul id="feedList"></ul>
+        <input type="hidden" id="popKeyword" name="popKeyword" value="">
+        <form action="/trend/keyword/list" id="popupForm" method="get">
+            <input type="button" name="sendSummary" id="sendSummary" value="summary">
+            <div id="feedList" class="m-3"></div>
+        </form>
     </div>
 </div>
 </body>

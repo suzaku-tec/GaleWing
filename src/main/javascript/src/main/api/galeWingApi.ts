@@ -50,6 +50,7 @@ export default class GaleWingApi {
         aiRecommendRead: '/ai/recommend/read',
         categorySelect: '/feedCategory/select',
         keywordFeed: '/trend/keyword/feeds',
+        keywordLinkSummaryReport: '/report/keyword/list',
     };
 
     private static singleton: GaleWingApi;
@@ -149,6 +150,11 @@ export default class GaleWingApi {
     viewSave(viewId: string, viewName: string, siteIdList: string[]): Promise<AxiosResponse<any>> {
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.viewsSave;
         return axios.post(ajaxUrl, { viewId: viewId, viewName: viewName, siteIdList: siteIdList });
+    }
+
+    keywordLinkSummaryReport(keyword: string, linkList: { link: string }[]): Promise<AxiosResponse<any>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.keywordLinkSummaryReport;
+        return axios.post(ajaxUrl, { keyword: keyword, linkList: linkList });
     }
 
     private fixSiteCategory(
