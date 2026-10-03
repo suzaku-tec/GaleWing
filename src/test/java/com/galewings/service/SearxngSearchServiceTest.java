@@ -43,9 +43,9 @@ class SearxngSearchServiceTest {
                 }
                 """;
 
-        server.expect(requestTo(BASE_URL + "/search"))
+        server.expect(requestTo(BASE_URL + "/search?q=spring%20boot&format=json&language=ja&safesearch=1&categories=general"))
                 .andExpect(method(HttpMethod.GET))
-                .andExpect(queryParam("q", "spring boot"))
+                .andExpect(queryParam("q", "spring%20boot"))
                 .andExpect(queryParam("format", "json"))
                 .andExpect(queryParam("language", "ja"))
                 .andExpect(queryParam("safesearch", "1"))
@@ -63,7 +63,7 @@ class SearxngSearchServiceTest {
 
     @Test
     void search_は500のとき例外を投げる() {
-        server.expect(requestTo(BASE_URL + "/search"))
+        server.expect(requestTo(BASE_URL + "/search?q=error&format=json&language=ja&safesearch=1&categories=general"))
                 .andExpect(method(HttpMethod.GET))
                 .andExpect(queryParam("q", "error"))
                 .andRespond(withServerError());
