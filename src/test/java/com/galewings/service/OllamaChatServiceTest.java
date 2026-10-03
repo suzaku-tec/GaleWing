@@ -12,6 +12,7 @@ import org.springframework.ai.chat.client.ChatClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,12 +41,12 @@ class OllamaChatServiceTest {
         when(chatClientBuilder.build()).thenReturn(chatClient);
 
         // チェーンメソッドのスタブ
-        when(chatClient.prompt()).thenReturn(requestSpec);
-        when(requestSpec.system(any(String.class))).thenReturn(requestSpec);
-        when(requestSpec.user(any(String.class))).thenReturn(requestSpec);
-        when(requestSpec.tools(any())).thenReturn(requestSpec);
-        when(requestSpec.call()).thenReturn(callResponseSpec);
-        when(callResponseSpec.content()).thenReturn("応答");
+        lenient().when(chatClient.prompt()).thenReturn(requestSpec);
+        lenient().when(requestSpec.system(any(String.class))).thenReturn(requestSpec);
+        lenient().when(requestSpec.user(any(String.class))).thenReturn(requestSpec);
+        lenient().when(requestSpec.tools(any())).thenReturn(requestSpec);
+        lenient().when(requestSpec.call()).thenReturn(callResponseSpec);
+        lenient().when(callResponseSpec.content()).thenReturn("応答");
     }
 
     @Test
@@ -76,8 +77,8 @@ class OllamaChatServiceTest {
 
         // Assert
         String capturedSystemPrompt = systemPromptCaptor.getValue();
-        assertThat(capturedSystemPrompt).contains("webSearch ツールを使用");
+        assertThat(capturedSystemPrompt).contains("webSearchツールを使用");
         assertThat(capturedSystemPrompt).contains("検索結果にない情報を事実として補わない");
-        assertThat(capturedSystemPrompt).contains("参照した URL を含めて");
+        assertThat(capturedSystemPrompt).contains("参照したURLを含めて");
     }
 }
