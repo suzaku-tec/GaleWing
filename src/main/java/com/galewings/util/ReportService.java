@@ -23,7 +23,11 @@ public class ReportService {
     public void report(String fileName, String content) throws IOException {
         File dir = new File(outputDir);
         if (!dir.exists()) {
-            dir.mkdirs();  // ディレクトリがなければ作成
+            boolean result = dir.mkdirs();  // ディレクトリがなければ作成
+
+            if (!result) {
+                throw new IOException("Unable to create directory");
+            }
         }
 
         File outputFile = new File(dir, fileName);

@@ -3,7 +3,6 @@ package com.galewings.controller;
 import com.galewings.dto.input.KeywordSummaryDto;
 import com.galewings.service.GwDateService;
 import com.galewings.service.OllamaChatService;
-import com.galewings.service.OllamaService;
 import com.galewings.util.ReportService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Controller;
@@ -20,17 +19,14 @@ public class ReportController {
 
     private final ReportService reportService;
 
-    private final OllamaService ollamaService;
-
     private final GwDateService gwDateService;
 
     private final OllamaChatService ollamaChatService;
 
     private final Executor taskExecutor;
 
-    public ReportController(ReportService reportService, OllamaService ollamaService, GwDateService gwDateService, OllamaChatService ollamaChatService, Executor taskExecutor) {
+    public ReportController(ReportService reportService, GwDateService gwDateService, OllamaChatService ollamaChatService, Executor taskExecutor) {
         this.reportService = reportService;
-        this.ollamaService = ollamaService;
         this.gwDateService = gwDateService;
         this.ollamaChatService = ollamaChatService;
         this.taskExecutor = taskExecutor;
@@ -48,9 +44,7 @@ public class ReportController {
 
         StringBuilder sb = new StringBuilder("以下の記事の内容を統合して要約してください。");
 
-        keywordSummaryDto.linkList.stream().forEach((link) -> {
-            sb.append("- ").append(link.link).append("\n");
-        });
+        keywordSummaryDto.linkList.forEach(link -> sb.append("- ").append(link.link).append("\n"));
 
         sb.append("""
                 出力内容は、下記の内容に沿って出力してください
