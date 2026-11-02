@@ -1,36 +1,29 @@
 import GaleWingApi from '../api/galeWingApi';
-import GaleWingGrid, { HeaderIndex } from '../screen/feed/galeWingGrid';
+import GaleWingGrid from '../screen/feed/galeWingGrid';
 import { IElementEvent } from './elementEvent';
 
 export default class ReadDispListEvent implements IElementEvent {
   execute(): void {
-    const gridjsTdList = Array.from(document.getElementsByClassName('gridjs-td'));
+    const gridApi = GaleWingGrid.getInstance().gridApi;
+    gridApi.getRenderedNodes()
+      .forEach((node) => {
+        const link = node.data.link;
+        const currentValue = node.getDataValue('readed');
+        node.setDataValue('readed', currentValue ? false : true);
+        GaleWingApi.getInstance().read(link)
+          .then(() => {
+            console.log('GaleWingGrid onCellClicked read success:', link);
+            GaleWingGrid.getInstance().gridApi.refreshCells({
+              rowNodes: [node],
+              force: true,
+              columns: ['title'],
+            });
+          })
+          .catch((error) => {
+            console.error('GaleWingGrid onCellClicked read error:', error);
+          });
 
-    GaleWingGrid.getInstance().setStopRowClickFlg(true);
-
-    const urls = gridjsTdList
-      .map((td) => td.querySelector('a.rss-link'))
-      .filter((el) => el !== null)
-      .map((el) => <HTMLAnchorElement>el)
-      .map((anchorEl) => {
-
-        const link = anchorEl.href;
-        const data = GaleWingGrid.getInstance().grid?.config.data as any;
-        data.filter((feed: any) => feed[HeaderIndex.link] === link).forEach((feed: any) => {
-          feed[HeaderIndex.chkSts] = '1';
-        });
-
-        anchorEl.classList.remove('rss-link');
-        anchorEl.classList.add('rss-read-link');
-        return anchorEl.href;
       });
-
-    GaleWingApi.getInstance().readDispList(urls);
-    const targetBadge = <HTMLSpanElement>document.querySelector('a.bg-warning span.badge');
-    const cnt = targetBadge?.innerText;
-    if (Number(cnt)) targetBadge.innerText = String(Number(cnt) - urls.length);
-
-    GaleWingGrid.getInstance().setStopRowClickFlg(false);
 
   }
 }
