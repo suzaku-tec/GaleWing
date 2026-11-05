@@ -76,7 +76,7 @@
                                     <a href="" class="list-group-item bg-warning" th:id="${site.uuid}"
                                        th:href="@{/(uuid=${site.uuid})}"> <img
                                             th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16"
-                                            height="16">
+                                            height="16" alt="アイコン">
                                         [[${site.title}]]：
                                         <span th:id="${site.uuid} + '_count'"
                                               class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
@@ -85,7 +85,7 @@
                                     <a href="" class="list-group-item" th:id="${site.uuid}"
                                        th:href="@{/(uuid=${site.uuid})}"> <img
                                             th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16"
-                                            height="16">
+                                            height="16" alt="アイコン">
                                         [[${site.title}]]：
                                         <span th:id="${site.uuid} + '_count'"
                                               class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
@@ -106,7 +106,7 @@
             <!-- 下のコンテンツ -->
             <div class="content p-3">
                 <div th:if="${selectSite != null}">
-                    <h1 th:text="${selectSite.title}" class="bg-info text-center"></h1>
+                    <h1 th:text="${selectSite.title}" class="bg-info text-center">ダミータイトル</h1>
                 </div>
                 <div>
                     <!-- アイコン -->
@@ -187,7 +187,55 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- カスタムフッター -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px 16px; background-color: #f8f9fa; border: 1px solid #babfc7; border-bottom: none;">
+                            <div>
+                                <label style="font-size: 14px;">
+                                    Page Size:
+                                    <input type="text" id="header-pageSize" size="3"/>
+                                </label>
+                            </div>
+
+                            <div id="header-viewDataInfo"></div>
+
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <i id="header-firstBtn" class="fa-solid fa-angles-left" style="cursor: pointer;"></i>
+                                <i id="header-prevBtn" class="fa-solid fa-chevron-left"
+                                   style="cursor: pointer; margin: 0px 20px;"></i>
+                                Page <input type="text" id="header-nowPage" size="3" aria-label="現在ページ"/>
+                                <span id="header-pageInfo" style="font-size: 14px; margin: 0 8px;"> of 1 ページ</span>
+                                <i id="header-nextBtn" class="fa-solid fa-chevron-right"
+                                   style="cursor: pointer; margin: 0px 20px;"></i>
+                                <i id="header-lastBtn" class="fa-solid fa-angles-right" style="cursor: pointer;"></i>
+                            </div>
+                        </div>
+
                         <div id="wrapper"></div>
+
+                        <!-- カスタムフッター -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px 16px; background-color: #f8f9fa; border: 1px solid #babfc7; border-top: none;">
+                            <div>
+                                <label style="font-size: 14px;">
+                                    Page Size:
+                                    <input type="text" id="footer-pageSize" size="3"/>
+                                </label>
+                            </div>
+
+                            <div id="footer-viewDataInfo"></div>
+
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <i id="footer-firstBtn" class="fa-solid fa-angles-left" style="cursor: pointer;"></i>
+                                <i id="footer-prevBtn" class="fa-solid fa-chevron-left"
+                                   style="cursor: pointer; margin: 0px 20px;"></i>
+                                Page <input type="text" id="footer-nowPage" size="3" aria-label="現在ページ"/>
+                                <span id="footer-pageInfo" style="font-size: 14px; margin: 0 8px;"> of 1 ページ</span>
+                                <i id="footer-nextBtn" class="fa-solid fa-chevron-right"
+                                   style="cursor: pointer; margin: 0px 20px;"></i>
+                                <i id="footer-lastBtn" class="fa-solid fa-angles-right" style="cursor: pointer;"></i>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
