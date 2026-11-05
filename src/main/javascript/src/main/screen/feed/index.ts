@@ -19,6 +19,10 @@ import {
   faListCheck,
   faLeftLong,
   faRightLong,
+  faAnglesRight,
+  faChevronRight,
+  faAnglesLeft,
+  faChevronLeft,
 } from '@fortawesome/free-solid-svg-icons/index';
 
 import { faYoutube } from '@fortawesome/free-brands-svg-icons';
@@ -41,6 +45,10 @@ library.add(
   faListCheck,
   faLeftLong,
   faRightLong,
+  faAnglesRight,
+  faChevronRight,
+  faAnglesLeft,
+  faChevronLeft,
 );
 dom.watch();
 
@@ -112,7 +120,6 @@ function setupEvent() {
 function setupPlayer() {
   const ps = new PlaySound();
   ps.setTalking(() => {
-    // TODO 再生のコントロールを検討する
     const rssLinks = document.getElementsByClassName('rss-link');
 
     (async () => {

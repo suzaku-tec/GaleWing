@@ -8,11 +8,9 @@ export default class ReadDispListEvent implements IElementEvent {
     gridApi.getRenderedNodes()
       .forEach((node) => {
         const link = node.data.link;
-        const currentValue = node.getDataValue('readed');
-        node.setDataValue('readed', currentValue ? false : true);
+        node.setDataValue('readed', true);
         GaleWingApi.getInstance().read(link)
           .then(() => {
-            console.log('GaleWingGrid onCellClicked read success:', link);
             GaleWingGrid.getInstance().gridApi.refreshCells({
               rowNodes: [node],
               force: true,

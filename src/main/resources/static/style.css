@@ -1,5 +1,5 @@
 /* 重要な部分 */
-.sidebar{
+.sidebar {
     top: 0;
     bottom: 0;
     left: 0;
@@ -12,24 +12,24 @@
 }
 
 /* 見栄え */
-.sidebar .brand{
+.sidebar .brand {
     background-color: #0d6efdc9;
     color: white;
 }
 
-.sidebar .nav-link{
+.sidebar .nav-link {
     background-color: rgba(255, 255, 255, 0.493);
     color: white;
 }
 
 /* アニメーション */
-main{
+main {
     transition: 0.3s all ease;
 }
 
 .rss-link {
     text-decoration: none;
-    font-weight:  bolder;
+    font-weight: bolder;
     color: #000000;
     margin: 0 0 0 10px;
 }
@@ -40,144 +40,152 @@ main{
 }
 
 .page-content {
-	display: block;
+    display: block;
 }
 
 .container {
-  margin-left: 0px;
-  margin-right: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
 }
 
 .is-close {
-/*  transform: translateX(-17em);*/
-  transition-duration: 1s;
-  display: none;
+    /*  transform: translateX(-17em);*/
+    transition-duration: 1s;
+    display: none;
 }
 
 .wideMainContent {
-/*  transform: translateX(-17em);*/
-  transition-duration: 1s;
+    /*  transform: translateX(-17em);*/
+    transition-duration: 1s;
 }
 
 div#mainContent {
-  transition-duration: 1s;
-  overflow-x: hidden;
-  overflow-y: auto;
-  max-height: 100vh;
+    transition-duration: 1s;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 100vh;
 }
 
 body {
-  max-height: 100vh;
+    max-height: 100vh;
 }
 
 .hiddenContent {
-  display: none;
+    display: none;
 }
 
 .list-group-item {
-  background-color: white;
-  padding: 5px;
+    background-color: white;
+    padding: 5px;
 }
 
 .list-group-item:hover {
-  background-color: #FFCC33;
+    background-color: #FFCC33;
 }
 
 .list-group-item-selected {
-  border: solid 2px #ff6a00;
+    border: solid 2px #ff6a00;
 }
 
 li#siteList div {
-  padding-bottom: 2px;
+    padding-bottom: 2px;
 }
 
 
 .parent-box {
-  width: 100%;
+    width: 100%;
 }
+
 .child-box {
 }
+
 .float {
-  overflow: hidden;
+    overflow: hidden;
 }
+
 .float .align-left {
-  float: left;
+    float: left;
 }
+
 .float .align-right {
-  float: right;
+    float: right;
 }
+
 .clear {
-  clear: both;
+    clear: both;
 }
 
 /* カードレイアウト */
 .card-list {
-  display: flex;
-  flex-wrap: wrap;
-  list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
 }
 
 .card-item {
-  width: calc(33.33% - 30px * 2 / 3);
-  margin-right: 30px;
-  margin-top: 30px;
-  background-color: #fff;
+    width: calc(33.33% - 30px * 2 / 3);
+    margin-right: 30px;
+    margin-top: 30px;
+    background-color: #fff;
 }
 
 .card-item:nth-child(3n) {
-  margin-right: 0;
+    margin-right: 0;
 }
 
 @media (max-width: 960px) {
-  .card-item {
-    width: calc(50% - 30px / 2);
-    margin-right: 30px;
-   }
-  .card-item:nth-child(3n) {
-    margin-right: 30px;
-  }
-  .card-item:nth-child(2n) {
-    margin-right: 0;
-  }
+    .card-item {
+        width: calc(50% - 30px / 2);
+        margin-right: 30px;
+    }
+
+    .card-item:nth-child(3n) {
+        margin-right: 30px;
+    }
+
+    .card-item:nth-child(2n) {
+        margin-right: 0;
+    }
 }
 
 @media (max-width: 767px) {
-  .card-item {
-    width: 100%;
-    margin-right: 0;
-  }
-  .card-item:nth-child(3n) {
-    margin-right: 0;
-  }
+    .card-item {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .card-item:nth-child(3n) {
+        margin-right: 0;
+    }
 }
 
 .card-item-link {
-  color: #333;
+    color: #333;
 }
 
 .card-item-picture img {
-  width: 100%;
-  height: auto;
+    width: 100%;
+    height: auto;
 }
 
 .card-item-title {
-  font-size: 18px;
-  font-weight: bold;
-  padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
 }
 
 .card-item-text {
-  padding: 10px;
+    padding: 10px;
 }
 
 /* 自前のテーブルをgrid.jsと同じような見た目にするための定義 start */
 .table-container {
-	overflow: hidden;
-	display: inline-block;
-	padding: 2px;
-	color: #000;
-	position: relative;
-	z-index: 0;
+    overflow: hidden;
+    display: inline-block;
+    padding: 2px;
+    color: #000;
+    position: relative;
+    z-index: 0;
 }
 
 .table-container-tr {
@@ -185,20 +193,21 @@ li#siteList div {
 }
 
 table.grid-table {
-	width: 100%;
-	max-width: 100%;
-	border-collapse: collapse;
-	text-align: left;
-	display: table;
-	margin: 0;
-	padding: 0;
-	overflow: auto;
-	table-layout: fixed;
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    display: table;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    table-layout: fixed;
 }
+
 /* 自前のテーブルをgrid.jsと同じような見た目にするための定義 end */
 
 .grid-cell {
-    word-break:break-word;
+    word-break: break-word;
 }
 
 .grid-card-read {
@@ -210,24 +219,27 @@ table.grid-table {
 .toggle {
     display: none;
 }
-.Label {		/*タイトル*/
+
+.Label { /*タイトル*/
     padding: 1em;
     display: block;
     color: #fff;
-    background:#019ac6;
+    background: #019ac6;
 }
-.Label::before{		/*タイトル横の矢印*/
-    content:"";
+
+.Label::before { /*タイトル横の矢印*/
+    content: "";
     width: 6px;
     height: 6px;
     border-top: 2px solid #fff;
     border-right: 2px solid #fff;
     -webkit-transform: rotate(45deg);
     position: absolute;
-    top:calc( 50% - 3px );
+    top: calc(50% - 3px);
     right: 20px;
     transform: rotate(135deg);
 }
+
 .Label,
 .accordionContent {
     -webkit-backface-visibility: hidden;
@@ -235,16 +247,25 @@ table.grid-table {
     transform: translateZ(0);
     transition: all 0.3s;
 }
-.accordionContent {		/*本文*/
+
+.accordionContent { /*本文*/
     height: 0;
-    margin-bottom:2px;
+    margin-bottom: 2px;
     overflow: hidden;
 }
-.toggle:checked + .Label + .accordionContent {	/*開閉時*/
+
+.toggle:checked + .Label + .accordionContent { /*開閉時*/
     height: auto;
     transition: all .3s;
 }
+
 .toggle:checked + .Label::before {
     transform: rotate(-45deg) !important;
 }
+
 /* accordion end */
+.icon-disabled {
+    color: #9ca3af; /* 薄いグレー */
+    opacity: 0.6; /* さらに控えめに */
+    cursor: not-allowed;
+}
