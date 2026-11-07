@@ -188,7 +188,7 @@ class SiteFeedControllerTest {
 
         siteFeedController.addSiteFeed(testDto);
 
-        verify(siteRepository).insertEntity(any());
+        verify(rssBridgeService).isRssBridgeDomain(any());
     }
 
     @Test
