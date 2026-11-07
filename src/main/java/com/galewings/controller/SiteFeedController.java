@@ -199,12 +199,11 @@ public class SiteFeedController {
      */
     private String updateFeed(Site site) {
 
-        try {
-            HttpClient http = HttpClient.newBuilder()
-                    .connectTimeout(Duration.ofSeconds(10))
-                    .followRedirects(HttpClient.Redirect.NORMAL)
-                    .build();
-
+        try (HttpClient http = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(10))
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build()) {
+            
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(site.xmlUrl))
                     .timeout(Duration.ofSeconds(20))
@@ -217,9 +216,7 @@ public class SiteFeedController {
 
             try (var in = response.body()) {
                 SyndFeed feed = new SyndFeedInput().build(new XmlReader(in));
-                feed.getEntries().stream().filter(syndEntry -> {
-                            return !feedRepository.existFeed(syndEntry.getLink());
-                        })
+                feed.getEntries().stream().filter(syndEntry -> !feedRepository.existFeed(syndEntry.getLink()))
                         .map(syndEntry -> feedFactoryService.create(syndEntry, site.uuid))
                         .filter(f -> gwDateService.isRetainedDateAfter(f.publishedDate))
                         .forEach(f -> {
@@ -254,11 +251,10 @@ public class SiteFeedController {
      * サイトとそのサイトのRSS情報をDBに登録する
      *
      * @param dto 追加情報
-     * @throws IOException 入出力失敗
      */
     @PostMapping(value = "/addFeed")
     @Transactional
-    public void addSiteFeed(@RequestBody AddFeedDto dto) throws IOException {
+    public void addSiteFeed(@RequestBody AddFeedDto dto) {
         String[] schemes = {"http", "https"};
         UrlValidator urlValidator = new UrlValidator(schemes, UrlValidator.ALLOW_LOCAL_URLS);
         dto.setLink(StringUtils.trimToEmpty(dto.getLink()));
