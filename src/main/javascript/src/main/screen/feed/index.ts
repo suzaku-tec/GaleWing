@@ -1,31 +1,48 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // fortawesome
-import { library, dom } from '@fortawesome/fontawesome-svg-core';
+import { dom, library } from '@fortawesome/fontawesome-svg-core';
 import {
-  faBars,
-  faCheck,
-  faSyncAlt,
-  faPlus,
-  faWrench,
-  faTh,
-  faIdCard,
-  faCogs,
-  faStepBackward,
-  faBookmark,
-  faPlayCircle,
-  faBackward,
-  faSearch,
-  faListCheck,
-  faLeftLong,
-  faRightLong,
-  faAnglesRight,
-  faChevronRight,
   faAnglesLeft,
+  faAnglesRight,
+  faBackward,
+  faBars,
+  faBookmark,
+  faCheck,
   faChevronLeft,
-} from '@fortawesome/free-solid-svg-icons/index';
+  faChevronRight,
+  faCogs,
+  faIdCard,
+  faListCheck,
+  faPlayCircle,
+  faPlus,
+  faSearch,
+  faStepBackward,
+  faSyncAlt,
+  faTh,
+  faWrench,
+} from '@fortawesome/free-solid-svg-icons';
 
 import { faYoutube } from '@fortawesome/free-brands-svg-icons';
+import 'gridjs/dist/theme/mermaid.css';
+
+import hideModifier from '@popperjs/core/lib/modifiers/hide';
+
+import axios from 'axios';
+
+import ElementEvent from '../../events/elementEvent';
+import AddSiteEvent from '../../events/modal/addSiteEvent';
+import ExportOpml from '../../events/exportOpml';
+import ImportOpml from '../../events/modal/importOpml';
+import GridLayoutChgEvent from '../../events/gridLayoutChgEvent';
+
+import PlaySound from '../../events/playSound';
+import ReadDispListEvent from '../../events/readDispListEvent';
+import GaleWingGrid from './galeWingGrid';
+import TitleListEvent from '../../events/markdown/titleListEvent';
+import AxiosSetting from '../../setting/AxiosSetting';
+import ReadAllShowFeed from '../../events/readAllShowFeed';
+import UpdateFeed from '../../events/updateFeed';
 
 library.add(
   faBars,
@@ -43,34 +60,12 @@ library.add(
   faYoutube,
   faSearch,
   faListCheck,
-  faLeftLong,
-  faRightLong,
   faAnglesRight,
   faChevronRight,
   faAnglesLeft,
   faChevronLeft,
 );
 dom.watch();
-
-import 'gridjs/dist/theme/mermaid.css';
-
-import hideModifier from '@popperjs/core/lib/modifiers/hide';
-
-import axios from 'axios';
-
-import ElementEvent from '../../events/elementEvent';
-import AddSiteEvent from '../../events/modal/addSiteEvent';
-import ExportOpml from '../../events/exportOpml';
-import ImportOpml from '../../events/modal/importOpml';
-import GridLayoutChgEvent from '../../events/gridLayoutChgEvent';
-
-import PlaySound from '../../events/playSound';
-import TranslationEnJp from '../../events/translationEnJpEvent';
-import ReadDispListEvent from '../../events/readDispListEvent';
-import GaleWingGrid from './galeWingGrid';
-import TitleListEvent from '../../events/markdown/titleListEvent';
-import AxiosSetting from '../../setting/AxiosSetting';
-import AllTitleGetEvent from '../../events/markdown/allTitleGetEvent';
 
 window.onload = async () => {
   // サイドバー初期化
@@ -95,11 +90,6 @@ function setupEvent() {
     document.getElementById('gridLayoutItem'),
   );
 
-  new ElementEvent(new TranslationEnJp()).setup(
-    'click',
-    document.getElementById('translationEnJp'),
-  );
-
   new ElementEvent(new ReadDispListEvent()).setup('click', document.getElementById('checkList'));
 
   new ElementEvent(new TitleListEvent()).setup('click', document.getElementById('mdTitleList'));
@@ -107,28 +97,22 @@ function setupEvent() {
   const ps = setupPlayer();
   new ElementEvent(ps).setup('click', document.getElementById('playTitle'));
 
-  document.getElementById('subPrev')?.addEventListener('click', () => {
-    (<HTMLElement>document.querySelector('button[title="Previous"]')).click();
-  });
-  document.getElementById('subNext')?.addEventListener('click', () => {
-    (<HTMLElement>document.querySelector('button[title="Next"]')).click();
-  });
+  new ElementEvent(new ReadAllShowFeed()).setup('click', document.getElementById('readAllShowFeed'));
 
-  new ElementEvent(new AllTitleGetEvent()).setup('click', document.getElementById('mdAllTitleList'));
+  const uuid = new URLSearchParams(window.location.search).get("uuid");
+  new ElementEvent(new UpdateFeed(uuid, GaleWingGrid.getInstance().gridApi)).setup('click', document.getElementById('updateFeed'));
 }
 
 function setupPlayer() {
   const ps = new PlaySound();
-  ps.setTalking(() => {
+  ps.setTalking(async () => {
     const rssLinks = document.getElementsByClassName('rss-link');
 
-    (async () => {
-      await Array.from(rssLinks).reduce((promise, rssLink) => {
-        return promise.then(async () => {
-          await ps.genAudio(rssLink.textContent);
-        });
-      }, Promise.resolve());
-    })();
+    await Array.from(rssLinks).reduce((promise, rssLink) => {
+      return promise.then(async () => {
+        await ps.genAudio(rssLink.textContent);
+      });
+    }, Promise.resolve());
   });
 
   return ps;
