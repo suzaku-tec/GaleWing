@@ -1,14 +1,8 @@
 import axios from 'axios';
 import { IElementEvent } from './elementEvent';
-import Grid from 'gridjs';
 import { getSite } from '../screen/siteList';
 
 export default class ReadAllShowFeed implements IElementEvent {
-  private grid: Grid;
-
-  constructor(grid: Grid) {
-    this.grid = grid;
-  }
 
   execute(): void {
     const element = <HTMLInputElement>document.getElementById('identifier');
@@ -20,7 +14,7 @@ export default class ReadAllShowFeed implements IElementEvent {
       .post(uri.origin + '/readAllShowFeed', {
         identifier: identifier,
       })
-      .catch((error) => { })
+      .catch((error) => console.error(error))
       .finally(() => {
         const site = getSite(identifier);
         if (site && site.next) {
