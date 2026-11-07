@@ -12,7 +12,6 @@ import com.galewings.repository.SiteRepository;
 import com.galewings.repository.ViewsRepository;
 import com.galewings.service.*;
 import com.galewings.service.async.TitleTagAnalysisAsyncService;
-import com.galewings.task.AutoUpdateTask;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
@@ -28,7 +27,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -46,9 +44,6 @@ class SiteFeedControllerTest {
 
     @Mock
     private URLService urlService;
-
-    @Mock
-    private AutoUpdateTask autoUpdateTask;
 
     @Mock
     private GoogleAlertService googleAlertService;
@@ -91,7 +86,7 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testReadedFeed() throws UnsupportedEncodingException, JsonProcessingException {
+    void testReadedFeed() throws JsonProcessingException {
         when(siteRepository.getSiteFeedCount(anyString())).thenReturn(
                 List.of(new SiteFeedCount()));
         when(feedRepository.updateReadFeed(anyString())).thenReturn(0);
@@ -164,7 +159,7 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testAddSiteFeedError() throws IOException {
+    void testAddSiteFeedError() {
         when(siteRepository.insertEntity(any())).thenReturn(0);
 
         try {
@@ -176,7 +171,7 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testAddSiteFeed() throws IOException {
+    void testAddSiteFeed() {
         when(siteRepository.insertEntity(any())).thenReturn(0);
         when(urlService.getUrlDomain(anyString())).thenReturn("http://127.0.0.1");
         when(rssBridgeService.isRssBridgeDomain(anyString())).thenReturn(true);
@@ -190,7 +185,7 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testAddSiteFeed_rdf() throws IOException {
+    void testAddSiteFeed_rdf() {
         when(siteRepository.insertEntity(any())).thenReturn(0);
         when(rssBridgeService.isRssBridgeDomain(anyString())).thenReturn(false);
 
@@ -203,7 +198,7 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testAddSiteFeed_rss() throws IOException {
+    void testAddSiteFeed_rss() {
         when(siteRepository.insertEntity(any())).thenReturn(0);
         when(rssBridgeService.isRssBridgeDomain(anyString())).thenReturn(false);
 
@@ -216,7 +211,7 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testAddSiteFeed_rsslist() throws IOException {
+    void testAddSiteFeed_rsslist() {
         when(siteRepository.insertEntity(any())).thenReturn(0);
         when(rssBridgeService.isRssBridgeDomain(anyString())).thenReturn(false);
 
@@ -327,7 +322,7 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testAddSiteFeed_NewSiteAndEntries_FullCoverage() throws IOException {
+    void testAddSiteFeed_NewSiteAndEntries_FullCoverage() {
         // 1. 準備：判定をバイパスするために .rss を使用
         String targetUrl = "https://example.com/feed.rss";
         AddFeedDto dto = new AddFeedDto();
@@ -352,9 +347,8 @@ class SiteFeedControllerTest {
         when(feedFactoryService.create(any(), any())).thenReturn(new Feed());
 
         // 2. MockedConstruction で SyndFeedInput と XmlReader をカバー
-        try (MockedConstruction<XmlReader> xmlMock = mockConstruction(XmlReader.class);
-             MockedConstruction<SyndFeedInput> ignored = mockConstruction(SyndFeedInput.class,
-                     (mock, context) -> when(mock.build(any(XmlReader.class))).thenReturn(mockSyndFeed))) {
+        try (MockedConstruction<SyndFeedInput> ignored = mockConstruction(SyndFeedInput.class,
+                (mock, context) -> when(mock.build(any(XmlReader.class))).thenReturn(mockSyndFeed))) {
 
             // 3. 実行
             siteFeedController.addSiteFeed(dto);
@@ -367,7 +361,7 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testAddSiteFeed_AlreadyExists() throws IOException {
+    void testAddSiteFeed_AlreadyExists() {
         // 準備
         String targetUrl = "http://example.com/rss.xml";
         AddFeedDto dto = new AddFeedDto();
