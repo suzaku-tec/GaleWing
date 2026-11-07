@@ -32,6 +32,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -61,47 +62,44 @@ public class SiteFeedController {
     /**
      * SiteRepository
      */
-    private final SiteRepository siteRepository;
+    @Autowired
+    private SiteRepository siteRepository;
 
     /**
      * FeedRepository
      */
-    private final FeedRepository feedRepository;
+    @Autowired
+    private FeedRepository feedRepository;
 
-    private final URLService urlService;
+    @Autowired
+    private URLService urlService;
 
-    private final AutoUpdateTask autoUpdateTask;
+    @Autowired
+    private AutoUpdateTask autoUpdateTask;
 
-    private final GwDateService gwDateService;
+    @Autowired
+    private GwDateService gwDateService;
 
-    private final GoogleAlertService googleAlertService;
+    @Autowired
+    private GoogleAlertService googleAlertService;
 
-    private final ViewsRepository viewsRepository;
+    @Autowired
+    private ViewsRepository viewsRepository;
 
-    private final QueueUrlReadAsyncService queueUrlReadAsyncService;
+    @Autowired
+    private QueueUrlReadAsyncService queueUrlReadAsyncService;
 
-    private final TitleTagAnalysisAsyncService titleTagAnalysAsyncService;
+    @Autowired
+    private TitleTagAnalysisAsyncService titleTagAnalysAsyncService;
 
-    private final FeedFactoryService feedFactoryService;
+    @Autowired
+    private FeedFactoryService feedFactoryService;
 
-    private final FunctionCtrlRepository functionCtrlRepository;
+    @Autowired
+    private FunctionCtrlRepository functionCtrlRepository;
 
-    private final RssBridgeService rssBridgeService;
-
-    public SiteFeedController(SiteRepository siteRepository, FeedRepository feedRepository, URLService urlService, AutoUpdateTask autoUpdateTask, GwDateService gwDateService, GoogleAlertService googleAlertService, ViewsRepository viewsRepository, QueueUrlReadAsyncService queueUrlReadAsyncService, TitleTagAnalysisAsyncService titleTagAnalysAsyncService, FeedFactoryService feedFactoryService, FunctionCtrlRepository functionCtrlRepository, RssBridgeService rssBridgeService) {
-        this.siteRepository = siteRepository;
-        this.feedRepository = feedRepository;
-        this.urlService = urlService;
-        this.autoUpdateTask = autoUpdateTask;
-        this.gwDateService = gwDateService;
-        this.googleAlertService = googleAlertService;
-        this.viewsRepository = viewsRepository;
-        this.queueUrlReadAsyncService = queueUrlReadAsyncService;
-        this.titleTagAnalysAsyncService = titleTagAnalysAsyncService;
-        this.feedFactoryService = feedFactoryService;
-        this.functionCtrlRepository = functionCtrlRepository;
-        this.rssBridgeService = rssBridgeService;
-    }
+    @Autowired
+    private RssBridgeService rssBridgeService;
 
     /**
      * 対象サイトのフィードを取得
@@ -203,7 +201,7 @@ public class SiteFeedController {
                 .connectTimeout(Duration.ofSeconds(10))
                 .followRedirects(HttpClient.Redirect.NORMAL)
                 .build()) {
-            
+
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(site.xmlUrl))
                     .timeout(Duration.ofSeconds(20))
