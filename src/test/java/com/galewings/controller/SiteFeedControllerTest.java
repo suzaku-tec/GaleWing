@@ -101,7 +101,7 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testUpdateFeed() throws FeedException, IOException {
+    void testUpdateFeed() throws FeedException, IOException, InterruptedException {
         when(siteRepository.getSite(anyString())).thenReturn(new Site());
         when(siteRepository.getAllSite()).thenReturn(List.of(new Site()));
         when(siteRepository.getSiteFeedCount()).thenReturn(
@@ -118,7 +118,7 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testUpdateFeed_siteUpdate() throws FeedException, IOException {
+    void testUpdateFeed_siteUpdate() throws FeedException, IOException, InterruptedException {
         List<Feed> feeds = List.of(new Feed());
         List<SiteFeedCount> siteFeedCounts = List.of(new SiteFeedCount());
         Site site = new Site();
@@ -187,6 +187,8 @@ class SiteFeedControllerTest {
         testDto.setLink("http://127.0.0.1");
 
         siteFeedController.addSiteFeed(testDto);
+
+        verify(siteRepository).insertEntity(any());
     }
 
     @Test
