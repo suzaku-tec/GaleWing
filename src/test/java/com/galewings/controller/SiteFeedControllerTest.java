@@ -136,9 +136,7 @@ class SiteFeedControllerTest {
                     // XmlReaderモックは不要な処理をスキップ
                 });
              MockedConstruction<SyndFeedInput> ignored = mockConstruction(SyndFeedInput.class,
-                     (mock, context) -> {
-                         when(mock.build(any(XmlReader.class))).thenReturn(mockFeed);
-                     });
+                     (mock, context) -> when(mock.build(any(XmlReader.class))).thenReturn(mockFeed));
              MockedStatic<Jsoup> jsoupMock = Mockito.mockStatic(Jsoup.class, Mockito.CALLS_REAL_METHODS)) {
             when(mockFeed.getEntries()).thenReturn(List.of(entry)); // List<SyndEntry> testEntries準備
             when(siteRepository.getSite(anyString())).thenReturn(site);
@@ -356,9 +354,7 @@ class SiteFeedControllerTest {
         // 2. MockedConstruction で SyndFeedInput と XmlReader をカバー
         try (MockedConstruction<XmlReader> xmlMock = mockConstruction(XmlReader.class);
              MockedConstruction<SyndFeedInput> ignored = mockConstruction(SyndFeedInput.class,
-                     (mock, context) -> {
-                         when(mock.build(any(XmlReader.class))).thenReturn(mockSyndFeed);
-                     })) {
+                     (mock, context) -> when(mock.build(any(XmlReader.class))).thenReturn(mockSyndFeed))) {
 
             // 3. 実行
             siteFeedController.addSiteFeed(dto);
@@ -384,9 +380,7 @@ class SiteFeedControllerTest {
         when(siteRepository.countSiteForHtmlUrl("http://example.com/home")).thenReturn(1);
 
         try (MockedConstruction<SyndFeedInput> ignored = mockConstruction(SyndFeedInput.class,
-                (mock, context) -> {
-                    when(mock.build(any(XmlReader.class))).thenReturn(mockSyndFeed);
-                })) {
+                (mock, context) -> when(mock.build(any(XmlReader.class))).thenReturn(mockSyndFeed))) {
 
             // 実行
             siteFeedController.addSiteFeed(dto);
