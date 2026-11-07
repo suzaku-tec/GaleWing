@@ -37,7 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
@@ -138,11 +137,11 @@ public class SiteFeedController {
      *
      * @param dto 既読にするページのリンク情報
      * @return サイトの未読フィード件数リスト
-     * @throws UnsupportedEncodingException エンコード失敗例外
+     * @throws JsonProcessingException JSON変換失敗時のエラー
      */
     @PostMapping(value = "/read")
     public String readFeed(@RequestBody ReadDto dto)
-            throws UnsupportedEncodingException, JsonProcessingException {
+            throws JsonProcessingException {
         feedRepository.updateReadFeed(dto.getLink());
 
         List<SiteFeedCount> siteFeedCounts = siteRepository.getSiteFeedCount(dto.getLink());
@@ -283,9 +282,7 @@ public class SiteFeedController {
 
     @PostMapping(value = "/readListFeed", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void readListFeed(@RequestBody ReadListFeedDto readListFeedDto) {
-        readListFeedDto.urls.forEach(url -> {
-            feedRepository.insertReadListQueue(url);
-        });
+        readListFeedDto.urls.forEach(feedRepository::insertReadListQueue);
 
         // 非同期でURL既読処理を流す
         queueUrlReadAsyncService.asyncMethod();
