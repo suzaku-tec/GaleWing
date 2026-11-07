@@ -1,15 +1,15 @@
-import Grid from 'gridjs';
 import axios from 'axios';
 import { IElementEvent } from './elementEvent';
 
 import UpdateMessageEvent from './modal/updateMessageEvent';
+import { GridApi } from 'ag-grid-community';
 export default class UpdateFeed implements IElementEvent {
-  uuidElementId: string;
-  grid: Grid;
+  uuid: string;
+  gridApi: GridApi;
 
-  constructor(uuidElementId: string, grid: Grid) {
-    this.uuidElementId = uuidElementId;
-    this.grid = grid;
+  constructor(uuid: string, gridApi: GridApi) {
+    this.uuid = uuid;
+    this.gridApi = gridApi;
   }
 
   execute() {
@@ -18,15 +18,13 @@ export default class UpdateFeed implements IElementEvent {
 
     const uri = new URL(window.location.href);
 
-    const uuid = (<HTMLInputElement>document.getElementById(this.uuidElementId)).value;
-
     console.log('execute', uri);
     axios
       .post(uri.origin + '/feed/update', {
-        uuid: uuid,
+        uuid: this.uuid,
       })
       .then((response) => {
-        console.log(response);
+        console.log('response:', response);
 
         // 未読数の更新
         response.data.siteFeedCounts.forEach((element: any) => {
@@ -35,11 +33,8 @@ export default class UpdateFeed implements IElementEvent {
         });
 
         // grid更新
-        this.grid
-          .updateConfig({
-            data: response.data.feeds,
-          })
-          .forceRender();
+        this.gridApi!.setGridOption('rowData', response.data);
+
       })
       .catch((error) => {
         console.log(error);

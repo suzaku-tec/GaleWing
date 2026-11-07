@@ -37,7 +37,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -159,7 +165,7 @@ public class SiteFeedController {
      * @throws FeedException フィード読み込み失敗
      */
     @PostMapping(value = "/feed/update")
-    public String updateFeed(@RequestBody UpdateFeedDto dto) throws IOException, FeedException {
+    public String updateFeed(@RequestBody UpdateFeedDto dto) throws IOException, FeedException, InterruptedException {
 
         if (Strings.isNullOrEmpty(dto.getUuid())) {
             autoUpdateTask.allUpdate();
@@ -193,36 +199,53 @@ public class SiteFeedController {
      * @throws FeedException フィード操作例外
      * @throws IOException   入力例外
      */
-    private String updateFeed(Site site) throws FeedException, IOException {
-        List<Feed> feeds;
-        SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(site.xmlUrl)));
-        feed.getEntries().stream().filter(syndEntry -> {
-                    return !feedRepository.existFeed(syndEntry.getLink());
-                })
-                .map(syndEntry -> feedFactoryService.create(syndEntry, site.uuid))
-                .filter(f -> gwDateService.isRetainedDateAfter(f.publishedDate))
-                .forEach(f -> {
-                    try {
-                        titleTagAnalysAsyncService.asyncMethod(site, f);
-                    } catch (JsonProcessingException e) {
-                        log.error("json解析失敗", e);
-                    }
-                    feedRepository.insertEntity(f);
-                });
+    private String updateFeed(Site site) throws FeedException, IOException, InterruptedException {
 
-        if (!feed.getEntries().isEmpty()) {
-            siteRepository.updateFeedLastUpdateDate(site.uuid, gwDateService.now());
+        HttpClient http = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(10))
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(site.xmlUrl))
+                .timeout(Duration.ofSeconds(20))
+                .header("User-Agent", "YourAppName/1.0")
+                .GET()
+                .build();
+
+        HttpResponse<InputStream> response =
+                http.send(request, HttpResponse.BodyHandlers.ofInputStream());
+
+        try (var in = response.body()) {
+            SyndFeed feed = new SyndFeedInput().build(new XmlReader(in));
+            feed.getEntries().stream().filter(syndEntry -> {
+                        return !feedRepository.existFeed(syndEntry.getLink());
+                    })
+                    .map(syndEntry -> feedFactoryService.create(syndEntry, site.uuid))
+                    .filter(f -> gwDateService.isRetainedDateAfter(f.publishedDate))
+                    .forEach(f -> {
+                        try {
+                            titleTagAnalysAsyncService.asyncMethod(site, f);
+                        } catch (JsonProcessingException e) {
+                            log.error("json解析失敗", e);
+                        }
+                        feedRepository.insertEntity(f);
+                    });
+
+            if (!feed.getEntries().isEmpty()) {
+                siteRepository.updateFeedLastUpdateDate(site.uuid, gwDateService.now());
+            }
+
+            List<Feed> feeds = feedRepository.getFeed(site.uuid);
+
+            List<SiteFeedCount> siteFeedCounts = siteRepository.getSiteFeedCount();
+            FeedUpdate feedUpdate = new FeedUpdate();
+            feedUpdate.feeds = feeds;
+            feedUpdate.siteFeedCounts = siteFeedCounts;
+
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(feedUpdate);
         }
-
-        feeds = feedRepository.getFeed(site.uuid);
-
-        List<SiteFeedCount> siteFeedCounts = siteRepository.getSiteFeedCount();
-        FeedUpdate feedUpdate = new FeedUpdate();
-        feedUpdate.feeds = feeds;
-        feedUpdate.siteFeedCounts = siteFeedCounts;
-
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(feedUpdate);
     }
 
     /**
