@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="Description" content="Enter your description here"/>
-    <script src="js/main.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <script th:src="@{/js/main.js}"></script>
+    <link rel="stylesheet" th:href="@{/style.css}">
     <title>GalwWing</title>
 
 </head>
@@ -21,7 +21,7 @@
         <nav class="sidebar col-md-3" id="sidemenu">
             <section class="accordion">
                 <!-- サイドメニュー(Site List) -->
-                <div th:replace="linkMenu"/>
+                <div th:replace="linkMenu"></div>
 
                 <!-- サイドメニュー(View List) -->
                 <input id="view-block" type="checkbox" class="toggle" checked/>
@@ -184,11 +184,11 @@
                             <div style="display: flex; gap: 8px; align-items: center;">
                                 <i id="header-firstBtn" class="fa-solid fa-angles-left" style="cursor: pointer;"></i>
                                 <i id="header-prevBtn" class="fa-solid fa-chevron-left"
-                                   style="cursor: pointer; margin: 0px 20px;"></i>
+                                   style="cursor: pointer; margin: 0 20px;"></i>
                                 Page <input type="text" id="header-nowPage" size="3" aria-label="現在ページ"/>
                                 <span id="header-pageInfo" style="font-size: 14px; margin: 0 8px;"> of 1 ページ</span>
                                 <i id="header-nextBtn" class="fa-solid fa-chevron-right"
-                                   style="cursor: pointer; margin: 0px 20px;"></i>
+                                   style="cursor: pointer; margin: 0 20px;"></i>
                                 <i id="header-lastBtn" class="fa-solid fa-angles-right" style="cursor: pointer;"></i>
                             </div>
                         </div>
@@ -235,7 +235,7 @@
 </body>
 
 <!-- Modal -->
-<div th:replace="modal/modalDialog"/>
+<div th:replace="modal/modalDialog"></div>
 
 <script src="/js/shortcutter.js"></script>
 </html>
