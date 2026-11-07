@@ -30,9 +30,9 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,53 +48,55 @@ import java.util.stream.Collectors;
 /**
  * SiteFeedController
  */
-@Controller
+@RestController
 public class SiteFeedController {
+
+    private static final Logger log = LoggerFactory.getLogger(SiteFeedController.class);
 
     /**
      * SiteRepository
      */
-    @Autowired
-    private SiteRepository siteRepository;
+    private final SiteRepository siteRepository;
 
     /**
      * FeedRepository
      */
-    @Autowired
-    private FeedRepository feedRepository;
+    private final FeedRepository feedRepository;
 
-    @Autowired
-    private URLService urlService;
+    private final URLService urlService;
 
-    @Autowired
-    private AutoUpdateTask autoUpdateTask;
+    private final AutoUpdateTask autoUpdateTask;
 
-    @Autowired
-    private GwDateService gwDateService;
+    private final GwDateService gwDateService;
 
-    @Autowired
-    private MachineLearningService machineLearningService;
+    private final GoogleAlertService googleAlertService;
 
-    @Autowired
-    private GoogleAlertService googleAlertService;
+    private final ViewsRepository viewsRepository;
 
-    @Autowired
-    private ViewsRepository viewsRepository;
+    private final QueueUrlReadAsyncService queueUrlReadAsyncService;
 
-    @Autowired
-    private QueueUrlReadAsyncService queueUrlReadAsyncService;
+    private final TitleTagAnalysisAsyncService titleTagAnalysAsyncService;
 
-    @Autowired
-    private TitleTagAnalysisAsyncService titleTagAnalysAsyncService;
+    private final FeedFactoryService feedFactoryService;
 
-    @Autowired
-    private FeedFactoryService feedFactoryService;
+    private final FunctionCtrlRepository functionCtrlRepository;
 
-    @Autowired
-    private FunctionCtrlRepository functionCtrlRepository;
+    private final RssBridgeService rssBridgeService;
 
-    @Autowired
-    private RssBridgeService rssBridgeService;
+    public SiteFeedController(SiteRepository siteRepository, FeedRepository feedRepository, URLService urlService, AutoUpdateTask autoUpdateTask, GwDateService gwDateService, GoogleAlertService googleAlertService, ViewsRepository viewsRepository, QueueUrlReadAsyncService queueUrlReadAsyncService, TitleTagAnalysisAsyncService titleTagAnalysAsyncService, FeedFactoryService feedFactoryService, FunctionCtrlRepository functionCtrlRepository, RssBridgeService rssBridgeService) {
+        this.siteRepository = siteRepository;
+        this.feedRepository = feedRepository;
+        this.urlService = urlService;
+        this.autoUpdateTask = autoUpdateTask;
+        this.gwDateService = gwDateService;
+        this.googleAlertService = googleAlertService;
+        this.viewsRepository = viewsRepository;
+        this.queueUrlReadAsyncService = queueUrlReadAsyncService;
+        this.titleTagAnalysAsyncService = titleTagAnalysAsyncService;
+        this.feedFactoryService = feedFactoryService;
+        this.functionCtrlRepository = functionCtrlRepository;
+        this.rssBridgeService = rssBridgeService;
+    }
 
     /**
      * 対象サイトのフィードを取得
@@ -104,7 +106,6 @@ public class SiteFeedController {
      * @throws JsonProcessingException JSON変換失敗
      */
     @GetMapping("/feedlist")
-    @ResponseBody
     public List<Feed> getFeedList(@RequestParam(value = "uuid", required = false) String uuid)
             throws JsonProcessingException {
 
@@ -140,15 +141,11 @@ public class SiteFeedController {
      * @throws UnsupportedEncodingException エンコード失敗例外
      */
     @PostMapping(value = "/read")
-    @ResponseBody
     public String readFeed(@RequestBody ReadDto dto)
             throws UnsupportedEncodingException, JsonProcessingException {
         feedRepository.updateReadFeed(dto.getLink());
 
         List<SiteFeedCount> siteFeedCounts = siteRepository.getSiteFeedCount(dto.getLink());
-
-        // 機械学習用のデータ出力
-//        machineLearningService.createArff(dto.getLink());
 
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(siteFeedCounts);
@@ -163,7 +160,6 @@ public class SiteFeedController {
      * @throws FeedException フィード読み込み失敗
      */
     @PostMapping(value = "/feed/update")
-    @ResponseBody
     public String updateFeed(@RequestBody UpdateFeedDto dto) throws IOException, FeedException {
 
         if (Strings.isNullOrEmpty(dto.getUuid())) {
@@ -195,8 +191,8 @@ public class SiteFeedController {
      *
      * @param site サイト情報
      * @return フィード情報
-     * @throws FeedException
-     * @throws IOException
+     * @throws FeedException フィード操作例外
+     * @throws IOException   入力例外
      */
     private String updateFeed(Site site) throws FeedException, IOException {
         List<Feed> feeds;
@@ -210,7 +206,7 @@ public class SiteFeedController {
                     try {
                         titleTagAnalysAsyncService.asyncMethod(site, f);
                     } catch (JsonProcessingException e) {
-                        e.printStackTrace();
+                        log.error("json解析失敗", e);
                     }
                     feedRepository.insertEntity(f);
                 });
@@ -237,7 +233,6 @@ public class SiteFeedController {
      * @throws IOException 入出力失敗
      */
     @PostMapping(value = "/addFeed")
-    @ResponseBody
     @Transactional
     public void addSiteFeed(@RequestBody AddFeedDto dto) throws IOException {
         String[] schemes = {"http", "https"};
@@ -259,15 +254,12 @@ public class SiteFeedController {
         }
 
         List<String> rssUrlList = searchRssUrlList(dto.getLink());
-        if (0 < rssUrlList.size()) {
-            rssUrlList.stream().forEach(url -> {
-                addSiteAndFeed(url);
-            });
+        if (!rssUrlList.isEmpty()) {
+            rssUrlList.forEach(this::addSiteAndFeed);
         }
     }
 
     @PostMapping(value = "/readAllShowFeed", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     public String readAllShowFeed(
             @RequestBody ReadAllShowFeedDto readAllShowFeedDto)
             throws JsonProcessingException {
@@ -284,13 +276,12 @@ public class SiteFeedController {
                     .forEach(site -> feedRepository.updateSiteFeedRead(site.uuid));
 
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(Collections.EMPTY_LIST);
+            return mapper.writeValueAsString(Collections.emptyList());
         }
 
     }
 
     @PostMapping(value = "/readListFeed", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     public void readListFeed(@RequestBody ReadListFeedDto readListFeedDto) {
         readListFeedDto.urls.forEach(url -> {
             feedRepository.insertReadListQueue(url);
@@ -323,7 +314,7 @@ public class SiteFeedController {
             Elements elements = document.select(
                     "link[type*='atom+xml'],link[type*='rss+xml'],a[href^='/'],a[href^='" + domain + "']");
 
-            if (0 < elements.size()) {
+            if (!elements.isEmpty()) {
                 return elements.stream().map(element -> {
                             if ("link".equals(StringUtils.toRootLowerCase(element.tagName()))) {
 
@@ -338,14 +329,14 @@ public class SiteFeedController {
                                 return StringUtils.EMPTY;
                             }
                         }).filter(StringUtils::isNoneBlank)
-                        .map(url -> urlService.fixUrl(domain, url)).filter(opt -> opt.isPresent())
-                        .map(opt -> opt.get()).collect(
+                        .map(url -> urlService.fixUrl(domain, url)).filter(Optional::isPresent)
+                        .map(Optional::get).collect(
                                 Collectors.toList());
             } else {
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             }
         } catch (IOException e) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 
@@ -394,8 +385,7 @@ public class SiteFeedController {
                         .forEach(feedRepository::insertEntity);
             });
         } catch (Exception e) {
-            // 特に何もしない
-            e.printStackTrace();
+            log.error("サイトの追加に失敗", e);
         }
     }
 
@@ -425,8 +415,7 @@ public class SiteFeedController {
                         .forEach(feedRepository::insertEntity);
             });
         } catch (Exception e) {
-            // 特に何もしない
-            e.printStackTrace();
+            log.error("サイトの追加に失敗", e);
         }
     }
 
