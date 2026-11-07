@@ -126,12 +126,8 @@ class SiteFeedControllerTest {
         SyndFeed mockFeed = mock(SyndFeed.class);
         Feed f = new Feed();
         f.publishedDate = "2026-01-01T00:00:00Z";
-        try (MockedConstruction<XmlReader> xmlMock = mockConstruction(XmlReader.class,
-                (mock, context) -> {
-                    // XmlReaderモックは不要な処理をスキップ
-                });
-             MockedConstruction<SyndFeedInput> ignored = mockConstruction(SyndFeedInput.class,
-                     (mock, context) -> when(mock.build(any(XmlReader.class))).thenReturn(mockFeed));
+        try (MockedConstruction<SyndFeedInput> ignored = mockConstruction(SyndFeedInput.class,
+                (mock, context) -> when(mock.build(any(XmlReader.class))).thenReturn(mockFeed));
              MockedStatic<Jsoup> jsoupMock = Mockito.mockStatic(Jsoup.class, Mockito.CALLS_REAL_METHODS)) {
             when(mockFeed.getEntries()).thenReturn(List.of(entry)); // List<SyndEntry> testEntries準備
             when(siteRepository.getSite(anyString())).thenReturn(site);
