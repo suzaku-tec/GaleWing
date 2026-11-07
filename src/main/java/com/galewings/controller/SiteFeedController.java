@@ -280,7 +280,7 @@ public class SiteFeedController {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(resultList);
         } else {
-            viewsRepository.selectSiteList(readAllShowFeedDto.getIdentifier()).stream()
+            viewsRepository.selectSiteList(readAllShowFeedDto.getIdentifier())
                     .forEach(site -> feedRepository.updateSiteFeedRead(site.uuid));
 
             ObjectMapper mapper = new ObjectMapper();
