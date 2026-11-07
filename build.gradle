@@ -118,8 +118,8 @@ dependencies {
 //
 //    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
 //    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
-
-    implementation group: 'oauth.signpost', name: 'signpost-commonshttp4', version: '1.1'
+//
+//    implementation group: 'oauth.signpost', name: 'signpost-commonshttp4', version: '1.1'
 
     implementation group: 'commons-io', name: 'commons-io', version: '2.14.0'
 
