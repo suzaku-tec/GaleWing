@@ -15,10 +15,22 @@ public class FeedFetchService {
 
     private final RestClient restClient;
 
+    /**
+     * コンストラクタ
+     *
+     * @param restClient RESTアクセス
+     */
     public FeedFetchService(RestClient restClient) {
         this.restClient = restClient;
     }
 
+    /**
+     * フィード情報取得
+     *
+     * @param feedUrl 取得URL
+     * @return フィード情報
+     * @throws FeedException フィード取得失敗
+     */
     public SyndFeed fetchFeed(String feedUrl) throws FeedException {
         URI uri = URI.create(feedUrl);
 
@@ -32,6 +44,8 @@ public class FeedFetchService {
             }
 
             return new SyndFeedInput().build(new XmlReader(body));
+        } catch (FeedException e) {
+            throw e;
         } catch (Exception e) {
             throw new FeedException("Failed to fetch or parse feed: " + feedUrl, e);
         }
