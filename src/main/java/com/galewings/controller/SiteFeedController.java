@@ -28,6 +28,8 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -40,13 +42,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * SiteFeedController
  */
 @Controller
 public class SiteFeedController {
+
+    private static final Logger logger = LoggerFactory.getLogger(SiteFeedController.class);
 
     /**
      * SiteRepository
@@ -142,7 +147,7 @@ public class SiteFeedController {
     @PostMapping(value = "/read")
     @ResponseBody
     public String readFeed(@RequestBody ReadDto dto)
-            throws UnsupportedEncodingException, JsonProcessingException {
+            throws JsonProcessingException {
         feedRepository.updateReadFeed(dto.getLink());
 
         List<SiteFeedCount> siteFeedCounts = siteRepository.getSiteFeedCount(dto.getLink());
@@ -195,22 +200,20 @@ public class SiteFeedController {
      *
      * @param site サイト情報
      * @return フィード情報
-     * @throws FeedException
-     * @throws IOException
+     * @throws FeedException Feed操作失敗例外
+     * @throws IOException   入力例外
      */
     private String updateFeed(Site site) throws FeedException, IOException {
         List<Feed> feeds;
         SyndFeed feed = feedFetchService.fetchFeed(site.xmlUrl);
-        feed.getEntries().stream().filter(syndEntry -> {
-                    return !feedRepository.existFeed(syndEntry.getLink());
-                })
+        feed.getEntries().stream().filter(syndEntry -> !feedRepository.existFeed(syndEntry.getLink()))
                 .map(syndEntry -> feedFactoryService.create(syndEntry, site.uuid))
                 .filter(f -> gwDateService.isRetainedDateAfter(f.publishedDate))
                 .forEach(f -> {
                     try {
                         titleTagAnalysAsyncService.asyncMethod(site, f);
                     } catch (JsonProcessingException e) {
-                        e.printStackTrace();
+                        logger.error("JSON変換失敗", e);
                     }
                     feedRepository.insertEntity(f);
                 });
@@ -234,12 +237,11 @@ public class SiteFeedController {
      * サイトとそのサイトのRSS情報をDBに登録する
      *
      * @param dto 追加情報
-     * @throws IOException 入出力失敗
      */
     @PostMapping(value = "/addFeed")
     @ResponseBody
     @Transactional
-    public void addSiteFeed(@RequestBody AddFeedDto dto) throws IOException {
+    public void addSiteFeed(@RequestBody AddFeedDto dto) {
         String[] schemes = {"http", "https"};
         UrlValidator urlValidator = new UrlValidator(schemes, UrlValidator.ALLOW_LOCAL_URLS);
         dto.setLink(StringUtils.trimToEmpty(dto.getLink()));
@@ -259,10 +261,8 @@ public class SiteFeedController {
         }
 
         List<String> rssUrlList = searchRssUrlList(dto.getLink());
-        if (0 < rssUrlList.size()) {
-            rssUrlList.stream().forEach(url -> {
-                addSiteAndFeed(url);
-            });
+        if (!rssUrlList.isEmpty()) {
+            rssUrlList.forEach(this::addSiteAndFeed);
         }
     }
 
@@ -280,11 +280,11 @@ public class SiteFeedController {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(resultList);
         } else {
-            viewsRepository.selectSiteList(readAllShowFeedDto.getIdentifier()).stream()
+            viewsRepository.selectSiteList(readAllShowFeedDto.getIdentifier())
                     .forEach(site -> feedRepository.updateSiteFeedRead(site.uuid));
 
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(Collections.EMPTY_LIST);
+            return mapper.writeValueAsString(Collections.emptyList());
         }
 
     }
@@ -292,9 +292,7 @@ public class SiteFeedController {
     @PostMapping(value = "/readListFeed", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void readListFeed(@RequestBody ReadListFeedDto readListFeedDto) {
-        readListFeedDto.urls.forEach(url -> {
-            feedRepository.insertReadListQueue(url);
-        });
+        readListFeedDto.urls.forEach(url -> feedRepository.insertReadListQueue(url));
 
         // 非同期でURL既読処理を流す
         queueUrlReadAsyncService.asyncMethod();
@@ -323,7 +321,7 @@ public class SiteFeedController {
             Elements elements = document.select(
                     "link[type*='atom+xml'],link[type*='rss+xml'],a[href^='/'],a[href^='" + domain + "']");
 
-            if (0 < elements.size()) {
+            if (!elements.isEmpty()) {
                 return elements.stream().map(element -> {
                             if ("link".equals(StringUtils.toRootLowerCase(element.tagName()))) {
 
@@ -338,14 +336,14 @@ public class SiteFeedController {
                                 return StringUtils.EMPTY;
                             }
                         }).filter(StringUtils::isNoneBlank)
-                        .map(url -> urlService.fixUrl(domain, url)).filter(opt -> opt.isPresent())
-                        .map(opt -> opt.get()).collect(
-                                Collectors.toList());
+                        .map(url -> urlService.fixUrl(domain, url)).filter(Optional::isPresent)
+                        .map(Optional::get).collect(
+                                toList());
             } else {
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             }
         } catch (IOException e) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 

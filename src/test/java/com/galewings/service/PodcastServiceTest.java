@@ -87,11 +87,7 @@ public class PodcastServiceTest {
         when(podcastFeedRepository.isNotExist(anyString())).thenReturn(false);
         when(feedFetchService.fetchFeed(any())).thenReturn(mockFeed);
 
-        try {
-            podcastService.sync();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        podcastService.sync();
 
         // insertが呼ばれないことを確認
         verify(podcastFeedRepository, never()).insert(any(PodcastFeed.class));

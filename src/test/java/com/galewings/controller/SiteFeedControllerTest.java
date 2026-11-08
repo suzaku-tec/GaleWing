@@ -81,7 +81,6 @@ class SiteFeedControllerTest {
 
     @Test
     void testGetFeedList() throws JsonProcessingException {
-//        when(feedRepository.getAllFeed()).thenReturn(List.of(new Feed()));
         when(feedRepository.getFeed(any())).thenReturn(List.of(new Feed()));
         when(functionCtrlRepository.get(any())).thenReturn(createFunctionCtrlMock("feed-img", "1"));
 
@@ -102,14 +101,9 @@ class SiteFeedControllerTest {
 
     @Test
     void testUpdateFeed() throws FeedException, IOException {
-//        when(siteRepository.getSite(any())).thenReturn(new Site());
-//        when(siteRepository.getAllSite()).thenReturn(List.of(new Site()));
         when(siteRepository.getSiteFeedCount()).thenReturn(
                 List.of(new SiteFeedCount()));
-//        when(feedRepository.existFeed(any())).thenReturn(true);
         when(feedRepository.getAllFeed()).thenReturn(List.of(new Feed()));
-//        when(feedRepository.getFeed(any())).thenReturn(List.of(new Feed()));
-//        when(googleAlertService.isGoogleAlert(any())).thenReturn(false);
         doNothing().when(autoUpdateTask).allUpdate();
 
         String result = siteFeedController.updateFeed(new UpdateFeedDto());
@@ -144,12 +138,6 @@ class SiteFeedControllerTest {
         when(siteRepository.getSiteFeedCount()).thenReturn(siteFeedCounts);
         when(feedFetchService.fetchFeed(any())).thenReturn(mockFeed);
 
-//        Connection connection = mock(Connection.class);
-//        Document document = mock(Document.class);
-//        Elements elements = new Elements();
-//        when(connection.get()).thenReturn(document);
-//        when(document.select(any())).thenReturn(elements);
-
         String s = siteFeedController.updateFeed(dto);
         assertNotNull(s);
 
@@ -169,8 +157,6 @@ class SiteFeedControllerTest {
 
     @Test
     void testAddSiteFeed() throws IOException {
-//        when(siteRepository.insertEntity(any())).thenReturn(0);
-//        when(urlService.getUrlDomain(any())).thenReturn("http://127.0.0.1");
         when(rssBridgeService.isRssBridgeDomain(any())).thenReturn(true);
 
         AddFeedDto testDto = new AddFeedDto();
@@ -181,7 +167,6 @@ class SiteFeedControllerTest {
 
     @Test
     void testAddSiteFeed_rdf() throws IOException {
-//        when(siteRepository.insertEntity(any())).thenReturn(0);
         when(rssBridgeService.isRssBridgeDomain(any())).thenReturn(false);
 
         AddFeedDto testDto = new AddFeedDto();
@@ -194,7 +179,6 @@ class SiteFeedControllerTest {
 
     @Test
     void testAddSiteFeed_rss() throws IOException {
-//        when(siteRepository.insertEntity(any())).thenReturn(0);
         when(rssBridgeService.isRssBridgeDomain(any())).thenReturn(false);
 
         AddFeedDto testDto = new AddFeedDto();
@@ -207,7 +191,6 @@ class SiteFeedControllerTest {
 
     @Test
     void testAddSiteFeed_rsslist() throws IOException {
-//        when(siteRepository.insertEntity(any())).thenReturn(0);
         when(rssBridgeService.isRssBridgeDomain(any())).thenReturn(false);
 
         AddFeedDto testDto = new AddFeedDto();
@@ -241,7 +224,6 @@ class SiteFeedControllerTest {
 
     @Test
     void testAddSiteFeed_with_rss_links() throws IOException {
-//        when(siteRepository.insertEntity(any())).thenReturn(0);
         when(rssBridgeService.isRssBridgeDomain(any())).thenReturn(false);
         when(urlService.getUrlDomain(any())).thenReturn("https://example.com");
 
@@ -293,9 +275,6 @@ class SiteFeedControllerTest {
 
     @Test
     void testReadAllShowFeed2() throws JsonProcessingException {
-//        when(siteRepository.getSiteFeedCount()).thenReturn(
-//                List.of(new SiteFeedCount()));
-//        when(feedRepository.updateSiteFeedRead(any())).thenReturn(0);
         when(viewsRepository.info(any())).thenReturn(new View());
 
         String result = siteFeedController.readAllShowFeed(new ReadAllShowFeedDto());
@@ -313,13 +292,9 @@ class SiteFeedControllerTest {
         SyndFeed mockSyndFeed = mock(SyndFeed.class);
         when(mockSyndFeed.getLink()).thenReturn("https://example.com/home");
         when(mockSyndFeed.getTitle()).thenReturn("Example Title");
-//        when(mockSyndFeed.getDescription()).thenReturn("Example Description");
-//        when(mockSyndFeed.getAuthor()).thenReturn("Author");
-//        when(mockSyndFeed.getPublishedDate()).thenReturn(new java.util.Date());
 
         // エントリの準備
         SyndEntry mockEntry = mock(SyndEntry.class);
-//        when(mockEntry.getLink()).thenReturn("https://example.com/item/1");
         when(mockSyndFeed.getEntries()).thenReturn(List.of(mockEntry));
 
         // リポジトリとサービスのモック
@@ -339,19 +314,11 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testAddSiteFeed_AlreadyExists() throws IOException, FeedException {
+    void testAddSiteFeed_AlreadyExists() {
         // 準備
         String targetUrl = "http://example.com/rss.xml";
         AddFeedDto dto = new AddFeedDto();
         dto.setLink(targetUrl);
-
-        SyndFeed mockSyndFeed = mock(SyndFeed.class);
-//        when(mockSyndFeed.getLink()).thenReturn("http://example.com/home");
-
-        // 既にサイトが1件以上登録されている状態
-//        when(siteRepository.countSiteForHtmlUrl(any())).thenReturn(1);
-//        when(siteRepository.insertEntity(any())).thenReturn(0);
-//        when(feedFetchService.fetchFeed(any())).thenReturn(mockSyndFeed);
 
         // 実行
         siteFeedController.addSiteFeed(dto);
@@ -361,6 +328,13 @@ class SiteFeedControllerTest {
         verify(feedRepository, never()).insertEntity(any(Feed.class));
     }
 
+    /**
+     * FunctionCtrl作成
+     *
+     * @param id  ID
+     * @param flg フラグ設定
+     * @return FunctionCtrl
+     */
     private FunctionCtrl createFunctionCtrlMock(String id, String flg) {
         FunctionCtrl functionCtrl = new FunctionCtrl();
         functionCtrl.id = id;
