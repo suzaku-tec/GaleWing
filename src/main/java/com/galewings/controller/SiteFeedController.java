@@ -96,6 +96,9 @@ public class SiteFeedController {
     @Autowired
     private RssBridgeService rssBridgeService;
 
+    @Autowired
+    private FeedFetchService feedFetchService;
+
     /**
      * 対象サイトのフィードを取得
      *
@@ -200,7 +203,7 @@ public class SiteFeedController {
      */
     private String updateFeed(Site site) throws FeedException, IOException {
         List<Feed> feeds;
-        SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(site.xmlUrl)));
+        SyndFeed feed = feedFetchService.fetchFeed(site.xmlUrl);
         feed.getEntries().stream().filter(syndEntry -> {
                     return !feedRepository.existFeed(syndEntry.getLink());
                 })

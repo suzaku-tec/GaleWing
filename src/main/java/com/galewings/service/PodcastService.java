@@ -6,13 +6,9 @@ import com.galewings.repository.PodcastFeedRepository;
 import com.galewings.repository.PodcastRepository;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
-import com.rometools.rome.io.SyndFeedInput;
-import com.rometools.rome.io.XmlReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +24,7 @@ public class PodcastService {
     private PodcastFeedRepository podcastFeedRepository;
 
     @Autowired
-    private GwDateService gwDateService;
+    private FeedFetchService feedFetchService;
 
     public void sync() {
         podcastRepository.selectAll().stream().map(podcast -> {
@@ -43,11 +39,9 @@ public class PodcastService {
 
     private Optional<SyndFeed> getFeed(String url) {
         try {
-            SyndFeed syndFeed = new SyndFeedInput().build(new XmlReader(new URL(url)));
+            SyndFeed syndFeed = feedFetchService.fetchFeed(url);
             return Optional.of(syndFeed);
         } catch (FeedException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

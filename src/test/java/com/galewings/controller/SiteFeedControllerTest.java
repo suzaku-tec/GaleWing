@@ -74,6 +74,9 @@ class SiteFeedControllerTest {
     @Mock
     private TitleTagAnalysisAsyncService titleTagAnalysAsyncService;
 
+    @Mock
+    private FeedFetchService feedFetchService;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -131,37 +134,26 @@ class SiteFeedControllerTest {
         SyndFeed mockFeed = mock(SyndFeed.class);
         Feed f = new Feed();
         f.publishedDate = "2026-01-01T00:00:00Z";
-        try (MockedConstruction<XmlReader> xmlMock = mockConstruction(XmlReader.class,
-                (mock, context) -> {
-                    // XmlReaderモックは不要な処理をスキップ
-                });
-             MockedConstruction<SyndFeedInput> ignored = mockConstruction(SyndFeedInput.class,
-                     (mock, context) -> {
-                         when(mock.build(any(XmlReader.class))).thenReturn(mockFeed);
-                     });
-             MockedStatic<Jsoup> jsoupMock = Mockito.mockStatic(Jsoup.class, Mockito.CALLS_REAL_METHODS)) {
-            when(mockFeed.getEntries()).thenReturn(List.of(entry)); // List<SyndEntry> testEntries準備
-            when(siteRepository.getSite(anyString())).thenReturn(site);
-            when(googleAlertService.isGoogleAlert(any())).thenReturn(false);
-            when(feedRepository.existFeed(anyString())).thenReturn(false);
-            when(feedFactoryService.create(any(), any())).thenReturn(f);
-            when(gwDateService.isRetainedDateAfter(anyString())).thenReturn(true);
-            when(titleTagAnalysAsyncService.asyncMethod(any(), any())).thenReturn(mock(CompletableFuture.class));
-            when(feedRepository.insertEntity(any())).thenReturn(0);
-            when(feedRepository.getFeed(anyString())).thenReturn(feeds);
-            when(siteRepository.getSiteFeedCount()).thenReturn(siteFeedCounts);
+        when(mockFeed.getEntries()).thenReturn(List.of(entry)); // List<SyndEntry> testEntries準備
+        when(siteRepository.getSite(anyString())).thenReturn(site);
+        when(googleAlertService.isGoogleAlert(any())).thenReturn(false);
+        when(feedRepository.existFeed(anyString())).thenReturn(false);
+        when(feedFactoryService.create(any(), any())).thenReturn(f);
+        when(gwDateService.isRetainedDateAfter(anyString())).thenReturn(true);
+        when(titleTagAnalysAsyncService.asyncMethod(any(), any())).thenReturn(mock(CompletableFuture.class));
+        when(feedRepository.insertEntity(any())).thenReturn(0);
+        when(feedRepository.getFeed(anyString())).thenReturn(feeds);
+        when(siteRepository.getSiteFeedCount()).thenReturn(siteFeedCounts);
+        when(feedFetchService.fetchFeed(any())).thenReturn(mockFeed);
 
-            Connection connection = mock(Connection.class);
-            Document document = mock(Document.class);
-            Elements elements = new Elements();
-            String link = "https://example.com";
-            jsoupMock.when(() -> Jsoup.connect(link)).thenReturn(connection);
-            when(connection.get()).thenReturn(document);
-            when(document.select(anyString())).thenReturn(elements);
+        Connection connection = mock(Connection.class);
+        Document document = mock(Document.class);
+        Elements elements = new Elements();
+        when(connection.get()).thenReturn(document);
+        when(document.select(anyString())).thenReturn(elements);
 
-            String s = siteFeedController.updateFeed(dto);
-            assertNotNull(s);
-        }
+        String s = siteFeedController.updateFeed(dto);
+        assertNotNull(s);
 
     }
 

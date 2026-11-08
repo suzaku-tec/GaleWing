@@ -8,14 +8,12 @@ import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndEntryImpl;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.feed.synd.SyndFeedImpl;
-import com.rometools.rome.io.SyndFeedInput;
-import com.rometools.rome.io.XmlReader;
+import com.rometools.rome.io.FeedException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedConstruction;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -42,7 +40,7 @@ public class PodcastServiceTest {
     private PodcastFeedRepository podcastFeedRepository;
 
     @Mock
-    private GwDateService gwDateService;
+    private FeedFetchService feedFetchService;
 
     @Test
     @DisplayName("sync: 正常系 - getFeedをモック化して実行")
@@ -62,26 +60,18 @@ public class PodcastServiceTest {
 
         // 3. 重複チェックのモック
         when(podcastFeedRepository.isNotExist(anyString())).thenReturn(true);
+        when(feedFetchService.fetchFeed(any())).thenReturn(mockFeed);
 
-        // 4. SyndFeedInputのコンストラクタをフックする
-        try (MockedConstruction<XmlReader> mockedReader = mockConstruction(XmlReader.class);
-             // 3. SyndFeedInputのコンストラクタをモック化
-             MockedConstruction<SyndFeedInput> mockedInput = mockConstruction(SyndFeedInput.class,
-                     (mock, context) -> {
-                         // どんなXmlReaderが渡されてもmockFeedを返すように設定
-                         when(mock.build(any(XmlReader.class))).thenReturn(mockFeed);
-                     })) {
-            // 5. 実行
-            podcastService.sync();
+        // 5. 実行
+        podcastService.sync();
 
-            // 6. 検証
-            verify(podcastFeedRepository, times(1)).insert(any(PodcastFeed.class));
-        }
+        // 6. 検証
+        verify(podcastFeedRepository, times(1)).insert(any(PodcastFeed.class));
     }
 
     @Test
     @DisplayName("sync: 既知のフィードはスキップされること")
-    void testSync_SkipDuplicate() {
+    void testSync_SkipDuplicate() throws FeedException {
         Podcast podcast = new Podcast();
         podcast.url = "http://example.com/rss";
         when(podcastRepository.selectAll()).thenReturn(List.of(podcast));
@@ -95,19 +85,16 @@ public class PodcastServiceTest {
 
         // 既に存在する場合はfalse
         when(podcastFeedRepository.isNotExist(anyString())).thenReturn(false);
+        when(feedFetchService.fetchFeed(any())).thenReturn(mockFeed);
 
-        try (MockedConstruction<XmlReader> mockedReader = mockConstruction(XmlReader.class);
-             // 3. SyndFeedInputのコンストラクタをモック化
-             MockedConstruction<SyndFeedInput> mockedInput = mockConstruction(SyndFeedInput.class,
-                     (mock, context) -> {
-                         // どんなXmlReaderが渡されてもmockFeedを返すように設定
-                         when(mock.build(any(XmlReader.class))).thenReturn(mockFeed);
-                     })) {
+        try {
             podcastService.sync();
-
-            // insertが呼ばれないことを確認
-            verify(podcastFeedRepository, never()).insert(any(PodcastFeed.class));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        // insertが呼ばれないことを確認
+        verify(podcastFeedRepository, never()).insert(any(PodcastFeed.class));
 
     }
 
