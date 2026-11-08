@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -35,10 +34,6 @@ public class MinhonService {
 
     @Autowired
     OkHttpClient okHttpClient;
-
-
-    @Autowired
-    private RestTemplate restTemplate;
 
     private static String getValueForPath(JsonElement jsonElement, String path) {
         String[] pathKeys = path.split("\\.");
