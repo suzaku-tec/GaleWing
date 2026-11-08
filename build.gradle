@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '4.1.2'
+    id 'org.springframework.boot' version '4.2.0-RC2'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'java'
     id "com.github.node-gradle.node" version "3.1.0"
@@ -12,7 +12,7 @@ apply plugin: 'io.spring.dependency-management'
 
 allprojects {
     ext {
-        springVersion = "4.1.2"
+        springVersion = "4.2.0-RC2"
         lucene_version = "8.11.4"
         springdocOpenApiVersion = "2.8.11"
         sudachi_version = "0.7.5"
