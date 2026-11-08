@@ -3,16 +3,16 @@ package com.galewings.service;
 import com.galewings.entity.Feed;
 import com.galewings.entity.Site;
 import com.galewings.repository.FeedRepository;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-@Component
+@Service
 public class GoogleAlertService {
 
     @Autowired
@@ -22,7 +22,7 @@ public class GoogleAlertService {
     private FeedRepository feedRepository;
 
     public boolean isGoogleAlert(Site site) {
-        return StringUtils.contains(site.title, "site:http");
+        return Strings.CS.contains(site.title, "site:http");
     }
 
     public void updateFeed(Site site) {
