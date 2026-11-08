@@ -5,18 +5,17 @@ import com.galewings.exception.GaleWingsSystemException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.http.client.utils.URIBuilder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Component
+@Service
 public class URLService {
 
     private final UrlValidator urlValidator = new UrlValidator(new String[]{"http", "https"});
@@ -70,16 +69,16 @@ public class URLService {
 
     private String appendPath(String base, String addPath) {
 
-        if (StringUtils.endsWith(base, "/")) {
-            if (StringUtils.startsWith(addPath, "/")) {
+        if (base != null && base.endsWith("/")) {
+            if (base.startsWith("/")) {
                 return base + StringUtils.substring(addPath, 1);
             } else {
                 return base + addPath;
             }
         }
 
-        if (!StringUtils.endsWith(base, "/")) {
-            if (StringUtils.startsWith(addPath, "/")) {
+        if (!(base != null && base.endsWith("/"))) {
+            if (addPath.startsWith("/")) {
                 return base + addPath;
             } else {
                 return base + "/" + addPath;
@@ -92,12 +91,12 @@ public class URLService {
     /**
      * URLの対象リソースを取得してバイト配列で返す。
      *
-     * @param resourceUrl
-     * @return
-     * @throws IOException
+     * @param resourceUrl 対象URL
+     * @return リソースのバイト配列
+     * @throws IOException 入出力例外
      */
     public byte[] getUrlResourceAllByte(String resourceUrl) throws IOException {
-        GwURL url = new GwURL(new URL(resourceUrl));
+        GwURL url = new GwURL(URI.create(resourceUrl).toURL());
         return url.getInputStream().readAllBytes();
     }
 
