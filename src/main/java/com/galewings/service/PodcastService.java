@@ -27,9 +27,8 @@ public class PodcastService {
     private FeedFetchService feedFetchService;
 
     public void sync() {
-        podcastRepository.selectAll().stream().map(podcast -> {
-                    return getFeed(podcast.url);
-                }).filter(Optional::isPresent)
+        podcastRepository.selectAll().stream().map(podcast -> getFeed(podcast.url))
+                .filter(Optional::isPresent)
                 .map(Optional::get)
                 .flatMap(syndFeed -> syndFeed.getEntries().stream())
                 .filter(syndEntry -> podcastFeedRepository.isNotExist(syndEntry.getLink()))

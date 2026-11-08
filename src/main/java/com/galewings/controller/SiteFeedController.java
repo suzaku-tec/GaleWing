@@ -23,8 +23,6 @@ import com.galewings.task.AutoUpdateTask;
 import com.google.common.base.Strings;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
-import com.rometools.rome.io.SyndFeedInput;
-import com.rometools.rome.io.XmlReader;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.jsoup.Jsoup;
@@ -38,7 +36,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -362,7 +359,7 @@ public class SiteFeedController {
         Optional<SyndFeed> result;
 
         try {
-            SyndFeed syndFeed = new SyndFeedInput().build(new XmlReader(new URL(xmlUrl)));
+            SyndFeed syndFeed = feedFetchService.fetchFeed(xmlUrl);
             result = Optional.ofNullable(syndFeed);
         } catch (Exception e) {
             result = Optional.empty();
