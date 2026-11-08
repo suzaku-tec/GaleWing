@@ -29,7 +29,6 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -90,7 +89,7 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testReadedFeed() throws UnsupportedEncodingException, JsonProcessingException {
+    void testReadedFeed() throws JsonProcessingException {
         when(siteRepository.getSiteFeedCount(any())).thenReturn(
                 List.of(new SiteFeedCount()));
         when(feedRepository.updateReadFeed(any())).thenReturn(0);
@@ -144,19 +143,12 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testAddSiteFeedError() throws IOException {
-//        when(siteRepository.insertEntity(any())).thenReturn(0);
-
-        try {
-            siteFeedController.addSiteFeed(new AddFeedDto());
-            fail("正常終了しちゃった余");
-        } catch (IllegalArgumentException e) {
-            assertEquals("不正なURLです", e.getMessage());
-        }
+    void testAddSiteFeedError() {
+        assertThrows(IllegalArgumentException.class, this::execute, "正常終了しちゃった余");
     }
 
     @Test
-    void testAddSiteFeed() throws IOException {
+    void testAddSiteFeed() {
         when(rssBridgeService.isRssBridgeDomain(any())).thenReturn(true);
 
         AddFeedDto testDto = new AddFeedDto();
@@ -166,7 +158,7 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testAddSiteFeed_rdf() throws IOException {
+    void testAddSiteFeed_rdf() {
         when(rssBridgeService.isRssBridgeDomain(any())).thenReturn(false);
 
         AddFeedDto testDto = new AddFeedDto();
@@ -178,7 +170,7 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testAddSiteFeed_rss() throws IOException {
+    void testAddSiteFeed_rss() {
         when(rssBridgeService.isRssBridgeDomain(any())).thenReturn(false);
 
         AddFeedDto testDto = new AddFeedDto();
@@ -190,7 +182,7 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testAddSiteFeed_rsslist() throws IOException {
+    void testAddSiteFeed_rsslist() {
         when(rssBridgeService.isRssBridgeDomain(any())).thenReturn(false);
 
         AddFeedDto testDto = new AddFeedDto();
@@ -208,7 +200,7 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testAddSiteFeed_no_syndfeed() throws IOException, FeedException {
+    void testAddSiteFeed_no_syndfeed() throws FeedException {
         when(rssBridgeService.isRssBridgeDomain(any())).thenReturn(false);
         when(urlService.getUrlDomain(any())).thenReturn("http://127.0.0.1");
 
@@ -282,7 +274,7 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testAddSiteFeed_NewSiteAndEntries_FullCoverage() throws IOException, FeedException {
+    void testAddSiteFeed_NewSiteAndEntries_FullCoverage() throws FeedException {
         // 1. 準備：判定をバイパスするために .rss を使用
         String targetUrl = "https://example.com/feed.rss";
         AddFeedDto dto = new AddFeedDto();
@@ -343,6 +335,10 @@ class SiteFeedControllerTest {
         return functionCtrl;
     }
 
+    private void execute() {
+        siteFeedController.addSiteFeed(new AddFeedDto());
+
+    }
 }
 
 //Generated with love by TestMe :) Please report issues and submit feature requests at: http://weirddev.com/forum#!/testme

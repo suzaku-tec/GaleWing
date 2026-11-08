@@ -37,7 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -73,9 +72,6 @@ public class SiteFeedController {
 
     @Autowired
     private GwDateService gwDateService;
-
-    @Autowired
-    private MachineLearningService machineLearningService;
 
     @Autowired
     private GoogleAlertService googleAlertService;
@@ -142,7 +138,6 @@ public class SiteFeedController {
      *
      * @param dto 既読にするページのリンク情報
      * @return サイトの未読フィード件数リスト
-     * @throws UnsupportedEncodingException エンコード失敗例外
      */
     @PostMapping(value = "/read")
     @ResponseBody
@@ -151,9 +146,6 @@ public class SiteFeedController {
         feedRepository.updateReadFeed(dto.getLink());
 
         List<SiteFeedCount> siteFeedCounts = siteRepository.getSiteFeedCount(dto.getLink());
-
-        // 機械学習用のデータ出力
-//        machineLearningService.createArff(dto.getLink());
 
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(siteFeedCounts);
@@ -393,7 +385,7 @@ public class SiteFeedController {
             });
         } catch (Exception e) {
             // 特に何もしない
-            e.printStackTrace();
+            logger.error("追加失敗", e);
         }
     }
 
@@ -424,7 +416,7 @@ public class SiteFeedController {
             });
         } catch (Exception e) {
             // 特に何もしない
-            e.printStackTrace();
+            logger.error("追加失敗", e);
         }
     }
 
