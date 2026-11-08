@@ -64,8 +64,7 @@ public class MinhonService {
                     .url(CREDENTIALS_URL)
                     .method("POST", body)
                     .build();
-            try {
-                Response response = okHttpClient.newCall(request).execute();
+            try (Response response = okHttpClient.newCall(request).execute()) {
                 String token = JsonParser.parseString(Objects.requireNonNull(response.body()).string()).getAsJsonObject().get(
                         "access_token").getAsString();
                 accessToken.set(token);
@@ -111,7 +110,7 @@ public class MinhonService {
                 .addFormDataPart("type", "json")
                 .build();
         String url = "https://mt-auto-minhon-mlt.ucri.jgn-x.jp/api/";
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
+        HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(url)).newBuilder();
         urlBuilder.addQueryParameter("key", key)
                 .addQueryParameter("name", name)
                 .addQueryParameter("text", text)

@@ -23,13 +23,13 @@ import com.galewings.task.AutoUpdateTask;
 import com.google.common.base.Strings;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
-import com.rometools.rome.io.SyndFeedInput;
-import com.rometools.rome.io.XmlReader;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -37,19 +37,20 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * SiteFeedController
  */
 @Controller
 public class SiteFeedController {
+
+    private static final Logger logger = LoggerFactory.getLogger(SiteFeedController.class);
 
     /**
      * SiteRepository
@@ -73,9 +74,6 @@ public class SiteFeedController {
     private GwDateService gwDateService;
 
     @Autowired
-    private MachineLearningService machineLearningService;
-
-    @Autowired
     private GoogleAlertService googleAlertService;
 
     @Autowired
@@ -95,6 +93,9 @@ public class SiteFeedController {
 
     @Autowired
     private RssBridgeService rssBridgeService;
+
+    @Autowired
+    private FeedFetchService feedFetchService;
 
     /**
      * 対象サイトのフィードを取得
@@ -137,18 +138,14 @@ public class SiteFeedController {
      *
      * @param dto 既読にするページのリンク情報
      * @return サイトの未読フィード件数リスト
-     * @throws UnsupportedEncodingException エンコード失敗例外
      */
     @PostMapping(value = "/read")
     @ResponseBody
     public String readFeed(@RequestBody ReadDto dto)
-            throws UnsupportedEncodingException, JsonProcessingException {
+            throws JsonProcessingException {
         feedRepository.updateReadFeed(dto.getLink());
 
         List<SiteFeedCount> siteFeedCounts = siteRepository.getSiteFeedCount(dto.getLink());
-
-        // 機械学習用のデータ出力
-//        machineLearningService.createArff(dto.getLink());
 
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(siteFeedCounts);
@@ -195,22 +192,20 @@ public class SiteFeedController {
      *
      * @param site サイト情報
      * @return フィード情報
-     * @throws FeedException
-     * @throws IOException
+     * @throws FeedException Feed操作失敗例外
+     * @throws IOException   入力例外
      */
     private String updateFeed(Site site) throws FeedException, IOException {
         List<Feed> feeds;
-        SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(site.xmlUrl)));
-        feed.getEntries().stream().filter(syndEntry -> {
-                    return !feedRepository.existFeed(syndEntry.getLink());
-                })
+        SyndFeed feed = feedFetchService.fetchFeed(site.xmlUrl);
+        feed.getEntries().stream().filter(syndEntry -> !feedRepository.existFeed(syndEntry.getLink()))
                 .map(syndEntry -> feedFactoryService.create(syndEntry, site.uuid))
                 .filter(f -> gwDateService.isRetainedDateAfter(f.publishedDate))
                 .forEach(f -> {
                     try {
                         titleTagAnalysAsyncService.asyncMethod(site, f);
                     } catch (JsonProcessingException e) {
-                        e.printStackTrace();
+                        logger.error("JSON変換失敗", e);
                     }
                     feedRepository.insertEntity(f);
                 });
@@ -234,12 +229,11 @@ public class SiteFeedController {
      * サイトとそのサイトのRSS情報をDBに登録する
      *
      * @param dto 追加情報
-     * @throws IOException 入出力失敗
      */
     @PostMapping(value = "/addFeed")
     @ResponseBody
     @Transactional
-    public void addSiteFeed(@RequestBody AddFeedDto dto) throws IOException {
+    public void addSiteFeed(@RequestBody AddFeedDto dto) {
         String[] schemes = {"http", "https"};
         UrlValidator urlValidator = new UrlValidator(schemes, UrlValidator.ALLOW_LOCAL_URLS);
         dto.setLink(StringUtils.trimToEmpty(dto.getLink()));
@@ -259,10 +253,8 @@ public class SiteFeedController {
         }
 
         List<String> rssUrlList = searchRssUrlList(dto.getLink());
-        if (0 < rssUrlList.size()) {
-            rssUrlList.stream().forEach(url -> {
-                addSiteAndFeed(url);
-            });
+        if (!rssUrlList.isEmpty()) {
+            rssUrlList.forEach(this::addSiteAndFeed);
         }
     }
 
@@ -280,11 +272,11 @@ public class SiteFeedController {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(resultList);
         } else {
-            viewsRepository.selectSiteList(readAllShowFeedDto.getIdentifier()).stream()
+            viewsRepository.selectSiteList(readAllShowFeedDto.getIdentifier())
                     .forEach(site -> feedRepository.updateSiteFeedRead(site.uuid));
 
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(Collections.EMPTY_LIST);
+            return mapper.writeValueAsString(Collections.emptyList());
         }
 
     }
@@ -292,9 +284,7 @@ public class SiteFeedController {
     @PostMapping(value = "/readListFeed", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void readListFeed(@RequestBody ReadListFeedDto readListFeedDto) {
-        readListFeedDto.urls.forEach(url -> {
-            feedRepository.insertReadListQueue(url);
-        });
+        readListFeedDto.urls.forEach(url -> feedRepository.insertReadListQueue(url));
 
         // 非同期でURL既読処理を流す
         queueUrlReadAsyncService.asyncMethod();
@@ -323,7 +313,7 @@ public class SiteFeedController {
             Elements elements = document.select(
                     "link[type*='atom+xml'],link[type*='rss+xml'],a[href^='/'],a[href^='" + domain + "']");
 
-            if (0 < elements.size()) {
+            if (!elements.isEmpty()) {
                 return elements.stream().map(element -> {
                             if ("link".equals(StringUtils.toRootLowerCase(element.tagName()))) {
 
@@ -338,14 +328,14 @@ public class SiteFeedController {
                                 return StringUtils.EMPTY;
                             }
                         }).filter(StringUtils::isNoneBlank)
-                        .map(url -> urlService.fixUrl(domain, url)).filter(opt -> opt.isPresent())
-                        .map(opt -> opt.get()).collect(
-                                Collectors.toList());
+                        .map(url -> urlService.fixUrl(domain, url)).filter(Optional::isPresent)
+                        .map(Optional::get).collect(
+                                toList());
             } else {
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             }
         } catch (IOException e) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 
@@ -359,7 +349,7 @@ public class SiteFeedController {
         Optional<SyndFeed> result;
 
         try {
-            SyndFeed syndFeed = new SyndFeedInput().build(new XmlReader(new URL(xmlUrl)));
+            SyndFeed syndFeed = feedFetchService.fetchFeed(xmlUrl);
             result = Optional.ofNullable(syndFeed);
         } catch (Exception e) {
             result = Optional.empty();
@@ -395,7 +385,7 @@ public class SiteFeedController {
             });
         } catch (Exception e) {
             // 特に何もしない
-            e.printStackTrace();
+            logger.error("追加失敗", e);
         }
     }
 
@@ -426,7 +416,7 @@ public class SiteFeedController {
             });
         } catch (Exception e) {
             // 特に何もしない
-            e.printStackTrace();
+            logger.error("追加失敗", e);
         }
     }
 
