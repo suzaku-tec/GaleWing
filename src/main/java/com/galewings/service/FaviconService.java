@@ -27,7 +27,9 @@ public class FaviconService {
     public Optional<String> getBase64Favicon(String url) {
         try {
             String domain = toDomain(url);
-            URL favGet = new URL("http://www.google.com/s2/favicons?domain=" + domain);
+            URL favGet = URI.create(
+                    "http://www.google.com/s2/favicons?domain=" + domain
+            ).toURL();
 
             var img = ImageIO.read(favGet);
 
