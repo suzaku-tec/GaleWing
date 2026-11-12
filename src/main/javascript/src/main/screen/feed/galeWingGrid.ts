@@ -150,12 +150,13 @@ export default class GaleWingGrid {
 
     const headerPrevBtn = document.getElementById('header-prevBtn');
     headerPrevBtn.addEventListener('click', () => {
+      this.readDispRow();
       this.gridApi?.paginationGoToPreviousPage();
     });
 
     const headerNextBtn = document.getElementById('header-nextBtn');
     headerNextBtn.addEventListener('click', () => {
-      this.readDistRow();
+      this.readDispRow();
       this.gridApi?.paginationGoToNextPage();
     });
 
@@ -200,11 +201,13 @@ export default class GaleWingGrid {
 
     const prevBtn = document.getElementById('footer-prevBtn');
     prevBtn.addEventListener('click', () => {
+      this.readDispRow();
       this.gridApi?.paginationGoToPreviousPage();
     });
 
     const nextBtn = document.getElementById('footer-nextBtn');
     nextBtn.addEventListener('click', () => {
+      this.readDispRow();
       this.gridApi?.paginationGoToNextPage();
     });
 
@@ -308,7 +311,7 @@ export default class GaleWingGrid {
     return `${start} to ${end} of ${count}`;
   }
 
-  private readDistRow() {
+  private readDispRow() {
     this.gridApi.getRenderedNodes()
       .forEach((node) => {
         const link = node.data.link;
