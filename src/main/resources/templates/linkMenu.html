@@ -32,7 +32,7 @@
     <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('circulation') eq '1'}">
         <a class="list-group-item" href="/circulation/">circulation</a>
     </li>
-    <li class="nav-item mb-2">
+    <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('summary') eq '1'}">
         <a class="list-group-item" href="/news/summary/">summary</a>
     </li>
     <li class="nav-item mb-2">
