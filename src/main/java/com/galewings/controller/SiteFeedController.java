@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galewings.dto.*;
 import com.galewings.dto.input.ReadListFeedDto;
+import com.galewings.dto.input.RelatedLinksDto;
 import com.galewings.dto.output.FeedUpdate;
 import com.galewings.entity.Feed;
 import com.galewings.entity.Site;
@@ -309,6 +310,12 @@ public class SiteFeedController {
 
         // 非同期でURL既読処理を流す
         queueUrlReadAsyncService.asyncMethod();
+    }
+
+    @PostMapping(value = "/relatedLinks")
+    @ResponseBody
+    public List<Feed> relatedLinks(@RequestBody RelatedLinksDto dto) {
+        return feedRepository.relatedLinks(dto.link, dto.rate);
     }
 
     /**
