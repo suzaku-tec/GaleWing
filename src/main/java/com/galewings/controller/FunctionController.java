@@ -31,4 +31,9 @@ public class FunctionController {
         functionCtrlRepository.update(dto.id, dto.flg);
     }
 
+    @PostMapping("/list")
+    @ResponseBody
+    public List<FunctionCtrl> list() {
+        return functionCtrlRepository.getAll();
+    }
 }
