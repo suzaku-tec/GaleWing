@@ -211,4 +211,16 @@ public class SiteRepository {
         param.put("base64", base64);
         sqlManager.executeUpdate(new ClasspathSqlResource("sql/site/update_site_icon.sql"), param);
     }
+
+    /**
+     * サイトの未読数を取得する
+     *
+     * @param uuid サイトUUID
+     * @return 未読数
+     */
+    public int countSiteUnreadFeed(String uuid) {
+        Map<String, String> param = new HashMap<>();
+        param.put("uuid", uuid);
+        return sqlManager.getSingleResult(Integer.class, new ClasspathSqlResource("sql/site/count_site_unread_feed.sql"), param);
+    }
 }

@@ -51,6 +51,7 @@ export default class GaleWingApi {
         categorySelect: '/feedCategory/select',
         keywordFeed: '/trend/keyword/feeds',
         keywordLinkSummaryReport: '/report/keyword/list',
+        countSiteUnread: '/site/countUnread',
     };
 
     private static singleton: GaleWingApi;
@@ -173,12 +174,8 @@ export default class GaleWingApi {
 
     async read(link: string) {
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.read;
-        const response = await axios.post(ajaxUrl, {
+        await axios.post(ajaxUrl, {
             link: link,
-        });
-        // 未読数の更新
-        response.data.forEach((element: { uuid: string; count: number }) => {
-            FeedApi.getInstance().unreadUpdate(element.uuid, element.count.toString());
         });
     }
 
@@ -316,6 +313,13 @@ export default class GaleWingApi {
     async keywordFeed(keyword: string): Promise<AxiosResponse<any>> {
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.keywordFeed + "?keyword=" + encodeURIComponent(keyword);
         return await axios.get(ajaxUrl);
+    }
+
+    async countSiteUnread(uuid: string): Promise<AxiosResponse<{ uuid: string, count: number }[]>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.countSiteUnread;
+        return await axios.post(ajaxUrl, {
+            uuid
+        });
     }
 
     private getBaseUrl(): string {

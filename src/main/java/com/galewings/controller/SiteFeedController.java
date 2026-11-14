@@ -2,10 +2,7 @@ package com.galewings.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.galewings.dto.AddFeedDto;
-import com.galewings.dto.ReadAllShowFeedDto;
-import com.galewings.dto.ReadDto;
-import com.galewings.dto.UpdateFeedDto;
+import com.galewings.dto.*;
 import com.galewings.dto.input.ReadListFeedDto;
 import com.galewings.dto.output.FeedUpdate;
 import com.galewings.entity.Feed;
@@ -37,10 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -137,18 +131,45 @@ public class SiteFeedController {
      * 対象ページを既読にする
      *
      * @param dto 既読にするページのリンク情報
-     * @return サイトの未読フィード件数リスト
      */
     @PostMapping(value = "/read")
     @ResponseBody
-    public String readFeed(@RequestBody ReadDto dto)
-            throws JsonProcessingException {
+    public void readFeed(@RequestBody ReadDto dto) {
         feedRepository.updateReadFeed(dto.getLink());
+    }
 
-        List<SiteFeedCount> siteFeedCounts = siteRepository.getSiteFeedCount(dto.getLink());
+    /**
+     * 未読数のカウント
+     * <p>
+     * viewが指定されている場合は、viewとそれに含まれる各サイトの未読数を返す。
+     *
+     * @param dto カウント対象のサイトの情報
+     * @return 未読数情報リスト
+     */
+    @PostMapping(value = "/site/countUnread")
+    @ResponseBody
+    public List<SiteFeedCount> countUnreadSite(@RequestBody CountUnreadSiteDto dto) {
+        if (Objects.isNull(viewsRepository.info(dto.uuid))) {
+            return List.of(createUnreadSiteCount(dto.uuid, siteRepository.countSiteUnreadFeed(dto.uuid)));
+        }
 
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(siteFeedCounts);
+        List<SiteFeedCount> siteCounts = viewsRepository.selectSiteList(dto.uuid).stream()
+                .map(site -> createUnreadSiteCount(site.uuid, siteRepository.countSiteUnreadFeed(site.uuid)))
+                .toList();
+
+        int totalUnreadCount = siteCounts.stream()
+                .mapToInt(count -> count.count)
+                .sum();
+        List<SiteFeedCount> result = new ArrayList<>(siteCounts);
+        result.add(createUnreadSiteCount(dto.uuid, totalUnreadCount));
+        return result;
+    }
+
+    private SiteFeedCount createUnreadSiteCount(String uuid, int count) {
+        SiteFeedCount result = new SiteFeedCount();
+        result.uuid = uuid;
+        result.count = count;
+        return result;
     }
 
     /**
