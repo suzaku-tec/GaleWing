@@ -89,13 +89,12 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testReadedFeed() throws JsonProcessingException {
-        when(siteRepository.getSiteFeedCount(any())).thenReturn(
-                List.of(new SiteFeedCount()));
+    void testReadFeed() {
         when(feedRepository.updateReadFeed(any())).thenReturn(0);
 
-        String result = siteFeedController.readFeed(new ReadDto());
-        assertEquals("[{\"uuid\":null,\"title\":null,\"count\":0,\"faviconBase64\":null}]", result);
+        siteFeedController.readFeed(new ReadDto());
+
+        verify(feedRepository).updateReadFeed(any());
     }
 
     @Test
@@ -155,6 +154,8 @@ class SiteFeedControllerTest {
         testDto.setLink("http://127.0.0.1");
 
         siteFeedController.addSiteFeed(testDto);
+
+        verify(rssBridgeService).isRssBridgeDomain(any());
     }
 
     @Test
