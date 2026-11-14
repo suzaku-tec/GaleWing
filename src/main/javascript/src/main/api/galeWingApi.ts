@@ -1,5 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
-import FeedApi from './disp/feedApi';
+import axios, {AxiosResponse} from 'axios';
 
 export default class GaleWingApi {
     async getFeedsByCategory(selectedCategoryId: string) {
@@ -51,6 +50,7 @@ export default class GaleWingApi {
         categorySelect: '/feedCategory/select',
         keywordFeed: '/trend/keyword/feeds',
         keywordLinkSummaryReport: '/report/keyword/list',
+        countSiteUnread: '/site/countUnread',
     };
 
     private static singleton: GaleWingApi;
@@ -72,7 +72,7 @@ export default class GaleWingApi {
 
     deleteSite(location: string, uuid: string) {
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.deleteSite;
-        return axios.post(ajaxUrl, { uuid: uuid });
+        return axios.post(ajaxUrl, {uuid: uuid});
     }
 
     getStackList(url: string): Promise<AxiosResponse<any>> {
@@ -91,7 +91,7 @@ export default class GaleWingApi {
             return Promise.reject();
         }
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.stackFeed;
-        return axios.post(ajaxUrl, { uuid: uuid, link: link });
+        return axios.post(ajaxUrl, {uuid: uuid, link: link});
     }
 
     settingJson(): Promise<AxiosResponse<any>> {
@@ -101,27 +101,27 @@ export default class GaleWingApi {
 
     jaroWinklerDistance(title: string): Promise<AxiosResponse<any>> {
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.jaroWinklerDistance;
-        return axios.get(ajaxUrl, { params: { targetTitle: title } });
+        return axios.get(ajaxUrl, {params: {targetTitle: title}});
     }
 
     analysisFeedAllRead(links: string[]): Promise<AxiosResponse<any>> {
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.analysisFeedAllRead;
-        return axios.post(ajaxUrl, { links: links });
+        return axios.post(ajaxUrl, {links: links});
     }
 
     siteCategoryList(siteUuid: string): Promise<AxiosResponse<any>> {
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.siteCategoryList;
-        return axios.post(ajaxUrl, { siteUuid: siteUuid });
+        return axios.post(ajaxUrl, {siteUuid: siteUuid});
     }
 
     addCategory(name: string, description: string): Promise<AxiosResponse<any>> {
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.addCategory;
-        return axios.post(ajaxUrl, { name: name, description: description });
+        return axios.post(ajaxUrl, {name: name, description: description});
     }
 
     deleteCategory(uuid: string): Promise<AxiosResponse<any>> {
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.deleteCategory;
-        return axios.post(ajaxUrl, { uuid: uuid });
+        return axios.post(ajaxUrl, {uuid: uuid});
     }
 
     addSiteCategory(siteUuid: string, categoryUuid: string): Promise<AxiosResponse<any>> {
@@ -134,7 +134,7 @@ export default class GaleWingApi {
 
     executeStatsSql(id: string): Promise<AxiosResponse<any>> {
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.executeStatsSql;
-        return axios.post(ajaxUrl, { id: id });
+        return axios.post(ajaxUrl, {id: id});
     }
 
     getStatsIdList(): Promise<AxiosResponse<any>> {
@@ -144,17 +144,17 @@ export default class GaleWingApi {
 
     updateIcon(uuid: string): Promise<AxiosResponse<any>> {
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.updateIcon;
-        return axios.post(ajaxUrl, { uuid: uuid });
+        return axios.post(ajaxUrl, {uuid: uuid});
     }
 
     viewSave(viewId: string, viewName: string, siteIdList: string[]): Promise<AxiosResponse<any>> {
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.viewsSave;
-        return axios.post(ajaxUrl, { viewId: viewId, viewName: viewName, siteIdList: siteIdList });
+        return axios.post(ajaxUrl, {viewId: viewId, viewName: viewName, siteIdList: siteIdList});
     }
 
     keywordLinkSummaryReport(keyword: string, linkList: { link: string }[]): Promise<AxiosResponse<any>> {
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.keywordLinkSummaryReport;
-        return axios.post(ajaxUrl, { keyword: keyword, linkList: linkList });
+        return axios.post(ajaxUrl, {keyword: keyword, linkList: linkList});
     }
 
     private fixSiteCategory(
@@ -163,22 +163,18 @@ export default class GaleWingApi {
         categoryUuid: string,
     ): Promise<AxiosResponse<any>> {
         const url = this.getBaseUrl() + kbn;
-        return axios.post(url, { siteUuid: siteUuid, categoryUuid: categoryUuid });
+        return axios.post(url, {siteUuid: siteUuid, categoryUuid: categoryUuid});
     }
 
     translationEnJp(text: string): Promise<AxiosResponse<any>> {
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.translationEnJp;
-        return axios.post(ajaxUrl, { text: text }, { headers: { 'Content-Type': 'application/json' } });
+        return axios.post(ajaxUrl, {text: text}, {headers: {'Content-Type': 'application/json'}});
     }
 
     async read(link: string) {
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.read;
-        const response = await axios.post(ajaxUrl, {
+        await axios.post(ajaxUrl, {
             link: link,
-        });
-        // 未読数の更新
-        response.data.forEach((element: { uuid: string; count: number }) => {
-            FeedApi.getInstance().unreadUpdate(element.uuid, element.count.toString());
         });
     }
 
@@ -316,6 +312,13 @@ export default class GaleWingApi {
     async keywordFeed(keyword: string): Promise<AxiosResponse<any>> {
         const ajaxUrl = this.getBaseUrl() + this.apiUrls.keywordFeed + "?keyword=" + encodeURIComponent(keyword);
         return await axios.get(ajaxUrl);
+    }
+
+    async countSiteUnread(uuid: string): Promise<AxiosResponse<{ uuid: string, count: number }[]>> {
+        const ajaxUrl = this.getBaseUrl() + this.apiUrls.countSiteUnread;
+        return await axios.post(ajaxUrl, {
+            uuid
+        });
     }
 
     private getBaseUrl(): string {

@@ -1,10 +1,7 @@
 package com.galewings.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.galewings.dto.AddFeedDto;
-import com.galewings.dto.ReadAllShowFeedDto;
-import com.galewings.dto.ReadDto;
-import com.galewings.dto.UpdateFeedDto;
+import com.galewings.dto.*;
 import com.galewings.entity.*;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.FunctionCtrlRepository;
@@ -89,13 +86,12 @@ class SiteFeedControllerTest {
     }
 
     @Test
-    void testReadedFeed() throws JsonProcessingException {
-        when(siteRepository.getSiteFeedCount(any())).thenReturn(
-                List.of(new SiteFeedCount()));
+    void testReadFeed() {
         when(feedRepository.updateReadFeed(any())).thenReturn(0);
 
-        String result = siteFeedController.readFeed(new ReadDto());
-        assertEquals("[{\"uuid\":null,\"title\":null,\"count\":0,\"faviconBase64\":null}]", result);
+        siteFeedController.readFeed(new ReadDto());
+
+        verify(feedRepository).updateReadFeed(any());
     }
 
     @Test
@@ -155,6 +151,8 @@ class SiteFeedControllerTest {
         testDto.setLink("http://127.0.0.1");
 
         siteFeedController.addSiteFeed(testDto);
+
+        verify(rssBridgeService).isRssBridgeDomain(any());
     }
 
     @Test
@@ -318,6 +316,47 @@ class SiteFeedControllerTest {
         // 検証: countチェックのあと、insertは呼ばれないはず
         verify(siteRepository, never()).insertEntity(any(Site.class));
         verify(feedRepository, never()).insertEntity(any(Feed.class));
+    }
+
+    @Test
+    void testCountUnereadSite() {
+        CountUnreadSiteDto dto = new CountUnreadSiteDto();
+        dto.uuid = "test";
+
+        when(viewsRepository.info(any())).thenReturn(null);
+        when(siteRepository.countSiteUnreadFeed(any())).thenReturn(1);
+
+        List<SiteFeedCount> resultList = siteFeedController.countUnreadSite(dto);
+
+        assertEquals(1, resultList.size());
+        assertEquals(1, resultList.getFirst().count);
+        assertEquals("test", resultList.getFirst().uuid);
+    }
+
+    @Test
+    void testCountUnreadSiteView() {
+        CountUnreadSiteDto dto = new CountUnreadSiteDto();
+        dto.uuid = "test";
+
+        View view = new View();
+        Site site1 = new Site();
+        site1.uuid = "site-uuid-1";
+        Site site2 = new Site();
+        site2.uuid = "site-uuid-2";
+
+        when(viewsRepository.info(any())).thenReturn(view);
+        when(viewsRepository.selectSiteList(any())).thenReturn(List.of(site1, site2));
+        when(siteRepository.countSiteUnreadFeed(any())).thenReturn(1);
+
+        List<SiteFeedCount> resultList = siteFeedController.countUnreadSite(dto);
+
+        assertEquals(3, resultList.size());
+        assertEquals(1, resultList.getFirst().count);
+        assertEquals("site-uuid-1", resultList.getFirst().uuid);
+        assertEquals(1, resultList.get(1).count);
+        assertEquals("site-uuid-2", resultList.get(1).uuid);
+        assertEquals(2, resultList.getLast().count);
+        assertEquals("test", resultList.getLast().uuid);
     }
 
     /**

@@ -19,7 +19,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -183,8 +185,18 @@ class SiteRepositoryTest {
 
         // Act
         siteRepository.updateSiteIcon("", "");
+
+        verify(sqlManager).executeUpdate(any(), any());
     }
 
+    @Test
+    void test_countSiteUnreadFeed() {
+        when(sqlManager.getSingleResult(any(), any(), any())).thenReturn(1);
+
+        int result = siteRepository.countSiteUnreadFeed("");
+
+        assertEquals(1, result);
+    }
 }
 
 //Generated with love by TestMe :) Please report issues and submit feature requests at: http://weirddev.com/forum#!/testme

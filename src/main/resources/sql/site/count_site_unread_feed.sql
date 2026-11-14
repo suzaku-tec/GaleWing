@@ -1,0 +1,1 @@
+select count(*) as count from feed where uuid = /*uuid*/'c9403ffc-7d91-42a0-8f56-d503cedefb7e' and readed = false
