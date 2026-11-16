@@ -48,7 +48,7 @@ class FunctionControllerTest {
 
         List<FunctionCtrl> list = functionController.list();
 
-        Assertions.assertEquals(0, list.size());
+        Assertions.assertEquals(1, list.size());
     }
 }
 
