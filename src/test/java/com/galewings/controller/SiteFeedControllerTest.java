@@ -2,6 +2,7 @@ package com.galewings.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.galewings.dto.*;
+import com.galewings.dto.input.RelatedLinksDto;
 import com.galewings.entity.*;
 import com.galewings.repository.FeedRepository;
 import com.galewings.repository.FunctionCtrlRepository;
@@ -26,6 +27,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -357,6 +359,15 @@ class SiteFeedControllerTest {
         assertEquals("site-uuid-2", resultList.get(1).uuid);
         assertEquals(2, resultList.getLast().count);
         assertEquals("test", resultList.getLast().uuid);
+    }
+
+    @Test
+    void testRelatedLinks() {
+        when(feedRepository.relatedLinks(any(), any())).thenReturn(Collections.emptyList());
+
+        List<Feed> list = siteFeedController.relatedLinks(new RelatedLinksDto());
+
+        assertEquals(0, list.size());
     }
 
     /**

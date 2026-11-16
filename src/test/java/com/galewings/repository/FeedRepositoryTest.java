@@ -162,6 +162,13 @@ class FeedRepositoryTest {
         List<Feed> result = feedRepository.findByCategoryId("categoryId");
         Assertions.assertEquals(0, result.size());
     }
+
+    @Test
+    void testRelatedLinks() {
+        when(sqlManager.getResultList(any(), any(), any())).thenReturn(new ArrayList<>());
+        List<Feed> result = feedRepository.relatedLinks("", 0.1);
+        Assertions.assertEquals(0, result.size());
+    }
 }
 
 //Generated with love by TestMe :) Please report issues and submit feature requests at: http://weirddev.com/forum#!/testme

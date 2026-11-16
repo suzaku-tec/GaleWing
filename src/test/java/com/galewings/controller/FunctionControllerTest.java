@@ -40,6 +40,16 @@ class FunctionControllerTest {
         functionController.update(new FunctionCtrl());
         verify(functionCtrlRepository).update(null, null);
     }
+
+    @Test
+    void testList() {
+        List<FunctionCtrl> resultList = List.of(new FunctionCtrl());
+        when(functionCtrlRepository.getAll()).thenReturn(resultList);
+
+        List<FunctionCtrl> list = functionController.list();
+
+        Assertions.assertEquals(1, list.size());
+    }
 }
 
 //Generated with love by TestMe :) Please raise issues & feature requests at: https://weirddev.com/forum#!/testme

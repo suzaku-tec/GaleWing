@@ -279,4 +279,18 @@ public class FeedRepository {
         return sqlManager.getResultList(Feed.class,
                 new ClasspathSqlResource("sql/feed/select_feed_by_category_id.sql"), params);
     }
+
+    /**
+     * 関連リンクを取得する
+     *
+     * @param link 対象リンク
+     * @param rate 類似度
+     * @return 関連リンク
+     */
+    public List<Feed> relatedLinks(String link, Double rate) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("link", link);
+        param.put("rate", rate);
+        return sqlManager.getResultList(Feed.class, new ClasspathSqlResource("sql/feed/select_related_links.sql"), param);
+    }
 }
