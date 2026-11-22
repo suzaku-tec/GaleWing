@@ -104,6 +104,18 @@
 
         <!-- メインコンテンツ -->
         <div class="col-md-9" id="mainContent">
+            <div class="page-title pb-2">
+                <button type="button" id="addSite" class="btn btn-outline-secondary">
+                        <span style="font-size: 2em; color: #33cc99;">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                </button>
+                <button type="button" id="updateFeed" class="btn btn-outline-secondary">
+                        <span style="font-size: 2em; color: #F79800;">
+                            <i class="fas fa-sync-alt"></i>
+                        </span>
+                </button>
+            </div>
             <div style="margin: 10px">
                 <!-- カスタムヘッダー -->
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px 16px; background-color: #f8f9fa; border: 1px solid #babfc7; border-bottom: none;">
@@ -173,4 +185,7 @@
 </main>
 
 </body>
+<div th:replace="modal/modalDialog"/>
+
+<script src="/js/shortcutter.js"></script>
 </html>
