@@ -38,6 +38,7 @@ const config = {
     aiRecommend: './src/main/screen/aiRecommend/index.ts',
     feedCategory: './src/main/screen/feedCategory/index.ts',
     trend: './src/main/screen/trend/index.ts',
+    workspace: './src/main/screen/workspace.ts',
   },
   output: {
     path: _resolve(__dirname, 'dist'),

@@ -8,15 +8,59 @@
     <meta name="Description" content="Enter your description here"/>
 
     <script src="js/settings.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <script th:src="@{/js/workspace.js}"></script>
+    <link rel="stylesheet" th:href="@{/workspace.css}">
+    <link rel="stylesheet" th:href="@{/menu.css}">
+    <link rel="stylesheet" th:href="@{/common.css}">
+    <link rel="stylesheet" th:href="@{/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/accordion.css}">
     <link rel="stylesheet" href="tree.css">
     <title>GalwWing</title>
 
 </head>
 
-<body class="h-100 bg-light">
+<body>
+<!-- ワークスペース -->
+<nav class="workspace" id="workspace">
+    <button class="toggle-btn" id="toggleBtn">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+    <ul class="menu-list">
+        <li class="menu-item">
+            <a href="/">
+                <span class="icon">
+                    <i class="fa-solid fa-rss"></i>
+                </span>
+                <span class="menu-text">RSSリーダー</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="#">
+                <span class="icon">
+                    <i class="fa-solid fa-chart-simple"></i>
+                </span>
+                <span class="menu-text">統計</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="#">
+                <span class="icon">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                </span>
+                <span class="menu-text">便利ツール</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/settings">
+                <span class="icon"><i class="fa-solid fa-gear"></i></span>
+                <span class="menu-text">設定</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
 <!-- 全ページを囲む要素 -->
-<main class="h-100">
+<main class="main-content container-fluid px-0 overflow-hidden">
     <div class="page-wrapper d-flex flex-row h-100">
 
         <!-- サイトバーメニュー -->

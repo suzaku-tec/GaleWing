@@ -1,0 +1,18 @@
+.menu-link-item {
+    display: block; /* または inline-block */
+    max-width: 100%;
+    box-sizing: border-box; /* padding・border を親幅に含める */
+    overflow-wrap: break-word; /* 長い英数字やURLも折り返す */
+}
+
+ul.menu {
+    overflow-y: auto;
+    padding-right: 0; /* スクロールバー分の余白を自分で足さない */
+}
+
+li.menu {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+}
+

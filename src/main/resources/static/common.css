@@ -1,0 +1,15 @@
+/* アニメーション */
+main {
+    transition: 0.3s all ease;
+}
+
+div#mainContent {
+    transition-duration: 1s;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 100vh;
+}
+
+body {
+    max-height: 100vh;
+}

@@ -1,0 +1,12 @@
+.rss-link {
+    text-decoration: none;
+    font-weight: bolder;
+    color: #000000;
+    margin: 0 0 0 10px;
+}
+
+.rss-read-link {
+    text-decoration: none;
+    color: #808080;
+}
+

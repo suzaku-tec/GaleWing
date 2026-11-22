@@ -21,6 +21,10 @@ import {
   faChevronRight,
   faAnglesLeft,
   faChevronLeft,
+  faRss,
+  faChartSimple,
+  faGear,
+  faScrewdriverWrench,
 } from '@fortawesome/free-solid-svg-icons/index';
 
 import { faYoutube } from '@fortawesome/free-brands-svg-icons';
@@ -45,6 +49,10 @@ library.add(
   faChevronRight,
   faAnglesLeft,
   faChevronLeft,
+  faRss,
+  faChartSimple,
+  faGear,
+  faScrewdriverWrench,
 );
 dom.watch();
 

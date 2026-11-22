@@ -1,0 +1,85 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+    display: flex;
+    background-color: #f4f6f9;
+}
+
+.workspace {
+    width: 60px; /* 閉じたときの幅 */
+    height: 100vh;
+    background-color: #2c3e50;
+    color: white;
+    transition: width 0.3s ease; /* 幅が変わるアニメーション */
+    overflow: hidden; /* はみ出た文字を隠す */
+    white-space: nowrap; /* 文字の折り返しを防ぐ */
+}
+
+/* メニューが開いたときのスタイル */
+.workspace.open {
+    width: 220px; /* 開いたときの幅 */
+}
+
+/* 開閉ボタン */
+.toggle-btn {
+    width: 100%;
+    height: 60px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    text-align: left;
+    padding-left: 20px;
+    border-bottom: 1px solid #34495e;
+}
+
+.toggle-btn:hover {
+    background-color: #34495e;
+}
+
+/* メニューリスト */
+.menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu-item a {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    color: white;
+    text-decoration: none;
+    padding-left: 18px;
+    transition: background 0.2s;
+}
+
+.menu-item a:hover {
+    background-color: #34495e;
+}
+
+/* アイコン部分 */
+.icon {
+    font-size: 20px;
+    min-width: 30px; /* アイコンの幅を固定して文字と位置を揃える */
+    text-align: center;
+}
+
+/* メニューの名称（初期状態は透明にして隠す） */
+.menu-text {
+    margin-left: 15px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* サイドバーが開いたら名称を表示する */
+.workspace.open .menu-text {
+    opacity: 1;
+}
+
+/* メインコンテンツエリア */
+.main-content {
+    flex: 1;
+}
+

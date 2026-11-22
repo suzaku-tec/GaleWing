@@ -1,0 +1,27 @@
+/* 重要な部分 */
+.sidebar {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transition-duration: 1s;
+    max-height: 100vh;
+    margin-right: 0px;
+    padding-right: 0px;
+}
+
+/* 見栄え */
+.sidebar .brand {
+    background-color: #0d6efdc9;
+    color: white;
+}
+
+.sidebar .nav-link {
+    background-color: rgba(255, 255, 255, 0.493);
+    color: white;
+}
+
+li#siteList div {
+    padding-bottom: 2px;
+}

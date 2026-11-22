@@ -1,27 +1,68 @@
 <!DOCTYPE html>
-<html lang="ja" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="Description" content="Enter your description here"/>
-    <script src="js/main.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <title>GalwWing</title>
-
+    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/workspace.js}"></script>
+    <link rel="stylesheet" th:href="@{/workspace.css}">
+    <link rel="stylesheet" th:href="@{/menu.css}">
+    <link rel="stylesheet" th:href="@{/common.css}">
+    <link rel="stylesheet" th:href="@{/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/accordion.css}">
+    <link rel="stylesheet" th:href="@{/rss.css}">
+    <title>GaleWing</title>
 </head>
-
 <body>
-<!-- 全ページを囲む要素 -->
-<main class="container mw-100" role="main">
-    <div class="row">
+
+<!-- ワークスペース -->
+<nav class="workspace" id="workspace">
+    <button class="toggle-btn" id="toggleBtn">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+    <ul class="menu-list">
+        <li class="menu-item">
+            <a href="/">
+                <span class="icon">
+                    <i class="fa-solid fa-rss"></i>
+                </span>
+                <span class="menu-text">RSSリーダー</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="#">
+                <span class="icon">
+                    <i class="fa-solid fa-chart-simple"></i>
+                </span>
+                <span class="menu-text">統計</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="#">
+                <span class="icon">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                </span>
+                <span class="menu-text">便利ツール</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/settings">
+                <span class="icon"><i class="fa-solid fa-gear"></i></span>
+                <span class="menu-text">設定</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<!-- メインコンテンツ -->
+<main class="main-content container-fluid px-0 overflow-hidden">
+
+    <div class="row g-0 p-0">
         <input type="hidden" id="identifier" value="" th:value="${identifier}">
 
         <!-- サイトバーメニュー -->
         <nav class="sidebar col-md-3" id="sidemenu">
-            <section class="accordion">
-                <!-- サイドメニュー(Site List) -->
-                <div th:replace="linkMenu"/>
+            <section>
 
                 <!-- サイドメニュー(View List) -->
                 <input id="view-block" type="checkbox" class="toggle" checked/>
@@ -35,13 +76,14 @@
                         <li class="nav-item">
                             <div th:each="view: ${viewlist}" class="mb-1">
                                 <th:block th:if="${view.id == identifier}">
-                                    <a class="list-group-item bg-warning" th:href="@{/(uuid=${view.id})}">
+                                    <a class="list-group-item bg-warning menu-link-item"
+                                       th:href="@{/(uuid=${view.id})}">
                                         [[${view.title}]]
                                         <span th:id="${view.id} + '_count'" class="badge rounded-pill bg-info text-dark"
                                               th:text="${view.count}"></span></a>
                                 </th:block>
                                 <th:block th:if="${!(view.id == identifier)}">
-                                    <a class="list-group-item" th:href="@{/(uuid=${view.id})}">
+                                    <a class="list-group-item menu-link-item" th:href="@{/(uuid=${view.id})}">
                                         [[${view.title}]]
                                         <span th:id="${view.id} + '_count'" class="badge rounded-pill bg-info text-dark"
                                               th:text="${view.count}"></span></a>
@@ -61,8 +103,8 @@
                 </label>
 
                 <div class="accordionContent">
-                    <ul class="nav flex-column m-o p-3 bg-primary">
-                        <li class="nav-item mb-2">
+                    <ul class="nav flex-column m-o p-3 bg-primary menu">
+                        <li class="nav-item mb-2 menu">
                             <th:block th:if="${#strings.isEmpty(identifier)}">
                                 <a href="/" class="list-group-item bg-warning">All</a>
                             </th:block>
@@ -70,10 +112,10 @@
                                 <a href="/" class="list-group-item">All</a>
                             </th:block>
                         </li>
-                        <li class="mb-2" id="siteList">
+                        <li class="mb-2 menu" id="siteList">
                             <div th:each="site: ${sitelist}">
                                 <th:block th:if="${site.uuid == identifier && site.count > 0}">
-                                    <a href="" class="list-group-item bg-warning" th:id="${site.uuid}"
+                                    <a href="" class="list-group-item bg-warning menu-link-item" th:id="${site.uuid}"
                                        th:href="@{/(uuid=${site.uuid})}"> <img
                                             th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16"
                                             height="16" alt="アイコン">
@@ -82,7 +124,7 @@
                                               class="badge rounded-pill bg-info text-dark">[[${site.count}]]</span></a>
                                 </th:block>
                                 <th:block th:if="${!(site.uuid == identifier) && site.count > 0}">
-                                    <a href="" class="list-group-item" th:id="${site.uuid}"
+                                    <a href="" class="list-group-item menu-link-item" th:id="${site.uuid}"
                                        th:href="@{/(uuid=${site.uuid})}"> <img
                                             th:src="'data:image/png;base64,' + ${site.faviconBase64}" width="16"
                                             height="16" alt="アイコン">
@@ -96,146 +138,76 @@
                 </div>
             </section>
         </nav>
-        <!-- サイトバーメニュー -->
 
-        <!-- 全ページの右のコンテンツ -->
+        <!-- メインコンテンツ -->
         <div class="col-md-9" id="mainContent">
-
-            <!-- トップバー -->
-
-            <!-- 下のコンテンツ -->
-            <div class="content p-3">
-                <div th:if="${selectSite != null}">
-                    <h1 th:text="${selectSite.title}" class="bg-info text-center">ダミータイトル</h1>
-                </div>
-                <div>
-                    <!-- アイコン -->
-                    <div class="page-title pb-2">
-                        <button class="btn btn-outline-secondary" id="sidebarToggler">
-                        <span style="font-size: 2em;">
-                            <i class="fas fa-bars "></i>
-                        </span>
-                        </button>
-                        <button type="button" id="addSite" class="btn btn-outline-secondary">
-                        <span style="font-size: 2em; color: #33cc99;">
-                            <i class="fas fa-plus"></i>
-                        </span>
-                        </button>
-                        <button type="button" id="updateFeed" class="btn btn-outline-secondary">
-                        <span style="font-size: 2em; color: #F79800;">
-                            <i class="fas fa-sync-alt"></i>
-                        </span>
-                        </button>
-                        <button type="button" class="btn btn-outline-secondary" id="readAllShowFeed"
-                                data-shortcut-key="ctrl+alt+r">
-                        <span style="font-size: 2em; color: #33cc99;">
-                           <i class="fas fa-check"></i>
-                        </span>
-                        </button>
-                        <button type="button" class="btn btn-outline-secondary" id="playTitle">
-                        <span style="font-size: 2em; color: #33cc99;">
-                           <i class="fas fa-play-circle"></i>
-                        </span>
-                        </button>
-                        <button class="btn btn-outline-secondary" data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                                id="toolDropdownMenuButton">
-            <span style="font-size: 2em;">
-              <i class="fas fa-wrench" id="tool"></i>
-            </span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="toolDropdownMenuButton">
-                            <li><a class="dropdown-item" href="#" id="importOpml">import</a></li>
-                            <li><a class="dropdown-item" href="#" id="exportOpml">export</a></li>
-                        </ul>
-
-                        <button id="checkList" class="btn btn-outline-secondary" type="button"
-                                data-shortcut-key="ctrl+alt+c">
-                            <span style="font-size: 2em; color: #33cc99;">
-                                <i class="fa-solid fa-list-check"></i>
-                            </span>
-                        </button>
+            <div style="margin: 10px">
+                <!-- カスタムヘッダー -->
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px 16px; background-color: #f8f9fa; border: 1px solid #babfc7; border-bottom: none;">
+                    <div>
+                        <label style="font-size: 14px;">
+                            Page Size:
+                            <input type="text" id="header-pageSize" size="3"/>
+                        </label>
                     </div>
 
-                    <!-- メインコンテンツ -->
-                    <div id="gridLayout" class="contentLayout">
-                        <div class="float" style="padding-bottom: 1em;">
-                            <div class="align-left">
-                                <button id="mdTitleList" data-shortcut-key="ctrl+alt+t" class="btn btn-outline-dark">
-                                    Markdown
-                                </button>
-                                <button id="mdAllTitleList" data-shortcut-key="ctrl+alt+t" class="btn btn-outline-dark">
-                                    All Title MD
-                                </button>
-                            </div>
-                        </div>
+                    <div id="header-viewDataInfo"></div>
 
-                        <!-- カスタムフッター -->
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px 16px; background-color: #f8f9fa; border: 1px solid #babfc7; border-bottom: none;">
-                            <div>
-                                <label style="font-size: 14px;">
-                                    Page Size:
-                                    <input type="text" id="header-pageSize" size="3"/>
-                                </label>
-                            </div>
-
-                            <div id="header-viewDataInfo"></div>
-
-                            <div style="display: flex; gap: 8px; align-items: center;">
-                                <i id="header-firstBtn" class="fa-solid fa-angles-left" style="cursor: pointer;"></i>
-                                <i id="header-prevBtn" class="fa-solid fa-chevron-left"
-                                   style="cursor: pointer; margin: 0px 20px;"></i>
-                                Page <input type="text" id="header-nowPage" size="3" aria-label="現在ページ"/>
-                                <span id="header-pageInfo" style="font-size: 14px; margin: 0 8px;"> of 1 ページ</span>
-                                <i id="header-nextBtn" class="fa-solid fa-chevron-right"
-                                   style="cursor: pointer; margin: 0px 20px;"></i>
-                                <i id="header-lastBtn" class="fa-solid fa-angles-right" style="cursor: pointer;"></i>
-                            </div>
-                        </div>
-
-                        <div id="wrapper"></div>
-
-                        <!-- カスタムフッター -->
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px 16px; background-color: #f8f9fa; border: 1px solid #babfc7; border-top: none;">
-                            <div>
-                                <label style="font-size: 14px;">
-                                    Page Size:
-                                    <input type="text" id="footer-pageSize" size="3"/>
-                                </label>
-                            </div>
-
-                            <div id="footer-viewDataInfo"></div>
-
-                            <div style="display: flex; gap: 8px; align-items: center;">
-                                <i id="footer-firstBtn" class="fa-solid fa-angles-left" style="cursor: pointer;"></i>
-                                <i id="footer-prevBtn" class="fa-solid fa-chevron-left"
-                                   style="cursor: pointer; margin: 0px 20px;"></i>
-                                Page <input type="text" id="footer-nowPage" size="3" aria-label="現在ページ"/>
-                                <span id="footer-pageInfo" style="font-size: 14px; margin: 0 8px;"> of 1 ページ</span>
-                                <i id="footer-nextBtn" class="fa-solid fa-chevron-right"
-                                   style="cursor: pointer; margin: 0px 20px;"></i>
-                                <i id="footer-lastBtn" class="fa-solid fa-angles-right" style="cursor: pointer;"></i>
-                            </div>
-                        </div>
-
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <button id="header-firstBtn" type="button" class="btn btn-outline-primary rounded">
+                            <i id="header-firstBtn-icon" class="fa-solid fa-angles-left" style="cursor: pointer;"></i>
+                        </button>
+                        <button id="header-prevBtn" type="button" class="btn btn-outline-primary rounded">
+                            <i id="header-prevBtn-icon" class="fa-solid fa-chevron-left"
+                               style="cursor: pointer;"></i>
+                        </button>
+                        Page <input type="text" id="header-nowPage" size="3" aria-label="現在ページ"/>
+                        <span id="header-pageInfo" style="font-size: 14px; margin: 0 8px;"> of 1 ページ</span>
+                        <button id="header-nextBtn" type="button" class="btn btn-outline-primary rounded">
+                            <i id="header-nextBtn-icon" class="fa-solid fa-chevron-right"
+                               style="cursor: pointer;"></i>
+                        </button>
+                        <button id="header-lastBtn" type="button" class="btn btn-outline-primary rounded">
+                            <i id="header-lastBtn-icon" class="fa-solid fa-angles-right" style="cursor: pointer;"></i>
+                        </button>
                     </div>
                 </div>
+                <div id="wrapper"></div>
+                <!-- カスタムフッター -->
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px 16px; background-color: #f8f9fa; border: 1px solid #babfc7; border-top: none;">
+                    <div>
+                        <label style="font-size: 14px;">
+                            Page Size:
+                            <input type="text" id="footer-pageSize" size="3"/>
+                        </label>
+                    </div>
+
+                    <div id="footer-viewDataInfo"></div>
+
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <button id="footer-firstBtn" type="button" class="btn btn-outline-primary rounded">
+                            <i id="footer-firstBtn-icon" class="fa-solid fa-angles-left" style="cursor: pointer;"></i>
+                        </button>
+                        <button id="footer-prevBtn" type="button" class="btn btn-outline-primary rounded">
+                            <i id="footer-prevBtn-icon" class="fa-solid fa-chevron-left"
+                               style="cursor: pointer;"></i>
+                        </button>
+                        Page <input type="text" id="footer-nowPage" size="3" aria-label="現在ページ"/>
+                        <span id="footer-pageInfo" style="font-size: 14px; margin: 0 8px;"> of 1 ページ</span>
+                        <button id="footer-nextBtn" type="button" class="btn btn-outline-primary rounded">
+                            <i id="footer-nextBtn-icon" class="fa-solid fa-chevron-right"
+                               style="cursor: pointer;"></i>
+                        </button>
+                        <button id="footer-lastBtn" type="button" class="btn btn-outline-primary rounded">
+                            <i id="footer-lastBtn-icon" class="fa-solid fa-angles-right" style="cursor: pointer;"></i>
+                        </button>
+                    </div>
+                </div>
+
             </div>
-            <!-- 下のコンテンツ -->
-
         </div>
-        <!-- 全ページの右のコンテンツ -->
-
     </div>
 </main>
-<!-- 全ページを囲む要素 -->
 
-<a id="downloadLink" style="display: none;"></a>
-<div id="playWav"></div>
 </body>
-
-<!-- Modal -->
-<div th:replace="modal/modalDialog"/>
-
-<script src="/js/shortcutter.js"></script>
 </html>
