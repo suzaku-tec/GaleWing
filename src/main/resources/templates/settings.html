@@ -7,15 +7,15 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="Description" content="Enter your description here"/>
 
-    <script src="js/settings.js"></script>
+    <script th:src="@{/js/settings.js}"></script>
     <script th:src="@{/js/workspace.js}"></script>
     <link rel="stylesheet" th:href="@{/workspace.css}">
     <link rel="stylesheet" th:href="@{/menu.css}">
     <link rel="stylesheet" th:href="@{/common.css}">
     <link rel="stylesheet" th:href="@{/sidebar.css}">
     <link rel="stylesheet" th:href="@{/accordion.css}">
-    <link rel="stylesheet" href="tree.css">
-    <title>GalwWing</title>
+    <link rel="stylesheet" th:href="@{/tree.css}">
+    <title>GaleWing</title>
 
 </head>
 
@@ -31,7 +31,7 @@
         <nav class="sidebar col-md-3" id="sidemenu">
             <section class="accordion">
                 <!-- サイドメニュー(Site List) -->
-                <div th:replace="linkMenu"/>
+                <div th:replace="linkMenu"></div>
             </section>
         </nav>
         <!-- サイトバーメニュー -->

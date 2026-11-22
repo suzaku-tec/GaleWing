@@ -7,8 +7,8 @@
     overflow-y: auto;
     transition-duration: 1s;
     max-height: 100vh;
-    margin-right: 0px;
-    padding-right: 0px;
+    margin-right: 0;
+    padding-right: 0;
 }
 
 /* 見栄え */
