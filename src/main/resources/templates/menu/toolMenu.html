@@ -1,0 +1,29 @@
+<ul class="nav flex-column m-o p-3 bg-primary" id="navi" xmlns:th="http://www.thymeleaf.org">
+    <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('podcast') eq '1'}">
+        <a class="list-group-item" href="/podcast">podcast</a>
+    </li>
+    <li class="nav-item mb-2">
+        <a class="list-group-item" href="/task/">task execute</a>
+    </li>
+    <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('circulation') eq '1'}">
+        <a class="list-group-item" href="/circulation/">circulation</a>
+    </li>
+    <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('summary') eq '1'}">
+        <a class="list-group-item" href="/news/summary/">summary</a>
+    </li>
+    <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('worldNewsApi') eq '1'}">
+        <a class="list-group-item" href="/worldNews/">worldNews</a>
+    </li>
+    <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('newsApi') eq '1'}">
+        <a class="list-group-item" href="/newsApi/">newsApi</a>
+    </li>
+    <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('rssBridge') eq '1'}">
+        <a class="list-group-item" href="/rssBridge">rssBridge</a>
+    </li>
+    <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('airecommend') eq '1'}">
+        <a class="list-group-item" href="/ai/recommend/">AI Recommend</a>
+    </li>
+    <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('trend') eq '1'}">
+        <a class="list-group-item" href="/trend/">trend</a>
+    </li>
+</ul>

@@ -1,0 +1,5 @@
+<ul class="nav flex-column m-o p-3 bg-primary" id="navi" xmlns:th="http://www.thymeleaf.org">
+    <li class="nav-item mb-2" th:if="${@functionCtrlRepository.getFlg('statistics') eq '1'}">
+        <a class="list-group-item" href="/statics/">Dashboard</a>
+    </li>
+</ul>

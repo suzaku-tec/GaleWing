@@ -7,40 +7,37 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="Description" content="Enter your description here"/>
 
-    <script src="js/settings.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="tree.css">
-    <title>GalwWing</title>
+    <script th:src="@{/js/settings.js}"></script>
+    <script th:src="@{/js/workspace.js}"></script>
+    <link rel="stylesheet" th:href="@{/workspace.css}">
+    <link rel="stylesheet" th:href="@{/menu.css}">
+    <link rel="stylesheet" th:href="@{/common.css}">
+    <link rel="stylesheet" th:href="@{/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/accordion.css}">
+    <link rel="stylesheet" th:href="@{/tree.css}">
+    <title>GaleWing</title>
 
 </head>
 
-<body class="h-100 bg-light">
+<body>
+<!-- ワークスペース -->
+<div th:replace="/menu/workspace"></div>
+
 <!-- 全ページを囲む要素 -->
-<main class="h-100">
+<main class="main-content container-fluid px-0 overflow-hidden">
     <div class="page-wrapper d-flex flex-row h-100">
 
         <!-- サイトバーメニュー -->
         <nav class="sidebar col-md-3" id="sidemenu">
             <section class="accordion">
                 <!-- サイドメニュー(Site List) -->
-                <div th:replace="linkMenu"/>
+                <div th:replace="linkMenu"></div>
             </section>
         </nav>
         <!-- サイトバーメニュー -->
 
         <!-- 全ページの右のコンテンツ -->
         <div class="page-content main w-100">
-
-            <!-- トップバー -->
-            <nav class="navbar px-3 bg-light border-bottom shadow-sm">
-                <div class="navbar-brand toggle-menu">
-                    <button class="btn btn-light btn-sm" id="sidebarToggler">
-                        <i class="fas fa-bars fa-lg"></i>
-                    </button>
-                </div>
-            </nav>
-            <!-- トップバー -->
-
             <!-- 下のコンテンツ -->
             <form class="content p-3">
                 <div class="container-fuild pt-3">
